@@ -1,4 +1,4 @@
-const CACHE_NAME = 'landed-v1';
+const CACHE = 'landed-v2';
 
 const PRECACHE = [
   '/',
