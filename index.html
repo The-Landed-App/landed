@@ -260,7 +260,16 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
 
-  <!-- Top row: welcome + stats side by side -->
+  <!-- Search bar -->
+  <div style="position:relative;margin-top:16px;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--cream2);border-radius:12px;padding:10px 14px;transition:border-color 0.15s;" id="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;color:var(--muted);"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="search-input" type="text" placeholder="Search timelines, documents, N-400, tips…" style="flex:1;border:none;outline:none;font-family:inherit;font-size:14px;background:transparent;color:var(--text);" oninput="runSearch(this.value)" onfocus="document.getElementById('search-wrap').style.borderColor='var(--grass)'" onblur="setTimeout(()=>{document.getElementById('search-wrap').style.borderColor='var(--cream2)';hideSearch()},150)"/>
+      <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--muted);font-size:18px;line-height:1;padding:0;cursor:pointer;">×</button>
+    </div>
+    <!-- Results dropdown -->
+    <div id="search-results" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.12);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;"></div>
+  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;margin-bottom:24px;">
     <div style="background:var(--forest);border-radius:var(--r);padding:20px;grid-column:1/2;">
       <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--cream2);line-height:1.25;margin-bottom:6px;">Helps you prepare</div>
@@ -794,7 +803,92 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-// ── INIT ──────────────────────────────────────────────
+// ── SEARCH ────────────────────────────────────────────
+const SEARCH_INDEX = [
+  // Timeline
+  { title:'My Timeline', sub:'Track your naturalization milestones', page:'timeline', keywords:'timeline progress steps process milestones' },
+  { title:'Confirm Eligibility', sub:'Are you ready to apply?', page:'timeline', keywords:'eligible eligibility green card 5 years 3 years' },
+  { title:'File Form N-400', sub:'The naturalization application', page:'n400', keywords:'n400 n-400 form application file submit' },
+  { title:'Biometrics Appointment', sub:'Fingerprints and photo', page:'timeline', keywords:'biometrics fingerprint appointment schedule' },
+  { title:'Background Check', sub:'FBI and USCIS background review', page:'timeline', keywords:'background check fbi criminal history' },
+  { title:'Interview & Civics Test', sub:'USCIS interview preparation', page:'interview', keywords:'interview civics test english uscis officer' },
+  { title:'Oath of Allegiance', sub:'The ceremony', page:'timeline', keywords:'oath ceremony allegiance citizenship certificate' },
+  // Documents
+  { title:'Document Center', sub:'Track all your required documents', page:'documents', keywords:'documents files passport birth certificate marriage' },
+  { title:'Birth Certificate', sub:'Required for N-400', page:'documents', keywords:'birth certificate document required translation' },
+  { title:'Passport', sub:'Current and expired passports needed', page:'documents', keywords:'passport travel document identification' },
+  { title:'Marriage Certificate', sub:'If applying on 3-year path', page:'documents', keywords:'marriage certificate spouse 3 year path' },
+  { title:'Medical Exam (I-693)', sub:'Required health examination', page:'documents', keywords:'medical exam i-693 doctor health' },
+  // N-400
+  { title:'N-400 Pre-Submit Checklist', sub:'47 items before you mail it', page:'n400', keywords:'checklist n400 submit mail filing fee documents' },
+  { title:'Filing Fee', sub:'$725 required with N-400', page:'n400', keywords:'filing fee $725 payment money order waiver' },
+  { title:'Travel History', sub:'All trips outside the U.S.', page:'n400', keywords:'travel history trips abroad outside country dates' },
+  { title:'Continuous Residence', sub:'5 years in the U.S.', page:'n400', keywords:'continuous residence 5 years 3 years eligibility' },
+  { title:'Moral Character Questions', sub:'Arrests, organizations, taxes', page:'n400', keywords:'moral character arrest criminal organization tax' },
+  // Interview
+  { title:'Interview Coach', sub:'Practice civics and English', page:'interview', keywords:'interview coach practice civics english test questions' },
+  { title:'100 Civics Questions', sub:'Practice all USCIS questions', page:'interview', keywords:'civics questions 100 history government constitution' },
+  { title:'English Reading Test', sub:'Practice reading and writing', page:'interview', keywords:'english reading writing test practice' },
+  // Tips
+  { title:'Pro Tips', sub:'Hard-won advice by immigrants', page:'tips', keywords:'tips advice mistakes avoid biometrics filing' },
+  { title:'Biometrics Tips', sub:'Lotion the night before, not morning', page:'tips', keywords:'biometrics tips fingerprint dry hands lotion' },
+  { title:'Interview Tips', sub:'Tell the officer about changes upfront', page:'tips', keywords:'interview tips officer changes honest disclose' },
+  { title:'Oath Ceremony Tips', sub:'Bring your green card to surrender', page:'tips', keywords:'oath ceremony tips green card surrender tissues family' },
+  // Legal
+  { title:'Legal Help Finder', sub:'Find attorneys and translators', page:'legal', keywords:'legal attorney lawyer paralegal free aid translator notary' },
+  { title:'BIA Accredited Representatives', sub:'Low-cost legal help', page:'legal', keywords:'bia accredited representative low cost affordable legal' },
+  { title:'USCIS Certified Translators', sub:'For document translation', page:'legal', keywords:'translator translation certified uscis document language' },
+  // FAQ
+  { title:'How long does it take?', sub:'12–24 months on average', page:'timeline', keywords:'how long timeline processing time months years wait' },
+  { title:'Processing times by city', sub:'NYC, LA, Chicago, Houston…', page:'timeline', keywords:'processing time city los angeles new york chicago houston charlotte' },
+  { title:'What if my background check takes long?', sub:'90% clear within 6 months', page:'timeline', keywords:'background check delay long time months slow' },
+];
+
+function runSearch(q) {
+  const clear = document.getElementById('search-clear');
+  const results = document.getElementById('search-results');
+  q = q.trim().toLowerCase();
+  if (!q) { results.style.display = 'none'; clear.style.display = 'none'; return; }
+  clear.style.display = 'block';
+  const hits = SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q) ||
+    item.sub.toLowerCase().includes(q) ||
+    item.keywords.toLowerCase().includes(q)
+  ).slice(0, 8);
+  if (!hits.length) {
+    results.style.display = 'block';
+    results.innerHTML = `<div style="padding:14px 16px;font-size:13px;color:var(--muted);">No results for "${q}"</div>`;
+    return;
+  }
+  results.style.display = 'block';
+  results.innerHTML = hits.map((h, i) => `
+    <div onclick="goToResult('${h.page}')" style="display:flex;align-items:center;gap:12px;padding:11px 16px;cursor:pointer;border-bottom:${i < hits.length-1 ? '1px solid var(--cream2)' : 'none'};transition:background 0.1s;" onmouseover="this.style.background='var(--cream)'" onmouseout="this.style.background='transparent'">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--approved-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="var(--forest)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--text);">${h.title}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">${h.sub}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function goToResult(page) {
+  clearSearch();
+  switchPage(page);
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').style.display = 'none';
+  document.getElementById('search-clear').style.display = 'none';
+}
+
+function hideSearch() {
+  document.getElementById('search-results').style.display = 'none';
+}
+
 loadState();
 renderTimeline();
 renderFAQ();
