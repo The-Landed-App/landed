@@ -7,7 +7,7 @@
 <title>Landed — Your Path Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <!-- Clerk -->
-<script async crossorigin="anonymous" data-clerk-publishable-key="YOUR_CLERK_PUBLISHABLE_KEY" src="https://YOUR_CLERK_FRONTEND_API.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_bWF4aW11bS1waWdsZXQtNTQuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://maximum-piglet-54.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -122,8 +122,18 @@ window.addEventListener('load', async () => {
   await window.__clerk_loaded;
   const clerk = window.Clerk;
   if (!clerk) return;
-
   await clerk.load();
+
+  // Handle payment success return from Stripe
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    document.getElementById('loading').classList.add('on');
+    // Wait a moment for webhook to process then redirect
+    setTimeout(() => {
+      window.location.href = './index.html';
+    }, 2500);
+    return;
+  }
 
   // Already signed in — check payment
   if (clerk.user) {
