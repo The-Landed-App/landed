@@ -10,6 +10,28 @@
 <meta name="apple-mobile-web-app-title" content="Landed"/>
 <link rel="manifest" href="manifest.json"/>
 <title>Landed — Your Path Home</title>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_bWF4aW11bS1waWdsZXQtNTQuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://maximum-piglet-54.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script>
+const WORKER = 'https://landed-mia.ksjbrown.workers.dev';
+window.addEventListener('load', async () => {
+  await window.__clerk_loaded;
+  const clerk = window.Clerk;
+  if (!clerk) return;
+  await clerk.load();
+  if (!clerk.user) {
+    window.location.href = './landing.html';
+    return;
+  }
+  const token = await clerk.session.getToken();
+  const res = await fetch(`${WORKER}/check-access`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  const data = await res.json();
+  if (!data.hasAccess) {
+    window.location.href = './landing.html';
+  }
+});
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -46,7 +68,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .logo-text{display:flex;flex-direction:column;}
 .logo-wordmark{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--cream2);letter-spacing:-0.3px;line-height:1;}
 .logo-tagline-text{font-size:10px;font-weight:400;color:rgba(232,223,200,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
-.tagline{font-family:'Playfair Display',serif;font-size:14px;font-style:italic;color:rgba(232,223,200,0.85);margin-bottom:14px;line-height:1.5;}
+.tagline{font-family:'Playfair Display',serif;font-size:14px;color:rgba(232,223,200,0.85);margin-bottom:14px;line-height:1.5;}
 
 /* ── TOP NAV BAR (scrollable tabs) ── */
 .nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(232,223,200,0.12);}
@@ -97,7 +119,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .about-card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:20px;}
 .about-founder-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#a8b8a8;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
 .about-founder-label::after{content:'';flex:1;height:0.5px;background:var(--card-border);}
-.about-quote{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:var(--forest);line-height:1.65;margin-bottom:12px;}
+.about-quote{font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);line-height:1.65;margin-bottom:12px;}
 .about-quote span{font-style:normal;font-weight:500;border-bottom:1.5px solid var(--grass);}
 .about-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
 .about-meta{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:0.5px solid var(--cream);}
@@ -184,7 +206,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .faq-body.open{display:block;}
 
 /* ── PRO TIPS ── */
-.tips-by{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:16px;}
+.tips-by{font-size:12px;color:var(--muted);margin-bottom:16px;}
 .tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 .tip-section{border:0.5px solid var(--card-border);border-radius:var(--r);overflow:hidden;background:var(--white);}
 .tip-section.warn{background:var(--pending-bg);border-color:var(--pending-border);}
@@ -427,7 +449,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
   <div class="tl-scroll" id="tl-scroll"></div>
 
   <div class="slabel mt16">Journey by the numbers</div>
-  <p style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:14px;line-height:1.5;">Real questions from people who've been exactly where you are.</p>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;">Real questions from people who've been exactly where you are.</p>
   <div id="faq-list"></div>
   <div class="page-footer">
     <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
