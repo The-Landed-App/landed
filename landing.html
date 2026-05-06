@@ -121,7 +121,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
     <a class="nav-link" href="#">How it works</a>
     <a class="nav-link" href="#">Pricing</a>
     <a class="nav-link" href="#">FAQ</a>
-    <button class="nav-cta">Sign in</button>
+    <button class="nav-cta" onclick="openAuth('signIn')">Sign in</button>
   </div>
 </nav>
 
@@ -278,10 +278,10 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
       <span class="price-num">$0.99</span>
       <span class="price-note">one-time · yours forever</span>
     </div>
-    <a href="#" class="cta-btn">
+    <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
       Get Landed
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
+    </button>
     <p class="reassure">Secure checkout · Instant access</p>
   </div>
 
@@ -369,7 +369,117 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
   <p>Landed is an educational tool and does not provide legal advice.<br>Not a substitute for a licensed immigration attorney. © 2025 Landed.</p>
 </footer>
 
-<!-- MIA CHAT -->
+<!-- AUTH MODAL -->
+<style>
+  #auth-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(10,24,16,0.55);align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+  #auth-modal.open{display:flex;}
+  #auth-box{background:var(--white);border-radius:20px;padding:32px 28px;width:100%;max-width:400px;margin:16px;position:relative;}
+  .auth-header{margin-bottom:24px;text-align:center;}
+  .auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;}
+  .auth-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);margin-bottom:6px;}
+  .auth-sub{font-size:13px;color:var(--muted);line-height:1.5;}
+  .auth-price-pill{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--forest);margin-top:10px;}
+  .auth-form{display:flex;flex-direction:column;gap:12px;}
+  .auth-input{border:1px solid var(--cream3);border-radius:10px;padding:12px 14px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;transition:border-color 0.15s;}
+  .auth-input:focus{border-color:var(--grass);}
+  .auth-submit{background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;}
+  .auth-submit:hover{background:var(--forest2);}
+  .auth-divider{display:flex;align-items:center;gap:10px;margin:4px 0;}
+  .auth-divider span{font-size:11px;color:var(--cream3);}
+  .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--cream2);}
+  .auth-switch{text-align:center;font-size:12px;color:var(--muted);margin-top:4px;}
+  .auth-switch button{background:none;border:none;color:var(--forest);font-weight:500;cursor:pointer;font-family:inherit;font-size:12px;text-decoration:underline;}
+  .auth-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;color:var(--cream3);cursor:pointer;line-height:1;}
+  .auth-close:hover{color:var(--muted);}
+  .auth-error{font-size:12px;color:#c0392b;background:#fdf0f0;border-radius:8px;padding:8px 12px;display:none;}
+  .auth-error.show{display:block;}
+</style>
+
+<div id="auth-modal">
+  <div id="auth-box">
+    <button class="auth-close" onclick="closeAuth()">×</button>
+    <div class="auth-header">
+      <div class="auth-logo">
+        <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#2d6647"/><path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/><circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/><circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/></svg>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--forest);">Landed</span>
+      </div>
+      <div id="auth-title" class="auth-title">Create your account</div>
+      <div id="auth-sub" class="auth-sub">Start your path to citizenship today.</div>
+      <div class="auth-price-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        $0.99 one-time · instant access
+      </div>
+    </div>
+    <div class="auth-form">
+      <div id="auth-error" class="auth-error"></div>
+      <div id="name-field" style="display:flex;gap:10px;">
+        <input class="auth-input" id="auth-fname" type="text" placeholder="First name" style="flex:1;"/>
+        <input class="auth-input" id="auth-lname" type="text" placeholder="Last name" style="flex:1;"/>
+      </div>
+      <input class="auth-input" id="auth-email" type="email" placeholder="Email address"/>
+      <input class="auth-input" id="auth-password" type="password" placeholder="Password"/>
+      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $0.99</button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="auth-switch" id="auth-switch-text">
+        Already have an account? <button onclick="switchAuthMode('signIn')">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let _authMode = 'signUp';
+
+function openAuth(mode){
+  _authMode = mode || 'signUp';
+  _authMode === 'signIn' ? setSignInMode() : setSignUpMode();
+  document.getElementById('auth-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('auth-email').focus(), 200);
+}
+
+function closeAuth(){
+  document.getElementById('auth-modal').classList.remove('open');
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+function setSignUpMode(){
+  _authMode = 'signUp';
+  document.getElementById('auth-title').textContent = 'Create your account';
+  document.getElementById('auth-sub').textContent = 'Start your path to citizenship today.';
+  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $0.99';
+  document.getElementById('name-field').style.display = 'flex';
+  document.getElementById('auth-switch-text').innerHTML = 'Already have an account? <button onclick="switchAuthMode(\'signIn\')">Sign in</button>';
+}
+
+function setSignInMode(){
+  _authMode = 'signIn';
+  document.getElementById('auth-title').textContent = 'Welcome back';
+  document.getElementById('auth-sub').textContent = 'Sign in to access your Landed kit.';
+  document.getElementById('auth-submit-btn').textContent = 'Sign in';
+  document.getElementById('name-field').style.display = 'none';
+  document.getElementById('auth-switch-text').innerHTML = 'New here? <button onclick="switchAuthMode(\'signUp\')">Create account</button>';
+}
+
+function switchAuthMode(mode){
+  mode === 'signIn' ? setSignInMode() : setSignUpMode();
+}
+
+function handleAuth(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value.trim();
+  const err = document.getElementById('auth-error');
+  if(!email || !password){ err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
+  err.classList.remove('show');
+  // Hook your Clerk + Stripe logic here
+  // On success: closeAuth(); if paid, unlockMia();
+  alert(`${_authMode === 'signUp' ? 'Sign up' : 'Sign in'} flow — wire up Clerk + Stripe here.\n\nEmail: ${email}`);
+}
+
+// Close on backdrop click
+document.getElementById('auth-modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('auth-modal')) closeAuth();
+});
+</script>
 <style>
   #mia-btn{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--forest);border:none;border-radius:99px;padding:12px 20px 12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 4px 20px rgba(26,61,43,0.3);transition:transform 0.15s,box-shadow 0.15s;font-family:inherit;}
   #mia-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,61,43,0.38);}
@@ -460,7 +570,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
     </div>
     <div class="mia-gate-title">Mia is a paid feature</div>
     <div class="mia-gate-sub">Get Landed for $0.99 to unlock Mia and everything else — yours forever.</div>
-    <button class="mia-gate-btn" onclick="document.getElementById('get-started-btn').click();toggleMia();">Get Landed — $0.99</button>
+    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $0.99</button>
     <span class="mia-gate-price">One-time · Instant access · No subscription</span>
   </div>
 
