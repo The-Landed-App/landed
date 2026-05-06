@@ -10,42 +10,21 @@
 <meta name="apple-mobile-web-app-title" content="Landed"/>
 <link rel="manifest" href="manifest.json"/>
 <title>Landed — Your Path Home</title>
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_bWF4aW11bS1waWdsZXQtNTQuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://maximum-piglet-54.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
-<script>
-const WORKER = 'https://landed-mia.ksjbrown.workers.dev';
-window.addEventListener('load', async () => {
-  await window.__clerk_loaded;
-  const clerk = window.Clerk;
-  if (!clerk) return;
-  await clerk.load();
-  if (!clerk.user) {
-    window.location.href = './landing.html';
-    return;
-  }
-  const token = await clerk.session.getToken();
-  const res = await fetch(`${WORKER}/check-access`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  });
-  const data = await res.json();
-  if (!data.hasAccess) {
-    window.location.href = './landing.html';
-  }
-});
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --forest:#1a3d2b;--forest2:#2d6647;--forest3:#0f2419;
   --grass:#4a9e6b;--grass2:#5db87e;
   --sage:#a8c4a8;
-  --cream:#f0ebe0;--cream2:#e8dfc8;--cream3:#d4c9b0;
+  --cream:#f7f2ea;--cream2:#e8dfc8;--cream3:#d4c9b0;
   --linen:#e8dfc8;
   --text:#1a1a1a;--muted:#4a6650;--white:#ffffff;
-  --card-border:#ddd6c4;
   --approved-bg:#e8f5ee;--approved-text:#1a3d2b;
   --pending-bg:#fff8e8;--pending-text:#8a6820;--pending-border:#e8d89a;
   --action-bg:#1a3d2b;--action-text:#e8dfc8;
+  --amber:#8a6820;--amber-bg:#fff8e8;
+  --green:#1a3d2b;--green-bg:#e8f5ee;
   --r:14px;--rs:8px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overscroll-behavior:none;}
@@ -59,200 +38,129 @@ input,select,textarea{font-family:inherit;}
 /* ── HEADER ── */
 header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .header-inner{padding:16px 20px 0;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 
 /* ── LOGO ── */
 .logo-wrap{display:flex;align-items:center;gap:12px;}
-.logo-mark{width:40px;height:40px;flex-shrink:0;}
-.logo-mark svg{display:block;}
+.logo-mark{width:40px;height:40px;background:var(--forest2);border-radius:10px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 8px 8px;overflow:hidden;position:relative;}
+.logo-blade{border-radius:3px 3px 0 0;flex-shrink:0;}
+.logo-blade:nth-child(1){width:5px;height:16px;background:#3a8a5a;}
+.logo-blade:nth-child(2){width:5px;height:22px;background:var(--grass);}
+.logo-blade:nth-child(3){width:5px;height:13px;background:var(--grass2);}
+.logo-blade:nth-child(4){width:5px;height:19px;background:#3a8a5a;}
 .logo-text{display:flex;flex-direction:column;}
-.logo-wordmark{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--cream2);letter-spacing:-0.3px;line-height:1;}
-.logo-tagline-text{font-size:10px;font-weight:400;color:rgba(232,223,200,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
-.tagline{font-family:'Playfair Display',serif;font-size:14px;color:rgba(232,223,200,0.85);margin-bottom:14px;line-height:1.5;}
+.logo-wordmark{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--white);letter-spacing:-0.3px;line-height:1;}
+.logo-tagline-text{font-size:10px;font-weight:400;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
 
-/* ── TOP NAV BAR (scrollable tabs) ── */
-.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(232,223,200,0.12);}
+.tagline{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:18px;line-height:1.5;max-width:300px;font-style:normal;letter-spacing:0.2px;}
+
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(255,255,255,0.08);}
 .nav-tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:11px 14px;font-size:12px;color:rgba(232,223,200,0.45);border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.18s;}
+.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:11px 16px;font-size:12px;color:rgba(255,255,255,0.4);border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.18s;}
 .tab svg{flex-shrink:0;color:inherit;}
-.tab.active{color:var(--cream2);border-bottom-color:var(--grass);}
-.tab:hover:not(.active){color:rgba(232,223,200,0.75);}
+.tab.active{color:var(--white);border-bottom-color:var(--grass);}
+.tab:hover:not(.active){color:rgba(255,255,255,0.75);}
 
 /* ── PAGES ── */
-.page{display:none;padding:20px 16px 0;max-width:520px;margin:0 auto;}
+.page{display:none;padding:24px 32px 100px;}
 .page.active{display:block;}
 
-/* ── FOOTER DISCLAIMER ── */
-.page-footer{padding:24px 0 100px;margin-top:32px;border-top:0.5px solid var(--card-border);}
-.page-footer-text{font-size:11px;color:#a8b8a8;line-height:1.65;text-align:center;}
+/* ── SNAPSHOT CARDS ── */
+.snap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.snap-card{background:var(--forest);border-radius:var(--r);padding:16px 14px;}
+.snap-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--grass2);line-height:1;margin-bottom:4px;}
+.snap-label{font-size:11px;color:var(--sage);line-height:1.4;}
 
 /* ── SECTION LABEL ── */
-.slabel{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#8a8070;margin-bottom:10px;margin-top:4px;font-weight:500;}
-
-/* ── HOME: HERO STATS ── */
-.hero-stat-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:16px;}
-.hero-stat-main{background:var(--forest);border-radius:var(--r);padding:14px;}
-.hero-stat-num{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--cream2);line-height:1.2;margin-bottom:4px;}
-.hero-stat-label{font-size:11px;color:var(--cream2);opacity:0.6;line-height:1.4;}
-.hero-stat-small{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:14px 12px;}
-.hero-stat-small-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);line-height:1;margin-bottom:3px;}
-.hero-stat-small-label{font-size:10px;color:var(--muted);line-height:1.3;}
-
-/* ── PROGRESS BAR ── */
-.progress-wrap{margin-bottom:20px;}
-.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
-.progress-title{font-size:11px;font-weight:500;color:var(--forest);letter-spacing:0.08em;text-transform:uppercase;}
-.progress-pct{font-size:12px;color:var(--grass);font-weight:500;}
-.prog-bar-bg{background:var(--cream3);border-radius:99px;height:5px;}
-.prog-bar-fill{height:5px;border-radius:99px;background:var(--grass);transition:width 0.4s;}
+.slabel{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:12px;margin-top:4px;font-weight:500;}
 
 /* ── MODULE CARDS (home) ── */
-.mod-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;}
-.mod-card{background:var(--white);border-radius:var(--r);padding:16px 14px 36px;border:0.5px solid var(--card-border);transition:border-color 0.15s;cursor:pointer;position:relative;}
-.mod-card:hover{border-color:var(--sage);}
-.mod-icon-wrap{width:36px;height:36px;border-radius:9px;background:var(--cream);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
-.mod-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);margin-bottom:3px;line-height:1.3;}
-.mod-sub{font-size:11px;color:var(--muted);line-height:1.4;}
-.mod-arrow{position:absolute;bottom:12px;right:12px;width:20px;height:20px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;}
+.mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.mod-card{background:var(--white);border-radius:var(--r);padding:20px 18px;border:1px solid var(--cream2);transition:all 0.15s;cursor:pointer;}
+.mod-card:hover{border-color:var(--grass);transform:translateY(-1px);}
+.mod-icon{margin-bottom:8px;line-height:1;}
+.mod-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);margin-bottom:2px;}
+.mod-sub{font-size:11px;color:var(--muted);}
 
-/* ── ABOUT CARD ── */
-.about-card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:20px;}
-.about-founder-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#a8b8a8;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.about-founder-label::after{content:'';flex:1;height:0.5px;background:var(--card-border);}
-.about-quote{font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);line-height:1.65;margin-bottom:12px;}
-.about-quote span{font-style:normal;font-weight:500;border-bottom:1.5px solid var(--grass);}
-.about-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
-.about-meta{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:0.5px solid var(--cream);}
-.about-avatar{width:32px;height:32px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--cream2);flex-shrink:0;}
-.about-name{font-size:12px;font-weight:500;color:var(--forest);}
-.about-role{font-size:11px;color:#8a8070;}
-
-/* ── TIMELINE — horizontal scroll ── */
-.tl-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:20px;}
-.tl-scroll::-webkit-scrollbar{display:none;}
-.tl-step{flex-shrink:0;width:108px;background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:12px 10px;display:flex;flex-direction:column;gap:5px;}
-.tl-step.done{background:var(--approved-bg);border-color:#a8c4a8;}
-.tl-step.active{background:var(--forest);border-color:var(--forest);}
-.tl-step-top{display:flex;align-items:center;justify-content:space-between;}
-.tl-step-emoji{font-size:17px;line-height:1;}
-.tl-sdot{width:8px;height:8px;border-radius:50%;background:var(--cream3);flex-shrink:0;}
-.tl-sdot.done{background:var(--grass);}
-.tl-sdot.active{background:var(--cream2);}
-.tl-step-name{font-family:'Playfair Display',serif;font-size:11px;font-weight:500;color:var(--forest);line-height:1.3;}
-.tl-step-name.active{color:var(--cream2);}
-.tl-step-time{font-size:10px;color:var(--muted);}
-.tl-step-time.active{color:rgba(232,223,200,0.6);}
-.tl-step-pill{font-size:9px;padding:2px 7px;border-radius:99px;font-weight:500;align-self:flex-start;}
-.pill-done{background:var(--forest);color:var(--cream2);}
-.pill-active{background:rgba(255,255,255,0.15);color:var(--cream2);}
-.pill-pending{background:var(--cream);color:#8a8070;}
-
-/* ── N-400 2-col section grid ── */
-.cl-section-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.cl-section-grid .checklist-section{margin-bottom:0;}
-
-/* ── ASK MIA ── */
-#mia-btn{position:fixed;bottom:76px;right:16px;z-index:300;display:flex;align-items:center;gap:8px;background:var(--forest);border:none;border-radius:99px;padding:10px 18px 10px 10px;box-shadow:0 4px 16px rgba(26,61,43,0.35);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;}
-#mia-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,61,43,0.4);}
-.mia-btn-icon{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mia-btn-label{font-size:13px;font-weight:500;color:var(--cream2);white-space:nowrap;}
-
-#mia-sheet{position:fixed;inset:0;z-index:400;pointer-events:none;}
-#mia-overlay{position:absolute;inset:0;background:rgba(10,24,16,0);transition:background 0.3s;pointer-events:none;}
-#mia-panel{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-radius:20px 20px 0 0;padding:0;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);max-height:88vh;display:flex;flex-direction:column;pointer-events:none;}
-#mia-sheet.open{pointer-events:all;}
-#mia-sheet.open #mia-overlay{background:rgba(10,24,16,0.45);pointer-events:all;}
-#mia-sheet.open #mia-panel{transform:translateY(0);pointer-events:all;}
-
-.mia-handle{width:36px;height:4px;background:var(--card-border);border-radius:2px;margin:12px auto 0;}
-.mia-header{display:flex;align-items:center;gap:10px;padding:14px 16px 12px;border-bottom:0.5px solid var(--card-border);}
-.mia-header-icon{width:34px;height:34px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mia-header-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--forest);}
-.mia-header-sub{font-size:11px;color:var(--muted);}
-.mia-close{margin-left:auto;background:none;border:none;font-size:20px;color:var(--muted);line-height:1;padding:4px;cursor:pointer;}
-
-.mia-disclosure{background:var(--pending-bg);border-bottom:0.5px solid var(--pending-border);padding:10px 16px;display:flex;gap:8px;align-items:flex-start;}
-.mia-disclosure-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
-.mia-disclosure-text{font-size:11px;color:var(--pending-text);line-height:1.5;}
-
-.mia-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:200px;}
-.mia-msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55;}
-.mia-msg.mia{background:var(--cream);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
-.mia-msg.user{background:var(--forest);color:var(--cream2);align-self:flex-end;border-bottom-right-radius:4px;}
-.mia-typing{display:flex;gap:4px;align-items:center;padding:10px 13px;background:var(--cream);border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;}
-.mia-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:miaTyping 1.2s infinite;}
-.mia-typing span:nth-child(2){animation-delay:0.2s;}
-.mia-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes miaTyping{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
-
-.mia-input-row{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid var(--card-border);background:var(--white);}
-#mia-input{flex:1;background:var(--cream);border:0.5px solid var(--card-border);border-radius:99px;padding:9px 14px;font-size:13px;outline:none;font-family:inherit;color:var(--text);}
-#mia-input:focus{border-color:var(--sage);}
-#mia-send{width:36px;height:36px;border-radius:50%;background:var(--forest);border:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
-#mia-send:disabled{opacity:0.4;}
+/* ── TIMELINE ── */
+.tl-card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);overflow:hidden;margin-bottom:16px;}
+.tl-card-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--cream2);}
+.tl-card-title{font-size:14px;font-weight:500;}
+.tl-card-sub{font-size:12px;color:var(--muted);}
+.tl-row{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-bottom:1px solid var(--cream2);cursor:pointer;transition:background 0.12s;}
+.tl-row:last-child{border-bottom:none;}
+.tl-row:hover{background:var(--cream);}
+.tl-left{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:3px;}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.tl-dot.done{background:var(--grass);}
+.tl-dot.active{background:var(--forest);box-shadow:0 0 0 3px rgba(26,61,43,0.15);}
+.tl-dot.pending{background:var(--cream3);border:1px solid var(--cream3);}
+.tl-line{width:1px;height:100%;background:var(--cream2);flex:1;min-height:8px;}
+.tl-body{flex:1;}
+.tl-name{font-size:13px;font-weight:400;color:var(--text);}
+.tl-name.done{color:var(--muted);text-decoration:line-through;}
+.tl-name.active{font-weight:500;color:var(--forest);}
+.tl-meta{display:flex;gap:8px;margin-top:3px;align-items:center;}
+.tl-time{font-size:11px;color:var(--muted);}
+.status-pill{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;}
+.pill-done{background:var(--approved-bg);color:var(--approved-text);}
+.pill-active{background:var(--linen);color:var(--forest);}
+.pill-pending{background:var(--cream2);color:var(--muted);}
+.tl-emoji{font-size:18px;margin-top:1px;}
 
 /* ── FAQ ── */
-.faq-item{border-bottom:0.5px solid var(--card-border);}
-.faq-item:first-child{border-top:0.5px solid var(--card-border);}
-.faq-trigger{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;gap:16px;background:none;border:none;width:100%;text-align:left;}
-.faq-trigger-q{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);line-height:1.4;flex:1;}
-.faq-indicator{width:20px;height:20px;min-width:20px;border-radius:50%;border:0.5px solid var(--card-border);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s,border-color 0.15s;}
-.faq-indicator-cross{position:relative;width:8px;height:8px;}
-.faq-indicator-h{position:absolute;top:50%;left:0;width:8px;height:1px;background:var(--muted);transform:translateY(-50%);}
-.faq-indicator-v{position:absolute;left:50%;top:0;width:1px;height:8px;background:var(--muted);transform:translateX(-50%);transition:transform 0.2s,opacity 0.2s;}
-.faq-trigger.open .faq-indicator{background:var(--approved-bg);border-color:var(--sage);}
-.faq-trigger.open .faq-indicator-v{transform:translateX(-50%) scaleY(0);opacity:0;}
-.faq-body{padding:0 0 14px;font-size:13px;color:var(--muted);line-height:1.65;display:none;}
-.faq-body.open{display:block;}
+.faq-intro{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;font-style:italic;}
+.faq-item{border:1px solid var(--cream2);border-radius:var(--r);margin-bottom:8px;overflow:hidden;}
+.faq-q{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 14px;cursor:pointer;background:var(--white);gap:10px;}
+.faq-q:hover{background:var(--cream);}
+.faq-q-text{font-size:13px;font-weight:500;line-height:1.4;flex:1;}
+.faq-chev{font-size:11px;color:var(--muted);transition:transform 0.2s;flex-shrink:0;margin-top:2px;}
+.faq-chev.open{transform:rotate(180deg);}
+.faq-a{display:none;padding:0 14px 12px;font-size:13px;color:var(--muted);line-height:1.6;background:var(--white);border-top:1px solid var(--cream2);}
+.faq-a.open{display:block;}
 
 /* ── PRO TIPS ── */
-.tips-by{font-size:12px;color:var(--muted);margin-bottom:16px;}
-.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.tip-section{border:0.5px solid var(--card-border);border-radius:var(--r);overflow:hidden;background:var(--white);}
-.tip-section.warn{background:var(--pending-bg);border-color:var(--pending-border);}
-.tip-trigger{display:flex;align-items:flex-start;gap:8px;padding:11px 12px;cursor:pointer;background:none;border:none;width:100%;text-align:left;}
-.tip-trigger-dot{width:7px;height:7px;border-radius:50%;background:var(--grass);flex-shrink:0;margin-top:4px;}
-.tip-trigger-dot.warn{background:var(--pending-text);}
-.tip-trigger-label{font-family:'Playfair Display',serif;font-size:12px;font-weight:500;color:var(--forest);flex:1;line-height:1.35;}
-.tip-trigger-label.warn{color:var(--pending-text);}
-.tip-chevron{font-size:9px;color:#a8b8a8;transition:transform 0.2s;margin-top:3px;flex-shrink:0;}
-.tip-chevron.open{transform:rotate(180deg);}
-.tip-body{display:none;border-top:0.5px solid var(--cream);padding:8px 12px 10px;flex-direction:column;gap:6px;}
-.tip-body.open{display:flex;}
-.tip-body.warn{border-top-color:var(--pending-border);}
-.tip-row{font-size:11px;color:var(--muted);line-height:1.55;padding-left:8px;border-left:1.5px solid var(--card-border);}
-.tip-row.warn{color:var(--pending-text);border-left-color:var(--pending-border);}
+.tips-by{font-size:12px;color:var(--muted);font-style:italic;margin-bottom:16px;}
+.tip-section{margin-bottom:20px;}
+.tip-section-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);margin-bottom:8px;padding-left:10px;border-left:3px solid var(--grass);}
+.tip-item{display:flex;gap:10px;padding:10px 12px;background:var(--white);border-radius:var(--rs);border:1px solid var(--cream2);margin-bottom:6px;}
+.tip-dot{width:6px;height:6px;border-radius:50%;background:var(--grass);flex-shrink:0;margin-top:6px;}
+.tip-text{font-size:13px;line-height:1.55;color:var(--text);}
+.tip-warn{background:var(--pending-bg);border-color:var(--pending-border);}
+.tip-warn .tip-dot{background:var(--pending-text);}
 
 /* ── DOCUMENT CENTER ── */
-.doc-progress{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:14px 16px;margin-bottom:16px;}
+.doc-progress{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;margin-bottom:16px;}
 .doc-progress-top{display:flex;justify-content:space-between;margin-bottom:8px;}
-.doc-progress-label{font-size:13px;font-weight:500;color:var(--forest);}
+.doc-progress-label{font-size:13px;font-weight:500;}
 .doc-progress-count{font-size:13px;color:var(--muted);}
-.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.doc-card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:12px;}
-.doc-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.doc-emoji{font-size:20px;}
-.doc-name{font-size:12px;font-weight:500;color:var(--forest);margin-bottom:2px;}
-.doc-status{font-size:11px;color:var(--muted);}
-.doc-btn{font-size:10px;padding:3px 10px;border-radius:99px;border:0.5px solid var(--card-border);background:var(--cream);color:var(--text);white-space:nowrap;cursor:pointer;font-family:inherit;}
-.doc-btn.uploaded{background:var(--approved-bg);border-color:var(--grass);color:var(--forest);font-weight:500;}
+.prog-bar-bg{background:var(--cream2);border-radius:99px;height:6px;}
+.prog-bar-fill{height:6px;border-radius:99px;background:var(--grass);transition:width 0.4s;}
+.doc-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);margin-bottom:8px;}
+.doc-emoji{font-size:20px;flex-shrink:0;}
+.doc-info{flex:1;}
+.doc-name{font-size:13px;font-weight:500;}
+.doc-status{font-size:11px;color:var(--muted);margin-top:2px;}
+.doc-btn{font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--text);white-space:nowrap;}
+.doc-btn.uploaded{background:var(--approved-bg);border-color:var(--grass);color:var(--forest);}
 
 /* ── N-400 GUIDE ── */
-.n400-link{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--forest);border-radius:var(--r);color:var(--white);text-decoration:none;margin-bottom:16px;}
-.n400-link-text{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--cream2);}
-.n400-link-sub{font-size:11px;color:rgba(232,223,200,0.6);margin-top:3px;}
-.n400-link-arrow{font-size:16px;margin-left:auto;color:var(--cream2);opacity:0.7;}
-.checklist-section{margin-bottom:8px;border:0.5px solid var(--card-border);border-radius:var(--r);overflow:hidden;}
-.cl-section-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--white);cursor:pointer;}
-.cl-section-header:hover{background:var(--cream);}
-.cl-section-title{font-size:13px;font-weight:500;color:var(--forest);}
+.n400-link{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--forest);border-radius:var(--r);color:var(--white);text-decoration:none;margin-bottom:16px;}
+.n400-link-text{font-size:13px;font-weight:500;}
+.n400-link-sub{font-size:11px;color:var(--sage);margin-top:2px;}
+.n400-link-arrow{font-size:18px;margin-left:auto;}
+.checklist-section{margin-bottom:16px;border:1px solid var(--cream2);border-radius:var(--r);overflow:hidden;}
+.cl-section-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--cream);cursor:pointer;}
+.cl-section-header:hover{background:var(--cream2);}
+.cl-section-title{font-size:13px;font-weight:500;}
 .cl-badge{font-size:10px;padding:2px 8px;border-radius:99px;}
 .cl-badge-done{background:var(--approved-bg);color:var(--forest);}
 .cl-badge-partial{background:var(--pending-bg);color:var(--pending-text);}
 .cl-badge-empty{background:var(--cream2);color:var(--muted);}
 .cl-body{display:none;}
 .cl-body.open{display:block;}
-.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;cursor:pointer;border-top:0.5px solid var(--card-border);}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;cursor:pointer;border-top:1px solid var(--cream2);}
 .cl-item:hover{background:var(--cream);}
 .cl-item.checked .cl-text{color:var(--muted);text-decoration:line-through;}
 .cl-cb{width:16px;height:16px;min-width:16px;border-radius:4px;border:1px solid var(--cream3);background:var(--white);display:flex;align-items:center;justify-content:center;margin-top:2px;}
@@ -265,28 +173,24 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 
 /* ── INTERVIEW COACH ── */
 .coach-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
-.widget-frame-wrap{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);overflow:hidden;margin-bottom:16px;}
-.widget-frame-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#8a8070;padding:10px 14px;border-bottom:0.5px solid var(--card-border);background:var(--cream);}
+.widget-frame-wrap{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);overflow:hidden;margin-bottom:16px;}
+.widget-frame-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--cream2);background:var(--cream);}
 .widget-frame{width:100%;border:none;display:block;}
 
 /* ── LEGAL RESOURCES ── */
 .legal-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
 
-/* ── PAGE INTROS ── */
-.page-intro{font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;}
-.page-intro strong{color:var(--forest);}
-
 /* ── INSTALL BANNER ── */
-#install-banner{display:none;position:fixed;bottom:68px;left:12px;right:12px;background:var(--forest3);color:var(--white);padding:14px 16px;border-radius:var(--r);z-index:200;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+#install-banner{display:none;position:fixed;bottom:60px;left:12px;right:12px;background:var(--forest3);color:var(--white);padding:14px 16px;border-radius:var(--r);z-index:200;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
 #install-banner.on{display:flex;}
-.ib-text strong{display:block;font-size:13px;margin-bottom:2px;color:var(--cream2);}
+.ib-text strong{display:block;font-size:13px;margin-bottom:2px;}
 .ib-text span{font-size:11px;color:var(--sage);}
 .ib-btn{background:var(--grass);color:var(--white);border:none;padding:8px 16px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap;}
 .ib-x{background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;line-height:1;padding:0 2px;}
 
 /* ── BOTTOM NAV ── */
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.5px solid var(--card-border);display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:100;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--cream3);}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--sage);}
 .nav-ico{line-height:1;color:inherit;}
 .nav-ico svg{display:block;color:inherit;}
 .nav-lbl{font-size:9px;color:inherit;letter-spacing:0.02em;}
@@ -294,7 +198,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
 .nav-item.active .nav-lbl{font-weight:500;}
 
 /* ── UTIL ── */
-.card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:16px;}
+.card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;}
 .mt8{margin-top:8px;}
 .mt16{margin-top:16px;}
 </style>
@@ -308,12 +212,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
     <div class="header-top">
       <div class="logo-wrap">
         <div class="logo-mark">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="10" fill="#1a3d2b"/>
-            <path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/>
-            <circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/>
-            <circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/>
-          </svg>
+          <div class="logo-blade"></div>
+          <div class="logo-blade"></div>
+          <div class="logo-blade"></div>
+          <div class="logo-blade"></div>
         </div>
         <div class="logo-text">
           <span class="logo-wordmark">Landed</span>
@@ -321,35 +223,35 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
         </div>
       </div>
     </div>
-    <p class="tagline">You've arrived. Now, let's stay.</p>
+    <p class="tagline">Your path from green card to U.S. citizenship</p>
   </div>
   <div class="nav-tabs" id="tabs">
     <button class="tab active" data-page="home">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.2"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.25"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
       Home
     </button>
     <button class="tab" data-page="timeline">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       Timeline
     </button>
     <button class="tab" data-page="documents">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
       Documents
     </button>
     <button class="tab" data-page="n400">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg>
       N-400
     </button>
     <button class="tab" data-page="interview">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       Interview
     </button>
     <button class="tab" data-page="tips">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg>
       Pro Tips
     </button>
     <button class="tab" data-page="legal">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
       Legal Help
     </button>
   </div>
@@ -358,142 +260,82 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
 
-  <div style="margin-top:16px;">
-    <div class="hero-stat-row">
-      <div class="hero-stat-main">
-        <div class="hero-stat-num">Helps you prepare</div>
-        <div class="hero-stat-label">for every stage of your naturalization journey</div>
-      </div>
-      <div class="hero-stat-small">
-        <div class="hero-stat-small-num" id="snap-docs">0/5</div>
-        <div class="hero-stat-small-label">Documents obtained</div>
-      </div>
-      <div class="hero-stat-small">
-        <div class="hero-stat-small-num" id="snap-days">—</div>
-        <div class="hero-stat-small-label">Days since filing</div>
-      </div>
+  <!-- Top row: welcome + stats side by side -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;margin-bottom:24px;">
+    <div style="background:var(--forest);border-radius:var(--r);padding:20px;grid-column:1/2;">
+      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--cream2);line-height:1.25;margin-bottom:6px;">Helps you prepare</div>
+      <div style="font-size:12px;color:var(--sage);line-height:1.5;">for every stage of your naturalization journey</div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:20px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;" id="snap-docs">0/5</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">Documents obtained</div>
+    </div>
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:20px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;" id="snap-days">—</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">Days since filing</div>
     </div>
   </div>
 
-  <div class="progress-wrap">
-    <div class="progress-top">
-      <span class="progress-title">Your progress</span>
-      <span class="progress-pct" id="home-prog-pct">0% complete</span>
-    </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="home-prog-fill" style="width:0%"></div></div>
+  <!-- Progress bar -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">Your progress</span>
+    <span style="font-size:12px;color:var(--grass);font-weight:500;" id="progress-pct">0% complete</span>
+  </div>
+  <div style="background:var(--cream2);border-radius:99px;height:5px;margin-bottom:28px;">
+    <div id="progress-bar" style="height:5px;border-radius:99px;background:var(--grass);width:0%;transition:width 0.4s;"></div>
   </div>
 
   <div class="slabel">What's included</div>
   <div class="mod-grid">
-    <div class="mod-card" onclick="switchPage('timeline')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/><circle cx="12" cy="5.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="12" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="18.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-      <div class="mod-title">My Timeline</div>
-      <div class="mod-sub">Track every milestone</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('documents')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="#1a3d2b" fill-opacity="0.1"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><line x1="9" y1="10" x2="15" y2="10" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><path d="M12 14L14 16.5L17 13" stroke="#4a9e6b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="mod-title">Document Center</div>
-      <div class="mod-sub">Organize your files</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('n400')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M8 4V2.5M16 4V2.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="#1a3d2b" stroke-width="1.2" opacity="0.4"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="#1a3d2b" letter-spacing="0.3">N-400</text></svg></div>
-      <div class="mod-title">N-400 Guide</div>
-      <div class="mod-sub">Application steps</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('interview')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.1"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="#1a3d2b" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="#4a9e6b" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-      <div class="mod-title">Interview Coach</div>
-      <div class="mod-sub">Civics & English prep</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('tips')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="#1a3d2b" stroke-width="1.4" stroke-linejoin="round" fill="#1a3d2b" fill-opacity="0.1"/><circle cx="12" cy="11.5" r="2" fill="#4a9e6b"/></svg></div>
-      <div class="mod-title">Pro Tips</div>
-      <div class="mod-sub">Avoid common mistakes</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('legal')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#1a3d2b"/></svg></div>
-      <div class="mod-title">Legal Resources</div>
-      <div class="mod-sub">Find legal help</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
+    <div class="mod-card" onclick="switchPage('timeline')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/><circle cx="12" cy="5.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="12" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="18.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="mod-title">My Timeline</div><div class="mod-sub">Track every milestone</div></div>
+    <div class="mod-card" onclick="switchPage('documents')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="#1a3d2b" fill-opacity="0.1"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><line x1="9" y1="10" x2="15" y2="10" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><line x1="9" y1="13" x2="12" y2="13" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><path d="M14 16L15.5 17.5L18 14.5" stroke="#4a9e6b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="mod-title">Document Center</div><div class="mod-sub">Organize your files</div></div>
+    <div class="mod-card" onclick="switchPage('n400')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M8 4V2.5M16 4V2.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="#1a3d2b" stroke-width="1.2" opacity="0.4"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="#1a3d2b" letter-spacing="0.3">N-400</text></svg></div><div class="mod-title">N-400 Guide</div><div class="mod-sub">Application steps</div></div>
+    <div class="mod-card" onclick="switchPage('interview')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.1"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="#1a3d2b" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="#4a9e6b" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="mod-title">Interview Coach</div><div class="mod-sub">Civics & English prep</div></div>
+    <div class="mod-card" onclick="switchPage('tips')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="#1a3d2b" stroke-width="1.4" stroke-linejoin="round" fill="#1a3d2b" fill-opacity="0.1"/><circle cx="12" cy="11.5" r="2" fill="#4a9e6b"/></svg></div><div class="mod-title">Pro Tips</div><div class="mod-sub">Avoid common mistakes</div></div>
+    <div class="mod-card" onclick="switchPage('legal')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#1a3d2b"/></svg></div><div class="mod-title">Legal Resources</div><div class="mod-sub">Find legal help</div></div>
   </div>
 
   <div class="slabel">About this kit</div>
-  <div class="about-card">
-    <div class="about-founder-label">From the founder</div>
-    <p class="about-quote">"The process is confusing, expensive, and <span>designed without you in mind.</span> This kit changes that."</p>
-    <p class="about-body">Landed was built for Lawful Permanent Residents navigating the path to U.S. citizenship — by someone who personally went through every step. It gives you practical checklists, guides, and tools to stay organized and move through naturalization with confidence.</p>
-    <div class="about-meta">
-      <div class="about-avatar">L</div>
-      <div>
-        <div class="about-name">Landed Team</div>
-        <div class="about-role">Naturalized U.S. citizens</div>
-      </div>
-    </div>
-  </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
+  <div class="card" style="font-size:13px;color:var(--muted);line-height:1.7;">
+    This kit is designed for Lawful Permanent Residents navigating the transition to U.S. citizenship. <strong style="color:var(--text);">Created by an immigrant who personally went through the process</strong>, it provides practical guidance, checklists, and trackers to help you stay organized and move confidently through your naturalization journey.
   </div>
 </div>
 
 <!-- ══ TIMELINE ══ -->
 <div class="page" id="page-timeline">
-  <p class="page-intro" style="margin-top:16px;">Based on FY 2025 processing times, the full journey takes <strong>12–24 months</strong> on average. Swipe to see each step.</p>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
 
-  <div class="slabel">Your naturalization journey</div>
-  <div class="tl-scroll" id="tl-scroll"></div>
+  <div class="slabel">Your progress</div>
+  <div class="tl-card" id="tl-card"></div>
 
-  <div class="slabel mt16">Journey by the numbers</div>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;">Real questions from people who've been exactly where you are.</p>
+  <div class="slabel mt16">Journey by the numbers — FAQs</div>
+  <p class="faq-intro">Real questions from people who've been exactly where you are — asked by immigrants, answered for immigrants.</p>
   <div id="faq-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
 </div>
 
 <!-- ══ DOCUMENTS ══ -->
 <div class="page" id="page-documents">
   <div class="doc-progress">
-    <div class="doc-progress-top">
-      <span class="doc-progress-label">Documents obtained</span>
-      <span class="doc-progress-count" id="doc-count">0 / 5</span>
-    </div>
+    <div class="doc-progress-top"><span class="doc-progress-label">Documents obtained</span><span class="doc-progress-count" id="doc-count">0 / 5</span></div>
     <div class="prog-bar-bg"><div class="prog-bar-fill" id="doc-prog-fill" style="width:0%"></div></div>
   </div>
   <div class="slabel">Citizenship pathway documents</div>
-  <div class="doc-grid" id="doc-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
+  <div id="doc-list"></div>
 </div>
 
 <!-- ══ N-400 ══ -->
 <div class="page" id="page-n400">
   <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank">
-    <div>
-      <div class="n400-link-text">Download Form N-400 + Instructions</div>
-      <div class="n400-link-sub">Official USCIS form and filing guide</div>
-    </div>
+    <div><div class="n400-link-text">Download Form N-400 + Instructions</div><div class="n400-link-sub">Official USCIS form and filing guide</div></div>
     <div class="n400-link-arrow">↗</div>
   </a>
 
   <div class="slabel">Pre-submit checklist</div>
   <div class="cl-prog-wrap">
-    <div class="doc-progress-top">
-      <span style="font-size:13px;font-weight:500;color:var(--forest);">Checklist progress</span>
-      <span class="doc-progress-count" id="cl-count">0 / 47</span>
-    </div>
+    <div class="doc-progress-top"><span style="font-size:13px;font-weight:500;">Checklist progress</span><span class="doc-progress-count" id="cl-count">0 / 47</span></div>
     <div class="prog-bar-bg"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%"></div></div>
   </div>
-  <div class="cl-section-grid" id="cl-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
+  <div id="cl-list"></div>
 </div>
 
 <!-- ══ INTERVIEW ══ -->
@@ -509,18 +351,12 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
     <div class="widget-frame-label">English practice test</div>
     <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/practice-test-english.html" height="400" loading="lazy" title="English practice test"></iframe>
   </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
 </div>
 
 <!-- ══ PRO TIPS ══ -->
 <div class="page" id="page-tips">
   <p class="tips-by">By immigrants. For immigrants. Together.</p>
-  <div class="tips-grid" id="tips-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
+  <div id="tips-list"></div>
 </div>
 
 <!-- ══ LEGAL ══ -->
@@ -529,55 +365,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
   <div class="widget-frame-wrap">
     <div class="widget-frame-label">Find legal help</div>
     <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/find-legal-help-search.html" height="600" loading="lazy" title="Find legal help"></iframe>
-  </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ ASK MIA ══ -->
-<button id="mia-btn" onclick="openMia()">
-  <div class="mia-btn-icon">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <circle cx="10" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/>
-      <path d="M4 20C4 16.69 6.69 14 10 14" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-      <path d="M17 11L20 14" stroke="#4a9e6b" stroke-width="1.6" stroke-linecap="round"/>
-      <circle cx="20.5" cy="14.5" r="2" fill="#4a9e6b"/>
-    </svg>
-  </div>
-  <span class="mia-btn-label">Ask Mia</span>
-</button>
-
-<div id="mia-sheet">
-  <div id="mia-overlay" onclick="closeMia()"></div>
-  <div id="mia-panel">
-    <div class="mia-handle"></div>
-    <div class="mia-header">
-      <div class="mia-header-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="10" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/>
-          <path d="M4 20C4 16.69 6.69 14 10 14" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-          <path d="M17 11L20 14" stroke="#4a9e6b" stroke-width="1.6" stroke-linecap="round"/>
-          <circle cx="20.5" cy="14.5" r="2" fill="#4a9e6b"/>
-        </svg>
-      </div>
-      <div>
-        <div class="mia-header-name">Mia</div>
-        <div class="mia-header-sub">Immigration guide · Always here</div>
-      </div>
-      <button class="mia-close" onclick="closeMia()">×</button>
-    </div>
-    <div class="mia-disclosure">
-      <span class="mia-disclosure-icon">ℹ️</span>
-      <span class="mia-disclosure-text">Mia is an AI assistant that helps with general questions about immigration documents and the naturalization process. Her responses are for informational purposes only and do not constitute legal advice. For questions about your specific legal situation, please consult a licensed immigration attorney.</span>
-    </div>
-    <div class="mia-messages" id="mia-messages"></div>
-    <div class="mia-input-row">
-      <input id="mia-input" type="text" placeholder="Ask Mia anything…" autocomplete="off" onkeydown="if(event.key==='Enter')sendMia()"/>
-      <button id="mia-send" onclick="sendMia()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
   </div>
 </div>
 
@@ -613,6 +400,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.
 </nav>
 
 <script>
+// ── DATA ──────────────────────────────────────────────
 const STEPS = [
   {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', status:'done'},
   {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', status:'done'},
@@ -764,6 +552,7 @@ const TIPS = [
   ]},
 ];
 
+// ── STATE ─────────────────────────────────────────────
 let clState = {};
 let docState = {};
 let filingDate = null;
@@ -784,132 +573,67 @@ function saveState() {
   try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate})); } catch(e) {}
 }
 
-
-let miaHistory = [];
-
-function openMia() {
-  const sheet = document.getElementById('mia-sheet');
-  sheet.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (miaHistory.length === 0) {
-    appendMiaMsg('mia', "Hi! I'm Mia 👋 I can help with questions about documents, timelines, the N-400, the interview — anything about the naturalization process. What's on your mind?");
-    miaHistory.push({role:'user',content:'[session start]'});
-  }
-  setTimeout(() => document.getElementById('mia-input').focus(), 350);
-}
-
-function closeMia() {
-  document.getElementById('mia-sheet').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function appendMiaMsg(role, text) {
-  const el = document.createElement('div');
-  el.className = `mia-msg ${role}`;
-  el.textContent = text;
-  const msgs = document.getElementById('mia-messages');
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function showMiaTyping() {
-  const el = document.createElement('div');
-  el.className = 'mia-typing';
-  el.id = 'mia-typing-indicator';
-  el.innerHTML = '<span></span><span></span><span></span>';
-  const msgs = document.getElementById('mia-messages');
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function hideMiaTyping() {
-  const el = document.getElementById('mia-typing-indicator');
-  if (el) el.remove();
-}
-
-async function sendMia() {
-  const input = document.getElementById('mia-input');
-  const text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  document.getElementById('mia-send').disabled = true;
-  appendMiaMsg('user', text);
-  miaHistory.push({role:'user', content: text});
-  showMiaTyping();
-  try {
-    const res = await fetch('https://landed-mia.ksjbrown.workers.dev', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are Mia, a document assistant for immigrants with a U.S. green card going through the naturalization process. You help users understand USCIS forms, explain what documents they need, and flag potential issues. You do not give legal advice. For any question about legal strategy, eligibility edge cases, or representation, recommend consulting a licensed immigration attorney. Your responses are for informational purposes only and do not constitute legal advice. For questions about a user's specific legal situation, advise them to consult a licensed immigration attorney. You can only help users who already have a U.S. green card and are looking to naturalize. If someone indicates they do not have a green card, politely let them know you can only assist green card holders pursuing naturalization. You are fluent in the world's 25 most commonly spoken languages. Always respond in the same language the user writes to you in. Keep responses clear, warm, and concise — under 150 words unless the question truly requires more detail. Use plain language, never legal jargon.`,
-        messages: miaHistory.filter(m => m.role !== 'user' || m.content !== '[session start]').slice(-10)
-      })
-    });
-    const data = await res.json();
-    hideMiaTyping();
-    const reply = data.content?.[0]?.text || "I'm sorry, I couldn't process that. Please try again.";
-    appendMiaMsg('mia', reply);
-    miaHistory.push({role:'assistant', content: reply});
-  } catch(e) {
-    hideMiaTyping();
-    appendMiaMsg('mia', "I'm having trouble connecting right now. Please try again in a moment.");
-  }
-  document.getElementById('mia-send').disabled = false;
-  document.getElementById('mia-input').focus();
-}
-
+// ── RENDER TIMELINE ───────────────────────────────────
 function renderTimeline() {
-  const el = document.getElementById('tl-scroll');
-  if (!el) return;
-  el.innerHTML = STEPS.map(s => `
-    <div class="tl-step ${s.status}">
-      <div class="tl-step-top">
-        <span class="tl-step-emoji">${s.emoji}</span>
-        <span class="tl-sdot ${s.status}"></span>
-      </div>
-      <div class="tl-step-name ${s.status==='active'?'active':''}">${s.name}</div>
-      <div class="tl-step-time ${s.status==='active'?'active':''}">${s.time}</div>
-      <div class="tl-step-pill ${s.status==='done'?'pill-done':s.status==='active'?'pill-active':'pill-pending'}">${s.status==='done'?'Complete':s.status==='active'?'In progress':'Upcoming'}</div>
+  const card = document.getElementById('tl-card');
+  card.innerHTML = `
+    <div class="tl-card-header">
+      <span class="tl-card-title">Naturalization process</span>
+      <span class="tl-card-sub">Est. 12–24 months total</span>
     </div>
-  `).join('');
+    ${STEPS.map((s,i) => `
+      <div class="tl-row">
+        <div class="tl-left">
+          <div class="tl-dot ${s.status}"></div>
+          ${i < STEPS.length-1 ? '<div class="tl-line"></div>' : ''}
+        </div>
+        <div style="width:28px;text-align:center;font-size:17px;padding-top:1px;">${s.emoji}</div>
+        <div class="tl-body">
+          <div class="tl-name ${s.status}">${s.name}</div>
+          <div class="tl-meta">
+            <span class="tl-time">${s.time}</span>
+            <span class="status-pill ${s.status==='done'?'pill-done':s.status==='active'?'pill-active':'pill-pending'}">${s.status==='done'?'Complete':s.status==='active'?'In progress':'Upcoming'}</span>
+          </div>
+        </div>
+      </div>
+    `).join('')}
+  `;
 }
 
+// ── RENDER FAQ ────────────────────────────────────────
 function renderFAQ() {
   const el = document.getElementById('faq-list');
   el.innerHTML = FAQS.map((f,i) => `
     <div class="faq-item">
-      <button class="faq-trigger" onclick="toggleFAQ(${i})">
-        <span class="faq-trigger-q">${f.q}</span>
-        <span class="faq-indicator"><span class="faq-indicator-cross"><span class="faq-indicator-h"></span><span class="faq-indicator-v"></span></span></span>
-      </button>
-      <div class="faq-body" id="fans-${i}">${f.a}</div>
+      <div class="faq-q" onclick="toggleFAQ(${i})">
+        <span class="faq-q-text">${f.q}</span>
+        <span class="faq-chev" id="fchev-${i}">▼</span>
+      </div>
+      <div class="faq-a" id="fans-${i}">${f.a}</div>
     </div>
   `).join('');
 }
 
 function toggleFAQ(i) {
-  const body = document.getElementById(`fans-${i}`);
-  const trigger = body.previousElementSibling;
-  const isOpen = body.classList.contains('open');
-  document.querySelectorAll('.faq-body.open').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.faq-trigger.open').forEach(t => t.classList.remove('open'));
-  if (!isOpen) { body.classList.add('open'); trigger.classList.add('open'); }
+  const a = document.getElementById(`fans-${i}`);
+  const c = document.getElementById(`fchev-${i}`);
+  a.classList.toggle('open');
+  c.classList.toggle('open');
 }
 
+// ── RENDER DOCUMENTS ─────────────────────────────────
 function renderDocs() {
   const el = document.getElementById('doc-list');
   el.innerHTML = DOCS.map(d => `
-    <div class="doc-card">
-      <div class="doc-card-top">
-        <div class="doc-emoji">${d.emoji}</div>
-        <button class="doc-btn ${docState[d.key]?'uploaded':''}" onclick="toggleDoc('${d.key}')">
-          ${docState[d.key] ? '✓ Filed' : 'Mark filed'}
-        </button>
+    <div class="doc-item">
+      <div class="doc-emoji">${d.emoji}</div>
+      <div class="doc-info">
+        <div class="doc-name">${d.name}</div>
+        <div class="doc-status">${docState[d.key] ? 'Uploaded' : 'Not uploaded'}</div>
       </div>
-      <div class="doc-name">${d.name}</div>
-      <div class="doc-status">${docState[d.key] ? 'Filed' : 'Not yet filed'}</div>
+      <button class="doc-btn ${docState[d.key]?'uploaded':''}" onclick="toggleDoc('${d.key}')">
+        ${docState[d.key] ? '✓ Filed' : 'Mark filed'}
+      </button>
     </div>
   `).join('');
   updateDocProgress();
@@ -920,7 +644,6 @@ function toggleDoc(key) {
   saveState();
   renderDocs();
   updateSnapDocs();
-  updateHomeProgress();
 }
 
 function updateDocProgress() {
@@ -935,17 +658,7 @@ function updateSnapDocs() {
   document.getElementById('snap-docs').textContent = `${done}/${DOCS.length}`;
 }
 
-function updateHomeProgress() {
-  let clDone=0, clTotal=0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clTotal++; if(clState[`${si}-${ii}`]) clDone++; }));
-  const docDone = Object.values(docState).filter(Boolean).length;
-  const total = clTotal + DOCS.length;
-  const done = clDone + docDone;
-  const pct = total > 0 ? Math.round(done/total*100) : 0;
-  document.getElementById('home-prog-fill').style.width = `${pct}%`;
-  document.getElementById('home-prog-pct').textContent = `${pct}% complete`;
-}
-
+// ── RENDER CHECKLIST ─────────────────────────────────
 function renderChecklist() {
   let total = 0;
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { if(!clState[`${si}-${ii}`]) clState[`${si}-${ii}`]=false; total++; }));
@@ -960,7 +673,7 @@ function renderChecklist() {
           <span class="cl-section-title">${s.section}</span>
           <span class="cl-badge ${badgeClass}" id="clbadge-${si}">${badgeText}</span>
         </div>
-        <div class="cl-body" id="clbody-${si}">
+        <div class="cl-body ${si===0?'open':''}" id="clbody-${si}">
           ${s.items.map((item,ii) => `
             <div class="cl-item ${clState[`${si}-${ii}`]?'checked':''}" id="clitem-${si}-${ii}" onclick="toggleCL(${si},${ii})">
               <div class="cl-cb"><div class="cl-check"></div></div>
@@ -978,7 +691,8 @@ function renderChecklist() {
 }
 
 function toggleCLSection(si) {
-  document.getElementById(`clbody-${si}`).classList.toggle('open');
+  const b = document.getElementById(`clbody-${si}`);
+  b.classList.toggle('open');
 }
 
 function toggleCL(si,ii) {
@@ -989,7 +703,6 @@ function toggleCL(si,ii) {
   el.classList.toggle('checked', clState[key]);
   updateCLBadge(si);
   updateCLProgress();
-  updateHomeProgress();
 }
 
 function updateCLBadge(si) {
@@ -1007,30 +720,23 @@ function updateCLProgress() {
   document.getElementById('cl-prog-fill').style.width = `${Math.round(done/total*100)}%`;
 }
 
+// ── RENDER TIPS ───────────────────────────────────────
 function renderTips() {
   const el = document.getElementById('tips-list');
-  el.innerHTML = TIPS.map((sec, i) => `
-    <div class="tip-section ${sec.warn?'warn':''}">
-      <button class="tip-trigger" onclick="toggleTip(${i})">
-        <span class="tip-trigger-dot ${sec.warn?'warn':''}"></span>
-        <span class="tip-trigger-label ${sec.warn?'warn':''}">${sec.section}</span>
-        <span class="tip-chevron" id="tipchev-${i}">▼</span>
-      </button>
-      <div class="tip-body ${sec.warn?'warn':''}" id="tipbody-${i}">
-        ${sec.items.map(t => `<div class="tip-row ${sec.warn?'warn':''}">${t}</div>`).join('')}
-      </div>
+  el.innerHTML = TIPS.map(sec => `
+    <div class="tip-section">
+      <div class="tip-section-title">${sec.section}</div>
+      ${sec.items.map(t => `
+        <div class="tip-item ${sec.warn?'tip-warn':''}">
+          <div class="tip-dot"></div>
+          <div class="tip-text">${t}</div>
+        </div>
+      `).join('')}
     </div>
   `).join('');
 }
 
-function toggleTip(i) {
-  const body = document.getElementById(`tipbody-${i}`);
-  const chev = document.getElementById(`tipchev-${i}`);
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  chev.classList.toggle('open', !isOpen);
-}
-
+// ── SNAP: DAYS SINCE FILING ───────────────────────────
 function updateSnapDays() {
   const el = document.getElementById('snap-days');
   if (filingDate) {
@@ -1051,6 +757,7 @@ function updateSnapDays() {
   }
 }
 
+// ── PAGE SWITCHING ────────────────────────────────────
 function switchPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab, .nav-item').forEach(t => t.classList.remove('active'));
@@ -1063,6 +770,7 @@ document.querySelectorAll('[data-page]').forEach(btn => {
   btn.addEventListener('click', () => switchPage(btn.dataset.page));
 });
 
+// ── INSTALL ───────────────────────────────────────────
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
@@ -1077,13 +785,16 @@ document.getElementById('ib-dismiss').addEventListener('click', () => {
   document.getElementById('install-banner').classList.remove('on');
 });
 
+// ── OFFLINE ───────────────────────────────────────────
 window.addEventListener('online', () => document.getElementById('offline').classList.remove('on'));
 window.addEventListener('offline', () => document.getElementById('offline').classList.add('on'));
 
+// ── SERVICE WORKER ────────────────────────────────────
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+// ── INIT ──────────────────────────────────────────────
 loadState();
 renderTimeline();
 renderFAQ();
@@ -1092,7 +803,6 @@ renderChecklist();
 renderTips();
 updateSnapDocs();
 updateSnapDays();
-updateHomeProgress();
 </script>
 </body>
 </html>
