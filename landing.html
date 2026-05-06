@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#1a3d2b"/>
+<title>Landed — Your Path Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<!-- Clerk -->
+<script async crossorigin="anonymous" data-clerk-publishable-key="YOUR_CLERK_PUBLISHABLE_KEY" src="https://YOUR_CLERK_FRONTEND_API.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --forest:#1a3d2b;--grass:#4a9e6b;--grass2:#5db87e;
+  --cream:#f0ebe0;--cream2:#e8dfc8;--cream3:#d4c9b0;
+  --muted:#4a6650;--white:#ffffff;--card-border:#ddd6c4;
+}
+html,body{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── NAV ── */
+nav{background:var(--forest);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo svg{display:block;}
+.nav-wordmark{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--cream2);letter-spacing:-0.3px;}
+.nav-btn{font-size:13px;font-weight:500;color:rgba(232,223,200,0.7);background:none;border:none;cursor:pointer;font-family:inherit;}
+.nav-btn:hover{color:var(--cream2);}
+
+/* ── HERO ── */
+.hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px 80px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:#e2f0e6;border-radius:99px;padding:5px 14px;margin-bottom:20px;}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--grass);}
+.hero-eyebrow-text{font-size:12px;font-weight:500;color:var(--forest);letter-spacing:0.5px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,52px);font-weight:500;color:var(--forest);line-height:1.15;margin-bottom:16px;max-width:560px;}
+.hero-title em{font-style:normal;color:var(--grass);}
+.hero-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:420px;margin-bottom:36px;}
+.hero-price{display:flex;align-items:baseline;gap:6px;justify-content:center;margin-bottom:28px;}
+.hero-price-num{font-family:'Playfair Display',serif;font-size:42px;font-weight:500;color:var(--forest);}
+.hero-price-note{font-size:14px;color:var(--muted);}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--forest);color:var(--cream2);padding:15px 32px;border-radius:99px;font-size:15px;font-weight:500;border:none;cursor:pointer;font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 14px rgba(26,61,43,0.25);}
+.cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,61,43,0.35);}
+.hero-reassure{font-size:12px;color:var(--muted);margin-top:14px;}
+
+/* ── FOOTER ── */
+footer{padding:20px 24px;text-align:center;border-top:0.5px solid var(--card-border);}
+footer p{font-size:11px;color:#a8b8a8;line-height:1.6;}
+
+/* ── AUTH MODAL ── */
+#auth-modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,24,16,0.5);align-items:center;justify-content:center;}
+#auth-modal.open{display:flex;}
+#auth-box{background:var(--white);border-radius:18px;padding:28px 24px;width:100%;max-width:380px;margin:16px;}
+#clerk-mount{min-height:200px;}
+
+/* ── LOADING ── */
+#loading{display:none;position:fixed;inset:0;background:var(--forest);z-index:600;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+#loading.on{display:flex;}
+.loading-mark svg{display:block;}
+.loading-text{font-family:'Playfair Display',serif;font-size:18px;color:var(--cream2);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="10" fill="#2d6647"/>
+      <path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/>
+      <circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/>
+      <circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/>
+    </svg>
+    <span class="nav-wordmark">Landed</span>
+  </div>
+  <button class="nav-btn" id="sign-in-link">Sign in</button>
+</nav>
+
+<main class="hero">
+  <div class="hero-eyebrow">
+    <div class="hero-eyebrow-dot"></div>
+    <span class="hero-eyebrow-text">For green card holders</span>
+  </div>
+  <h1 class="hero-title">Your path to <em>citizenship</em> starts here.</h1>
+  <p class="hero-sub">The only kit built by immigrants, for immigrants. Timeline, documents, N-400 guide, interview prep — everything in one place.</p>
+  <div class="hero-price">
+    <span class="hero-price-num">$0.99</span>
+    <span class="hero-price-note">one-time · yours forever</span>
+  </div>
+  <button class="cta-btn" id="get-started-btn">
+    Get Landed
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <p class="hero-reassure">Secure checkout · Instant access</p>
+</main>
+
+<footer>
+  <p>Landed is an educational tool and does not provide legal advice. Not a substitute for a licensed immigration attorney.<br>© 2025 Landed. All rights reserved.</p>
+</footer>
+
+<!-- Auth modal -->
+<div id="auth-modal">
+  <div id="auth-box">
+    <div id="clerk-mount"></div>
+  </div>
+</div>
+
+<!-- Loading screen -->
+<div id="loading">
+  <div class="loading-mark">
+    <svg width="56" height="56" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="10" fill="#2d6647"/>
+      <path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/>
+      <circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/>
+      <circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/>
+    </svg>
+  </div>
+  <p class="loading-text">Getting things ready…</p>
+</div>
+
+<script>
+const WORKER_URL = 'https://landed-mia.ksjbrown.workers.dev';
+
+window.addEventListener('load', async () => {
+  await window.__clerk_loaded;
+  const clerk = window.Clerk;
+  if (!clerk) return;
+
+  await clerk.load();
+
+  // Already signed in — check payment
+  if (clerk.user) {
+    await checkAccessAndRedirect(clerk);
+    return;
+  }
+
+  // Sign in link
+  document.getElementById('sign-in-link').addEventListener('click', () => openAuth('signIn'));
+
+  // Get started button
+  document.getElementById('get-started-btn').addEventListener('click', () => openAuth('signUp'));
+
+  // Close modal on backdrop click
+  document.getElementById('auth-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('auth-modal')) closeAuth();
+  });
+});
+
+function openAuth(mode) {
+  document.getElementById('auth-modal').classList.add('open');
+  const clerk = window.Clerk;
+  const mount = document.getElementById('clerk-mount');
+  mount.innerHTML = '';
+
+  if (mode === 'signUp') {
+    clerk.mountSignUp(mount, {
+      afterSignUpUrl: window.location.href,
+      signInUrl: window.location.href,
+    });
+  } else {
+    clerk.mountSignIn(mount, {
+      afterSignInUrl: window.location.href,
+      signUpUrl: window.location.href,
+    });
+  }
+}
+
+function closeAuth() {
+  document.getElementById('auth-modal').classList.remove('open');
+}
+
+async function checkAccessAndRedirect(clerk) {
+  document.getElementById('loading').classList.add('on');
+  try {
+    const token = await clerk.session.getToken();
+    const res = await fetch(`${WORKER_URL}/check-access`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (data.hasAccess) {
+      window.location.href = './index.html';
+    } else {
+      // No access — send to Stripe checkout
+      const checkoutRes = await fetch(`${WORKER_URL}/create-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId: clerk.user.id, email: clerk.user.primaryEmailAddress?.emailAddress })
+      });
+      const checkoutData = await checkoutRes.json();
+      if (checkoutData.url) {
+        window.location.href = checkoutData.url;
+      }
+    }
+  } catch (e) {
+    document.getElementById('loading').classList.remove('on');
+  }
+}
+</script>
+</body>
+</html>
