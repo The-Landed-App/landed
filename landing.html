@@ -65,13 +65,13 @@ nav{background:var(--forest);padding:0 40px;display:flex;align-items:center;just
 .proof-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,42px);font-weight:500;color:var(--cream2);line-height:1.2;margin-bottom:16px;}
 .proof-sub{font-size:14px;color:var(--sage);line-height:1.7;}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.stat-card{background:rgba(255,255,255,0.07);border-radius:14px;padding:20px;}
-.stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:500;color:var(--grass2);line-height:1;margin-bottom:4px;}
-.stat-label{font-size:12px;color:var(--sage);line-height:1.4;}
+.stat-card{background:rgba(255,255,255,0.07);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:500;color:var(--grass2);line-height:1.15;}
+.stat-label{font-size:12px;color:var(--sage);line-height:1.5;margin-top:8px;}
 
 /* ── FOOTER ── */
-footer{padding:28px 80px;background:var(--forest3);display:flex;align-items:center;justify-content:space-between;}
-footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
+footer{padding:32px 80px;background:var(--forest3);display:flex;align-items:flex-start;justify-content:flex-start;}
+footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:left;}
 .footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--cream2);}
 
 /* ── ANIMATION CSS ── */
@@ -345,7 +345,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
   </div>
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-num">Walk in<br><span style="font-size:22px;">confident</span></div>
+      <div class="stat-num" style="font-size:28px;line-height:1.2;">Walk in<br>confident</div>
       <div class="stat-label">Know exactly what to expect before your interview day</div>
     </div>
     <div class="stat-card">
@@ -365,31 +365,34 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.6;}
 
 <!-- FOOTER -->
 <footer>
-  <span class="footer-logo">Landed</span>
-  <p>Landed is an educational tool and does not provide legal advice.<br>Not a substitute for a licensed immigration attorney. © 2025 Landed.</p>
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+    <span class="footer-logo">Landed</span>
+    <p>Boston, Massachusetts · 2026</p>
+    <p style="font-size:10px;color:rgba(168,196,168,0.4);">Landed is an educational tool and does not provide legal advice. Not a substitute for a licensed immigration attorney. © 2026 Landed.</p>
+  </div>
 </footer>
 
 <!-- AUTH MODAL -->
 <style>
   #auth-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(10,24,16,0.55);align-items:center;justify-content:center;backdrop-filter:blur(4px);}
   #auth-modal.open{display:flex;}
-  #auth-box{background:var(--white);border-radius:20px;padding:32px 28px;width:100%;max-width:400px;margin:16px;position:relative;}
-  .auth-header{margin-bottom:24px;text-align:center;}
-  .auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;}
-  .auth-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);margin-bottom:6px;}
-  .auth-sub{font-size:13px;color:var(--muted);line-height:1.5;}
-  .auth-price-pill{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;border-radius:99px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--forest);margin-top:10px;}
-  .auth-form{display:flex;flex-direction:column;gap:12px;}
-  .auth-input{border:1px solid var(--cream3);border-radius:10px;padding:12px 14px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;transition:border-color 0.15s;}
+  #auth-box{background:var(--white);border-radius:20px;padding:40px 40px 36px;width:100%;max-width:440px;margin:16px;position:relative;}
+  .auth-header{margin-bottom:28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0;}
+  .auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;}
+  .auth-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:var(--forest);margin-bottom:8px;}
+  .auth-sub{font-size:14px;color:var(--muted);line-height:1.5;}
+  .auth-price-pill{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;border-radius:99px;padding:7px 18px;font-size:13px;font-weight:500;color:var(--forest);margin-top:14px;}
+  .auth-form{display:flex;flex-direction:column;gap:14px;}
+  .auth-input{width:100%;border:1.5px solid var(--cream3);border-radius:12px;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;transition:border-color 0.15s;}
   .auth-input:focus{border-color:var(--grass);}
-  .auth-submit{background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;}
+  .auth-submit{width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;margin-top:2px;}
   .auth-submit:hover{background:var(--forest2);}
-  .auth-divider{display:flex;align-items:center;gap:10px;margin:4px 0;}
-  .auth-divider span{font-size:11px;color:var(--cream3);}
+  .auth-divider{display:flex;align-items:center;gap:12px;margin:2px 0;}
+  .auth-divider span{font-size:13px;color:var(--cream3);}
   .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--cream2);}
-  .auth-switch{text-align:center;font-size:12px;color:var(--muted);margin-top:4px;}
-  .auth-switch button{background:none;border:none;color:var(--forest);font-weight:500;cursor:pointer;font-family:inherit;font-size:12px;text-decoration:underline;}
-  .auth-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;color:var(--cream3);cursor:pointer;line-height:1;}
+  .auth-switch{text-align:center;font-size:13px;color:var(--muted);}
+  .auth-switch button{background:none;border:none;color:var(--forest);font-weight:500;cursor:pointer;font-family:inherit;font-size:13px;text-decoration:underline;}
+  .auth-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;color:var(--cream3);cursor:pointer;line-height:1;}
   .auth-close:hover{color:var(--muted);}
   .auth-error{font-size:12px;color:#c0392b;background:#fdf0f0;border-radius:8px;padding:8px 12px;display:none;}
   .auth-error.show{display:block;}
