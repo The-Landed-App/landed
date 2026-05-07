@@ -1013,6 +1013,19 @@ function switchPage(id) {
   document.getElementById(`page-${id}`).classList.add('active');
   document.querySelectorAll(`[data-page="${id}"]`).forEach(t => t.classList.add('active'));
   window.scrollTo(0,0);
+  reapplyTranslation();
+}
+
+function reapplyTranslation() {
+  const lang = localStorage.getItem('landed_lang');
+  if (!lang || lang === 'en') return;
+  setTimeout(() => {
+    const gtSelect = document.querySelector('.goog-te-combo');
+    if (gtSelect && gtSelect.value !== lang) {
+      gtSelect.value = lang;
+      gtSelect.dispatchEvent(new Event('change'));
+    }
+  }, 200);
 }
 
 document.querySelectorAll('[data-page]').forEach(btn => {
@@ -1240,17 +1253,19 @@ function loadLanguage() {
   const lang = localStorage.getItem('landed_lang') || 'en';
   const sel = document.getElementById('lang-select');
   if (sel) sel.value = lang;
-  // Apply saved language once Google Translate is ready
   if (lang !== 'en') {
-    const apply = setInterval(() => {
-      const gtSelect = document.querySelector('.goog-te-combo');
-      if (gtSelect) {
-        clearInterval(apply);
-        gtSelect.value = lang;
-        gtSelect.dispatchEvent(new Event('change'));
-      }
-    }, 200);
-    setTimeout(() => clearInterval(apply), 5000);
+    // Wait for renders to finish, then apply translation
+    setTimeout(() => {
+      const apply = setInterval(() => {
+        const gtSelect = document.querySelector('.goog-te-combo');
+        if (gtSelect) {
+          clearInterval(apply);
+          gtSelect.value = lang;
+          gtSelect.dispatchEvent(new Event('change'));
+        }
+      }, 100);
+      setTimeout(() => clearInterval(apply), 5000);
+    }, 800);
   }
 }
 
@@ -1310,7 +1325,7 @@ function addToCalendar(i) {
   URL.revokeObjectURL(url);
   showToast('📅 Opening calendar…');
 }
-loadLanguage();
+loadState();
 renderTimeline();
 renderFAQ();
 renderDocs();
@@ -1323,6 +1338,7 @@ updateCurrentStep();
 updateLifeGraphic();
 startTicker();
 startAffirmations();
+loadLanguage(); // Must be LAST — after all DOM renders
 </script>
 
 <!-- ── MIA ── -->
