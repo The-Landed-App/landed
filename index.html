@@ -211,9 +211,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 .nav-item.active .nav-lbl{font-weight:500;}
 
 /* ── GOOGLE TRANSLATE ── */
-.goog-te-banner-frame{display:none!important;}
-body{top:0!important;}
-#gt-hidden{display:none;}
+.goog-te-banner-frame,.goog-te-ftab-float{display:none!important;}
+.goog-te-menu-frame{box-shadow:0 4px 20px rgba(0,0,0,0.15)!important;}
+body{top:0!important;position:static!important;}
+#gt-el{display:none;}
 .affirmation-wrap{max-width:260px;display:flex;align-items:center;justify-content:flex-end;}
 .affirmation-text{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.2px;text-align:left;}
 .affirmation-text:hover{color:rgba(255,255,255,0.95);}
@@ -221,10 +222,19 @@ body{top:0!important;}
 .mt8{margin-top:8px;}
 .mt16{margin-top:16px;}
 </style>
+<script>
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({
+    pageLanguage:'en',
+    autoDisplay:false
+  },'gt-el');
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
 
-<div id="gt-hidden"></div>
+<div id="gt-el"></div>
 <div id="offline">You're offline — cached content is available</div>
 
 <header>
@@ -1219,27 +1229,10 @@ function showToast(msg) {
 // ── LANGUAGE ─────────────────────────────────────────
 function setLanguage(lang) {
   localStorage.setItem('landed_lang', lang);
-  if (lang === 'en') {
-    // Remove translation cookie to revert to English
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
-    location.reload();
-  } else {
-    document.cookie = `googtrans=/en/${lang}; path=/`;
-    document.cookie = `googtrans=/en/${lang}; path=/; domain=${location.hostname}`;
-    // Load Google Translate script dynamically
-    if (!window._gtLoaded) {
-      window._gtLoaded = true;
-      window.googleTranslateElementInit = function() {
-        new google.translate.TranslateElement({pageLanguage:'en',autoDisplay:false},'gt-hidden');
-      };
-      const s = document.createElement('script');
-      s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      document.head.appendChild(s);
-      setTimeout(() => location.reload(), 1500);
-    } else {
-      location.reload();
-    }
+  const select = document.querySelector('.goog-te-combo');
+  if (select) {
+    select.value = lang;
+    select.dispatchEvent(new Event('change'));
   }
 }
 
@@ -1247,6 +1240,18 @@ function loadLanguage() {
   const lang = localStorage.getItem('landed_lang') || 'en';
   const sel = document.getElementById('lang-select');
   if (sel) sel.value = lang;
+  // Apply saved language once Google Translate is ready
+  if (lang !== 'en') {
+    const apply = setInterval(() => {
+      const gtSelect = document.querySelector('.goog-te-combo');
+      if (gtSelect) {
+        clearInterval(apply);
+        gtSelect.value = lang;
+        gtSelect.dispatchEvent(new Event('change'));
+      }
+    }, 200);
+    setTimeout(() => clearInterval(apply), 5000);
+  }
 }
 
 // ── STEP DATES & CALENDAR ────────────────────────────
