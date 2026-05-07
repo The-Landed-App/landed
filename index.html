@@ -37,8 +37,8 @@ input,select,textarea{font-family:inherit;}
 
 /* ── HEADER ── */
 header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
-.header-inner{padding:16px 20px 12px;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.header-inner{padding:12px 20px;}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:12px;}
 
 /* ── LOGO ── */
 .logo-wrap{display:flex;align-items:center;gap:12px;}
@@ -135,7 +135,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .search-inner:focus-within{border-color:var(--grass);}
 #search-input{color:var(--white);font-size:12px;width:100%;}
 #search-input::placeholder{color:rgba(255,255,255,0.4);}
-.search-results-drop{display:none;position:absolute;top:calc(100% - 4px);left:20px;width:320px;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.18);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;}
+.search-results-drop{display:none;position:absolute;top:calc(100% + 4px);left:0;width:320px;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.18);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;}
 
 /* ── TIP TICKER (home) ── */
 .tip-ticker{background:var(--forest);border-radius:var(--r);padding:14px 16px;overflow:hidden;}
@@ -243,10 +243,8 @@ function googleTranslateElementInit(){
       <div class="logo-wrap">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
           <rect width="40" height="40" rx="10" fill="#2d6647"/>
-          <path d="M20 34C20 34 10 26 10 19C10 13.48 14.48 9 20 9C25.52 9 30 13.48 30 19C30 26 20 34 20 34Z"
-                fill="#1a3d2b" stroke="#4a9e6b" stroke-width="2.2" stroke-linejoin="round"/>
-          <path d="M20 32C20 32 11 25 11 19C11 13.48 15.03 10 20 10C24.97 10 29 13.48 29 19C29 25 20 32 20 32Z"
-                fill="#1a3d2b"/>
+          <path d="M20 34C20 34 10 26 10 19C10 13.48 14.48 9 20 9C25.52 9 30 13.48 30 19C30 26 20 34 20 34Z" fill="#1a3d2b" stroke="#4a9e6b" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M20 32C20 32 11 25 11 19C11 13.48 15.03 10 20 10C24.97 10 29 13.48 29 19C29 25 20 32 20 32Z" fill="#1a3d2b"/>
           <circle cx="20" cy="18.5" r="7" fill="#e8dfc8"/>
           <circle cx="20" cy="18.5" r="4.2" fill="#1a3d2b"/>
         </svg>
@@ -255,8 +253,19 @@ function googleTranslateElementInit(){
           <span class="logo-tagline-text">Your path home</span>
         </div>
       </div>
+
+      <!-- Search inline -->
+      <div style="flex:1;margin:0 16px;position:relative;">
+        <div class="search-inner">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;color:var(--sage);"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="search-input" type="text" placeholder="Search…" style="flex:1;border:none;outline:none;font-family:inherit;font-size:12px;background:transparent;color:var(--white);" oninput="runSearch(this.value)" onfocus="this.closest('.search-inner').style.borderColor='var(--grass)'" onblur="setTimeout(()=>{this.closest('.search-inner').style.borderColor='rgba(255,255,255,0.12)';hideSearch()},150)"/>
+          <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--sage);font-size:18px;line-height:1;padding:0;cursor:pointer;">×</button>
+        </div>
+        <div id="search-results" class="search-results-drop"></div>
+      </div>
+
       <div class="affirmation-wrap">
-        <select id="lang-select" onchange="setLanguage(this.value)" style="background:var(--forest2);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--cream2);font-size:11px;padding:4px 8px;font-family:inherit;cursor:pointer;margin-right:12px;outline:none;appearance:none;-webkit-appearance:none;">
+        <select id="lang-select" onchange="setLanguage(this.value)" style="background:var(--forest2);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--cream2);font-size:11px;padding:4px 8px;font-family:inherit;cursor:pointer;margin-right:12px;outline:none;appearance:none;-webkit-appearance:none;flex-shrink:0;">
           <option value="en">🌐 EN</option>
           <option value="es">ES</option>
           <option value="fr">FR</option>
@@ -273,16 +282,6 @@ function googleTranslateElementInit(){
         <span class="affirmation-text" id="affirmation-text" onclick="cycleAffirmation()"></span>
       </div>
     </div>
-  </div>
-
-  <!-- Global search bar -->
-  <div class="global-search">
-    <div class="search-inner">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;color:var(--sage);"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <input id="search-input" type="text" placeholder="Search timelines, documents, N-400, tips…" style="flex:1;border:none;outline:none;font-family:inherit;font-size:13px;background:transparent;color:var(--white);" oninput="runSearch(this.value)" onfocus="this.closest('.search-inner').style.borderColor='var(--grass)'" onblur="setTimeout(()=>{this.closest('.search-inner').style.borderColor='var(--cream2)';hideSearch()},150)"/>
-      <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--sage);font-size:18px;line-height:1;padding:0;cursor:pointer;">×</button>
-    </div>
-    <div id="search-results" class="search-results-drop"></div>
   </div>
 </header>
 
@@ -359,18 +358,22 @@ function googleTranslateElementInit(){
   </div>
 
   <div style="text-align:center;padding:8px 0 12px;font-size:11px;color:var(--cream3);">Built by immigrants, for immigrants.</div>
+
+  <!-- Refer a friend -->
+  <div style="background:var(--forest);border-radius:var(--r);padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Know someone on the same path?</div>
+      <div style="font-size:12px;color:var(--sage);line-height:1.5;">Share Landed with a friend — $0.99 gets them everything.</div>
+    </div>
+    <button onclick="referFriend()" style="background:var(--grass);color:var(--white);border:none;border-radius:99px;padding:10px 18px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;">Share →</button>
+  </div>
 </div>
 
 <!-- ══ TIMELINE ══ -->
 <div class="page" id="page-timeline">
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
-
   <div class="slabel">Your progress</div>
   <div class="tl-card" id="tl-card"></div>
-
-  <div class="slabel mt16">Journey by the numbers — FAQs</div>
-  <p class="faq-intro">Real questions from people who've been exactly where you are — asked by immigrants, answered for immigrants.</p>
-  <div id="faq-list"></div>
 </div>
 
 <!-- ══ DOCUMENTS ══ -->
@@ -400,17 +403,86 @@ function googleTranslateElementInit(){
 
 <!-- ══ INTERVIEW ══ -->
 <div class="page" id="page-interview">
-  <p class="coach-intro">Practice common USCIS interview questions. The civics questions feel intimidating but they're straightforward once you drill them. Use the widgets below to prepare.</p>
 
-  <div class="widget-frame-wrap">
-    <div class="widget-frame-label">Civics practice test</div>
-    <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/practice-test-civics.html" height="500" loading="lazy" title="Civics practice test"></iframe>
+  <!-- Home screen: choose quiz type -->
+  <div id="quiz-home">
+    <p class="coach-intro">Practice the 100 USCIS civics questions and English reading test. Your results are tracked and turned into a personal study plan.</p>
+
+    <!-- Score history -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:13px;font-weight:500;color:var(--forest);">Score history</span>
+        <button onclick="clearScores()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;">Clear all</button>
+      </div>
+      <div id="score-history">No scores yet — take a practice test below.</div>
+    </div>
+
+    <!-- Study plan -->
+    <div id="study-plan-wrap" style="display:none;background:var(--approved-bg);border-radius:var(--r);border:1px solid var(--sage);padding:16px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:13px;font-weight:500;color:var(--forest);">📚 Your study plan</span>
+        <button onclick="exportStudyPlan()" style="font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--grass);background:var(--white);color:var(--forest);cursor:pointer;font-family:inherit;">Export notes</button>
+      </div>
+      <div id="study-plan-content" style="font-size:13px;color:var(--forest);line-height:1.7;"></div>
+    </div>
+
+    <!-- Quiz buttons -->
+    <div class="slabel">Start a practice test</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div onclick="startQuiz('civics')" style="background:var(--forest);border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <div style="font-size:22px;margin-bottom:8px;">🏛️</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Civics</div>
+        <div style="font-size:11px;color:var(--sage);">100 USCIS questions · 10 at a time</div>
+      </div>
+      <div onclick="startQuiz('english')" style="background:var(--forest2);border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <div style="font-size:22px;margin-bottom:8px;">📖</div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">English</div>
+        <div style="font-size:11px;color:var(--sage);">Reading · 10 sentences</div>
+      </div>
+    </div>
   </div>
 
-  <div class="widget-frame-wrap">
-    <div class="widget-frame-label">English practice test</div>
-    <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/practice-test-english.html" height="400" loading="lazy" title="English practice test"></iframe>
+  <!-- Quiz screen -->
+  <div id="quiz-screen" style="display:none;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <button onclick="exitQuiz()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0;line-height:1;">←</button>
+      <div style="flex:1;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:4px;" id="quiz-label">Civics · Question 1 of 10</div>
+        <div style="background:var(--cream2);border-radius:99px;height:4px;">
+          <div id="quiz-progress-bar" style="height:4px;border-radius:99px;background:var(--grass);transition:width 0.3s;width:0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-question-wrap" style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:20px;margin-bottom:16px;">
+      <div id="quiz-q" style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:var(--forest);line-height:1.45;margin-bottom:16px;"></div>
+      <div id="quiz-options" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+
+    <div id="quiz-feedback" style="display:none;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.6;"></div>
+
+    <button id="quiz-next-btn" onclick="nextQuestion()" style="display:none;width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:14px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Next question →</button>
   </div>
+
+  <!-- Results screen -->
+  <div id="quiz-results" style="display:none;">
+    <div style="text-align:center;padding:24px 0 20px;">
+      <div id="results-emoji" style="font-size:48px;margin-bottom:12px;"></div>
+      <div id="results-score" style="font-family:'Playfair Display',serif;font-size:42px;font-weight:500;color:var(--forest);"></div>
+      <div id="results-label" style="font-size:14px;color:var(--muted);margin-top:4px;"></div>
+    </div>
+
+    <div id="results-wrong-wrap" style="margin-bottom:20px;display:none;">
+      <div class="slabel">Questions to review</div>
+      <div id="results-wrong-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <button onclick="retakeQuiz()" style="background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Try again</button>
+      <button onclick="exitQuiz()" style="background:var(--cream);color:var(--forest);border:1px solid var(--cream2);border-radius:99px;padding:13px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Back to coach</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══ PRO TIPS ══ -->
@@ -430,7 +502,11 @@ function googleTranslateElementInit(){
   </div>
 </div>
 
-<!-- ══ INSTALL BANNER ══ -->
+<!-- ══ FAQ ══ -->
+<div class="page" id="page-faq">
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 20px;">Real questions from people who've been exactly where you are — asked by immigrants, answered for immigrants.</p>
+  <div id="faq-list-standalone"></div>
+</div>
 <div id="install-banner">
   <div class="ib-text"><strong>Add to home screen</strong><span>Install for offline access</span></div>
   <button class="ib-btn" id="ib-install">Install</button>
@@ -459,13 +535,13 @@ function googleTranslateElementInit(){
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
     <div class="nav-lbl">Coach</div>
   </button>
+  <button class="nav-item" data-page="faq">
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg></div>
+    <div class="nav-lbl">FAQ</div>
+  </button>
   <button class="nav-item" data-page="tips">
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg></div>
     <div class="nav-lbl">Tips</div>
-  </button>
-  <button class="nav-item" data-page="legal">
-    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg></div>
-    <div class="nav-lbl">Legal</div>
   </button>
 </nav>
 
@@ -1239,6 +1315,347 @@ function showToast(msg) {
   window._toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
 }
 
+// ── SCORE TRACKING ────────────────────────────────────
+let scores = [];
+
+function loadScores() {
+  try { scores = JSON.parse(localStorage.getItem('landed_scores') || '[]'); } catch(e) { scores = []; }
+}
+
+function saveScores() {
+  try { localStorage.setItem('landed_scores', JSON.stringify(scores)); } catch(e) {}
+}
+
+function logScore() {
+  const type = document.getElementById('score-type').value;
+  const val = parseInt(document.getElementById('score-val').value);
+  const total = parseInt(document.getElementById('score-total').value) || 100;
+  if (isNaN(val) || val < 0 || val > total) { showToast('Please enter a valid score'); return; }
+  scores.push({ type, val, total, date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}) });
+  saveScores();
+  document.getElementById('score-val').value = '';
+  document.getElementById('score-total').value = '';
+  renderScoreHistory();
+  showToast('✅ Score saved');
+}
+
+function clearScores() {
+  scores = [];
+  saveScores();
+  renderScoreHistory();
+}
+
+function renderScoreHistory() {
+  const el = document.getElementById('score-history');
+  if (!el) return;
+  if (!scores.length) { el.innerHTML = '<span style="color:var(--muted);">No scores yet — take a practice test below.</span>'; updateHomeScores(); return; }
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+  const renderRow = (arr, label) => {
+    if (!arr.length) return '';
+    const latest = arr[arr.length-1];
+    const pct = Math.round(latest.val/latest.total*100);
+    const trend = arr.length > 1 ? Math.round(arr[arr.length-1].val/arr[arr.length-1].total*100) - Math.round(arr[arr.length-2].val/arr[arr.length-2].total*100) : null;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cream2);">
+      <div><span style="font-size:13px;font-weight:500;color:var(--forest);">${label}</span><span style="font-size:11px;color:var(--muted);margin-left:8px;">${latest.date}</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        ${trend !== null ? `<span style="font-size:11px;color:${trend >= 0 ? 'var(--grass)' : '#c8952a'};">${trend >= 0 ? '▲' : '▼'} ${Math.abs(trend)}%</span>` : ''}
+        <span style="font-family:'Playfair Display',serif;font-size:20px;color:${pct >= 80 ? 'var(--grass)' : pct >= 60 ? '#c8952a' : '#c0392b'};font-weight:500;">${pct}%</span>
+      </div>
+    </div>`;
+  };
+  el.innerHTML = renderRow(civics, 'Civics') + renderRow(english, 'English');
+  generateStudyPlan();
+  updateHomeScores();
+}
+
+function generateStudyPlan() {
+  const wrap = document.getElementById('study-plan-wrap');
+  const content = document.getElementById('study-plan-content');
+  if (!wrap || !content) return;
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+  if (!civics.length && !english.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  let plan = [];
+
+  if (civics.length) {
+    const latest = civics[civics.length-1];
+    const pct = Math.round(latest.val/latest.total*100);
+    if (pct < 60) plan.push('🔴 <strong>Civics needs work.</strong> Practice daily. Focus on government structure and history first.');
+    else if (pct < 80) plan.push('🟡 <strong>Civics is improving.</strong> Review the questions below and focus on those categories.');
+    else plan.push('🟢 <strong>Civics is strong.</strong> Quick review once a week to stay sharp.');
+
+    // List actual wrong questions
+    const wrongQs = (latest.wrong || []);
+    if (wrongQs.length) {
+      plan.push('<strong>Review these questions:</strong><br>' + wrongQs.map(w =>
+        `• <em>${w.q}</em><br>&nbsp;&nbsp;✓ ${w.correct}`).join('<br>'));
+    }
+  }
+
+  if (english.length) {
+    const latest = english[english.length-1];
+    const pct = Math.round(latest.val/latest.total*100);
+    if (pct < 60) plan.push('🔴 <strong>English needs practice.</strong> Read a short English article daily. Practice reading sentences aloud.');
+    else if (pct < 80) plan.push('🟡 <strong>English is okay.</strong> Practice reading aloud and work on longer sentences.');
+    else plan.push('🟢 <strong>English is solid.</strong> You\'re ready for the reading portion of the interview.');
+
+    const wrongQs = (latest.wrong || []);
+    if (wrongQs.length) {
+      plan.push('<strong>Review these sentences:</strong><br>' + wrongQs.map(w =>
+        `• <em>${w.q.replace('Read: ','')}</em>`).join('<br>'));
+    }
+  }
+
+  content.innerHTML = plan.join('<br><br>');
+}
+
+function exportStudyPlan() {
+  const content = document.getElementById('study-plan-content');
+  if (!content || !content.innerText.trim()) { showToast('No study plan yet — take a quiz first'); return; }
+  const text = `LANDED — MY STUDY PLAN\n${new Date().toLocaleDateString()}\n\n${content.innerText}\n\nGenerated by Landed\nhttps://the-landed-app.github.io/landed/`;
+  const blob = new Blob([text], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'landed-study-plan.txt';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  showToast('📋 Study plan exported');
+}
+
+function updateHomeScores() {
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+  const cEl = document.getElementById('home-score');
+  const eEl = document.getElementById('home-english-score');
+  if (cEl) cEl.textContent = civics.length ? Math.round(civics[civics.length-1].val/civics[civics.length-1].total*100) + '%' : '—';
+  if (eEl) eEl.textContent = english.length ? Math.round(english[english.length-1].val/english[english.length-1].total*100) + '%' : '—';
+}
+
+// ── REFER A FRIEND ────────────────────────────────────
+function referFriend() {
+  const url = 'https://the-landed-app.github.io/landed/landing.html';
+  const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $0.99: ${url}`;
+  if (navigator.share) {
+    navigator.share({ title: 'Landed — Your Path Home', text: msg, url }).catch(() => {
+      navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied!'));
+    });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied to clipboard'));
+  } else {
+    window.open(`mailto:?subject=Check out Landed&body=${encodeURIComponent(msg)}`);
+  }
+}
+
+// ── QUIZ DATA ─────────────────────────────────────────
+const CIVICS_QUESTIONS = [
+  {q:"What is the supreme law of the land?",a:"The Constitution",options:["The Bill of Rights","The Constitution","The Declaration of Independence","Federal law"],cat:"Principles of American Democracy"},
+  {q:"What does the Constitution do?",a:"Sets up the government / defines the government / protects basic rights",options:["Sets up the government / defines the government / protects basic rights","Declares independence from Britain","Creates the military","Sets tax rates"],cat:"Principles of American Democracy"},
+  {q:"The idea of self-government is in the first three words of the Constitution. What are these words?",a:"We the People",options:["We the People","In order to","We hold these","All men are"],cat:"Principles of American Democracy"},
+  {q:"What is an amendment?",a:"A change to the Constitution",options:["A court ruling","A presidential order","A change to the Constitution","A new law passed by Congress"],cat:"Principles of American Democracy"},
+  {q:"What do we call the first ten amendments to the Constitution?",a:"The Bill of Rights",options:["The Declaration","The Bill of Rights","The Articles","The Amendments"],cat:"Principles of American Democracy"},
+  {q:"What is one right or freedom from the First Amendment?",a:"Speech",options:["The right to bear arms","Speech","Right to a fair trial","Right to vote"],cat:"Bill of Rights"},
+  {q:"How many amendments does the Constitution have?",a:"27",options:["10","21","27","32"],cat:"Principles of American Democracy"},
+  {q:"What did the Declaration of Independence do?",a:"Announced our independence from Great Britain",options:["Created the Constitution","Announced our independence from Great Britain","Ended the Civil War","Gave women the right to vote"],cat:"Principles of American Democracy"},
+  {q:"What are two rights in the Declaration of Independence?",a:"Life and liberty",options:["Life and liberty","Freedom and justice","Equality and opportunity","Peace and prosperity"],cat:"Principles of American Democracy"},
+  {q:"What is freedom of religion?",a:"You can practice any religion, or not practice a religion",options:["You must practice Christianity","You can practice any religion, or not practice a religion","Only certain religions are allowed","The government chooses your religion"],cat:"Bill of Rights"},
+  {q:"What is the economic system in the United States?",a:"Capitalist economy / market economy",options:["Socialist economy","Communist economy","Capitalist economy / market economy","Feudal economy"],cat:"Principles of American Democracy"},
+  {q:"What is the 'rule of law'?",a:"Everyone must follow the law",options:["Only citizens follow the law","Everyone must follow the law","The president makes the laws","Laws change every year"],cat:"Principles of American Democracy"},
+  {q:"Name one branch or part of the government.",a:"Congress / legislative",options:["Congress / legislative","The Supreme Court only","The military","The IRS"],cat:"System of Government"},
+  {q:"What stops one branch of government from becoming too powerful?",a:"Checks and balances / separation of powers",options:["The president","Checks and balances / separation of powers","Elections","The Supreme Court alone"],cat:"System of Government"},
+  {q:"Who is in charge of the executive branch?",a:"The President",options:["The Speaker of the House","The Chief Justice","The President","The Senate Majority Leader"],cat:"System of Government"},
+  {q:"Who makes federal laws?",a:"Congress / Senate and House",options:["The President","The Supreme Court","Congress / Senate and House","The governors"],cat:"System of Government"},
+  {q:"What are the two parts of the U.S. Congress?",a:"The Senate and House of Representatives",options:["The House and the Courts","The Senate and House of Representatives","The President and Senate","The Cabinet and Senate"],cat:"System of Government"},
+  {q:"How many U.S. Senators are there?",a:"100",options:["50","100","435","535"],cat:"System of Government"},
+  {q:"We elect a U.S. Senator for how many years?",a:"6",options:["2","4","6","8"],cat:"System of Government"},
+  {q:"The House of Representatives has how many voting members?",a:"435",options:["100","270","435","538"],cat:"System of Government"},
+  {q:"We elect a U.S. Representative for how many years?",a:"2",options:["2","4","6","8"],cat:"System of Government"},
+  {q:"We elect a President for how many years?",a:"4",options:["2","4","6","8"],cat:"System of Government"},
+  {q:"In what month do we vote for President?",a:"November",options:["October","November","September","December"],cat:"System of Government"},
+  {q:"If the President can no longer serve, who becomes President?",a:"The Vice President",options:["The Speaker of the House","The Chief Justice","The Vice President","The Secretary of State"],cat:"System of Government"},
+  {q:"If both the President and the Vice President can no longer serve, who becomes President?",a:"The Speaker of the House",options:["The Secretary of State","The Senate Majority Leader","The Speaker of the House","The Chief Justice"],cat:"System of Government"},
+  {q:"Who is the Commander in Chief of the military?",a:"The President",options:["The Secretary of Defense","The Joint Chiefs","The President","The Vice President"],cat:"System of Government"},
+  {q:"Who signs bills to become laws?",a:"The President",options:["The Vice President","Congress","The President","The Supreme Court"],cat:"System of Government"},
+  {q:"Who vetoes bills?",a:"The President",options:["The Senate","The President","The Supreme Court","The Speaker of the House"],cat:"System of Government"},
+  {q:"What does the judicial branch do?",a:"Reviews laws / explains laws / resolves disputes",options:["Makes laws","Reviews laws / explains laws / resolves disputes","Enforces laws","Taxes citizens"],cat:"System of Government"},
+  {q:"What is the highest court in the United States?",a:"The Supreme Court",options:["The Court of Appeals","The Federal Court","The Supreme Court","The District Court"],cat:"System of Government"},
+  {q:"How many justices are on the Supreme Court?",a:"9",options:["7","9","11","12"],cat:"System of Government"},
+  {q:"What is the political party of the President now?",a:"Republican",options:["Democratic","Republican","Independent","Libertarian"],cat:"System of Government"},
+  {q:"What are the two major political parties in the United States?",a:"Democratic and Republican",options:["Democratic and Republican","Liberal and Conservative","Federal and State","National and Local"],cat:"System of Government"},
+  {q:"There are four amendments to the Constitution about who can vote. Describe one.",a:"Citizens eighteen and older can vote",options:["Citizens eighteen and older can vote","Only landowners can vote","Only men can vote","Only taxpayers can vote"],cat:"Rights and Responsibilities"},
+  {q:"What is one responsibility that is only for United States citizens?",a:"Serve on a jury / vote in a federal election",options:["Pay taxes","Obey the law","Serve on a jury / vote in a federal election","Go to school"],cat:"Rights and Responsibilities"},
+  {q:"Name one right only for United States citizens.",a:"Vote in a federal election",options:["Pay taxes","Vote in a federal election","Drive a car","Own a home"],cat:"Rights and Responsibilities"},
+  {q:"What do we show loyalty to when we say the Pledge of Allegiance?",a:"The United States / the flag",options:["The President","The Constitution","The United States / the flag","The military"],cat:"Rights and Responsibilities"},
+  {q:"How old do citizens have to be to vote for President?",a:"Eighteen (18) and older",options:["16","18","21","25"],cat:"Rights and Responsibilities"},
+  {q:"When is the last day you can send in federal income tax forms?",a:"April 15",options:["March 15","April 15","May 1","December 31"],cat:"Rights and Responsibilities"},
+  {q:"When must all men register for the Selective Service?",a:"At age eighteen (18)",options:["At age 16","At age 18","At age 21","At age 25"],cat:"Rights and Responsibilities"},
+  {q:"Who lived in America before the Europeans arrived?",a:"American Indians / Native Americans",options:["African Americans","Asian Americans","American Indians / Native Americans","European settlers"],cat:"American History"},
+  {q:"What group of people was taken to America and sold as slaves?",a:"Africans / African Americans",options:["Native Americans","Asians","Europeans","Africans / African Americans"],cat:"American History"},
+  {q:"Why did the colonists fight the British?",a:"Because of high taxes / lack of self-government",options:["Because of high taxes / lack of self-government","Because of religion","Because of language","Because of trade disputes only"],cat:"American History"},
+  {q:"Who wrote the Declaration of Independence?",a:"Thomas Jefferson",options:["George Washington","Benjamin Franklin","Thomas Jefferson","John Adams"],cat:"American History"},
+  {q:"When was the Declaration of Independence adopted?",a:"July 4, 1776",options:["July 4, 1776","June 15, 1775","September 17, 1787","April 19, 1775"],cat:"American History"},
+  {q:"When was the Constitution written?",a:"1787",options:["1776","1787","1791","1803"],cat:"American History"},
+  {q:"Who is the 'Father of Our Country'?",a:"George Washington",options:["Thomas Jefferson","Benjamin Franklin","George Washington","John Adams"],cat:"American History"},
+  {q:"Who was the first President?",a:"George Washington",options:["John Adams","Thomas Jefferson","George Washington","James Madison"],cat:"American History"},
+  {q:"What territory did the United States buy from France in 1803?",a:"The Louisiana Territory / Louisiana",options:["Florida","The Louisiana Territory / Louisiana","Texas","California"],cat:"American History"},
+  {q:"Name the U.S. war between the North and the South.",a:"The Civil War",options:["The Revolutionary War","The Civil War","World War I","The Spanish-American War"],cat:"American History"},
+  {q:"What was one important thing that Abraham Lincoln did?",a:"Freed the slaves / saved the Union",options:["Wrote the Constitution","Freed the slaves / saved the Union","Won World War II","Started the industrial revolution"],cat:"American History"},
+  {q:"What did the Emancipation Proclamation do?",a:"Freed the slaves in the Confederacy",options:["Ended World War I","Gave women the right to vote","Freed the slaves in the Confederacy","Created the income tax"],cat:"American History"},
+  {q:"What did Susan B. Anthony do?",a:"Fought for women's rights / fought for civil rights",options:["Was the first female president","Fought for women's rights / fought for civil rights","Led the Underground Railroad","Founded the Red Cross"],cat:"American History"},
+  {q:"When did all men and women get the right to vote?",a:"1920",options:["1865","1890","1920","1965"],cat:"American History"},
+  {q:"What movement tried to end racial discrimination?",a:"Civil rights movement",options:["Women's suffrage","Civil rights movement","Labor movement","Environmental movement"],cat:"American History"},
+  {q:"What did Martin Luther King, Jr. do?",a:"Fought for civil rights / worked for equality for all Americans",options:["Was the first Black president","Fought for civil rights / worked for equality for all Americans","Founded the NAACP","Led the march on Washington only"],cat:"American History"},
+  {q:"What major event happened on September 11, 2001?",a:"Terrorists attacked the United States",options:["A hurricane hit New York","Terrorists attacked the United States","The U.S. declared war on Iraq","The stock market crashed"],cat:"Recent American History"},
+  {q:"What ocean is on the West Coast of the United States?",a:"Pacific Ocean",options:["Atlantic Ocean","Pacific Ocean","Indian Ocean","Arctic Ocean"],cat:"Geography"},
+  {q:"What ocean is on the East Coast of the United States?",a:"Atlantic Ocean",options:["Pacific Ocean","Atlantic Ocean","Indian Ocean","Gulf of Mexico"],cat:"Geography"},
+  {q:"What is the capital of the United States?",a:"Washington, D.C.",options:["New York City","Washington, D.C.","Los Angeles","Chicago"],cat:"Geography"},
+  {q:"Where is the Statue of Liberty?",a:"New York Harbor / Liberty Island",options:["Washington D.C.","Boston Harbor","New York Harbor / Liberty Island","Philadelphia"],cat:"Geography"},
+  {q:"Why does the flag have 13 stripes?",a:"Because there were 13 original colonies",options:["Because there were 13 founding fathers","Because there were 13 original colonies","Because there were 13 original states and territories","Because of 13 original wars"],cat:"Symbols"},
+  {q:"Why does the flag have 50 stars?",a:"Because there is one star for each state",options:["Because there are 50 founding fathers","Because there is one star for each state","Because of 50 original colonies","Because there are 50 amendments"],cat:"Symbols"},
+  {q:"What is the name of the national anthem?",a:"The Star-Spangled Banner",options:["America the Beautiful","God Bless America","The Star-Spangled Banner","My Country 'Tis of Thee"],cat:"Symbols"},
+  {q:"When do we celebrate Independence Day?",a:"July 4",options:["June 14","July 4","September 17","November 11"],cat:"Holidays"},
+  {q:"Name two national U.S. holidays.",a:"New Year's Day and Independence Day",options:["New Year's Day and Independence Day","Christmas and Easter","Halloween and Thanksgiving","Valentine's Day and St. Patrick's Day"],cat:"Holidays"},
+];
+
+const ENGLISH_QUESTIONS = [
+  {q:"Read: 'George Washington was the first President.'",a:"George Washington was the first President.",options:["George Washington was the first President.","Abraham Lincoln was the first President.","Washington D.C. is the capital.","The first president was elected in 1800."],cat:"Reading"},
+  {q:"Read: 'The United States has three branches of government.'",a:"The United States has three branches of government.",options:["The United States has three branches of government.","Congress makes all the laws.","There are two parts of Congress.","The President leads the government."],cat:"Reading"},
+  {q:"Read: 'The flag has 50 stars and 13 stripes.'",a:"The flag has 50 stars and 13 stripes.",options:["The flag has 50 stars and 13 stripes.","The flag is only red, white, and blue.","There are 50 states and 13 colonies.","The flag was made in 1776."],cat:"Reading"},
+  {q:"Read: 'Congress makes the laws in the United States.'",a:"Congress makes the laws.",options:["Congress makes the laws.","The President makes all laws.","The Supreme Court writes laws.","States make all federal laws."],cat:"Reading"},
+  {q:"Read: 'Citizens have the right to vote.'",a:"Citizens have the right to vote.",options:["Citizens have the right to vote.","Only men can vote.","Voting is optional for citizens.","Non-citizens can vote in federal elections."],cat:"Reading"},
+  {q:"Read: 'The President lives in the White House.'",a:"The President lives in the White House.",options:["The President lives in the White House.","Congress meets in the White House.","The Supreme Court is in the White House.","The Vice President lives in the White House."],cat:"Reading"},
+  {q:"Read: 'Abraham Lincoln freed the slaves.'",a:"Abraham Lincoln freed the slaves.",options:["Abraham Lincoln freed the slaves.","George Washington freed the slaves.","Thomas Jefferson ended slavery.","Congress freed the slaves in 1865."],cat:"Reading"},
+  {q:"Read: 'The Bill of Rights protects our freedoms.'",a:"The Bill of Rights protects our freedoms.",options:["The Bill of Rights protects our freedoms.","The Constitution alone protects freedoms.","The President protects our rights.","Congress protects all rights."],cat:"Reading"},
+  {q:"Read: 'America is a land of freedom and opportunity.'",a:"America is a land of freedom and opportunity.",options:["America is a land of freedom and opportunity.","America is the oldest democracy.","Freedom means you can do anything.","Opportunity is only for citizens."],cat:"Reading"},
+  {q:"Read: 'The Civil War was fought to end slavery.'",a:"The Civil War was fought to end slavery.",options:["The Civil War was fought to end slavery.","The Civil War was fought against Britain.","The Revolutionary War ended slavery.","Slavery ended after World War I."],cat:"Reading"},
+];
+
+// ── QUIZ ENGINE ───────────────────────────────────────
+let quizType = '';
+let quizQuestions = [];
+let quizIndex = 0;
+let quizCorrect = 0;
+let quizWrong = [];
+let quizAnswered = false;
+
+function startQuiz(type) {
+  quizType = type;
+  quizWrong = [];
+  quizCorrect = 0;
+  quizIndex = 0;
+  quizAnswered = false;
+  const pool = type === 'civics' ? CIVICS_QUESTIONS : ENGLISH_QUESTIONS;
+  quizQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+  document.getElementById('quiz-home').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+  const q = quizQuestions[quizIndex];
+  const total = quizQuestions.length;
+  document.getElementById('quiz-label').textContent = `${quizType === 'civics' ? 'Civics' : 'English'} · Question ${quizIndex + 1} of ${total}`;
+  document.getElementById('quiz-progress-bar').style.width = `${(quizIndex / total) * 100}%`;
+  document.getElementById('quiz-q').textContent = q.q;
+  document.getElementById('quiz-feedback').style.display = 'none';
+  document.getElementById('quiz-next-btn').style.display = 'none';
+  quizAnswered = false;
+  const opts = [...q.options].sort(() => Math.random() - 0.5);
+  document.getElementById('quiz-options').innerHTML = opts.map(o => `
+    <button onclick="answerQuestion(this)" data-answer="${o.replace(/"/g,'&quot;')}" style="text-align:left;background:var(--white);border:1.5px solid var(--cream2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer;transition:all 0.15s;line-height:1.4;width:100%;">${o}</button>
+  `).join('');
+}
+
+function answerQuestion(btn) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const selected = btn.getAttribute('data-answer');
+  const q = quizQuestions[quizIndex];
+  const correct = selected === q.a;
+  const feedback = document.getElementById('quiz-feedback');
+  document.querySelectorAll('#quiz-options button').forEach(b => {
+    b.disabled = true;
+    const ans = b.getAttribute('data-answer');
+    if (ans === q.a) { b.style.background='var(--approved-bg)';b.style.borderColor='var(--grass)';b.style.color='var(--forest)'; }
+    else if (ans === selected && !correct) { b.style.background='#fdf0f0';b.style.borderColor='#e74c3c';b.style.color='#c0392b'; }
+  });
+  if (correct) {
+    quizCorrect++;
+    feedback.style.cssText='display:block;background:var(--approved-bg);border:1px solid var(--grass);color:var(--forest);border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
+    feedback.innerHTML='✅ Correct!';
+  } else {
+    quizWrong.push({q:q.q, correct:q.a, cat:q.cat||'General'});
+    feedback.style.cssText='display:block;background:#fdf0f0;border:1px solid #e74c3c;color:#c0392b;border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
+    feedback.innerHTML=`❌ The correct answer is: <strong>${q.a}</strong>`;
+  }
+  const nextBtn = document.getElementById('quiz-next-btn');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = quizIndex < quizQuestions.length - 1 ? 'Next question →' : 'See results →';
+}
+
+function nextQuestion() {
+  quizIndex++;
+  if (quizIndex < quizQuestions.length) { renderQuizQuestion(); }
+  else { showQuizResults(); }
+}
+
+function showQuizResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'block';
+  const total = quizQuestions.length;
+  const pct = Math.round(quizCorrect / total * 100);
+  document.getElementById('results-emoji').textContent = pct >= 80 ? '🎉' : pct >= 60 ? '📚' : '💪';
+  document.getElementById('results-score').textContent = `${quizCorrect}/${total}`;
+  document.getElementById('results-label').textContent = pct >= 80 ? "Great work! You're interview-ready." : pct >= 60 ? 'Getting there — keep practicing.' : 'Keep going — every session helps.';
+  const wrongWrap = document.getElementById('results-wrong-wrap');
+  const wrongList = document.getElementById('results-wrong-list');
+  if (quizWrong.length) {
+    wrongWrap.style.display = 'block';
+    wrongList.innerHTML = quizWrong.map(w => `
+      <div style="background:var(--white);border-radius:var(--rs);border:1px solid var(--cream2);padding:12px 14px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">${w.cat}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">${w.q}</div>
+        <div style="font-size:12px;color:var(--grass);">✓ ${w.correct}</div>
+      </div>`).join('');
+  } else { wrongWrap.style.display = 'none'; }
+  scores.push({type:quizType, val:quizCorrect, total, date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), wrong:quizWrong});
+  saveScores();
+  renderScoreHistory();
+  updateHomeScores();
+}
+
+function retakeQuiz() { startQuiz(quizType); }
+
+function exitQuiz() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'none';
+  document.getElementById('quiz-home').style.display = 'block';
+}
+
+// ── FAQ STANDALONE ────────────────────────────────────
+function renderFAQStandalone() {
+  const el = document.getElementById('faq-list-standalone');
+  if (!el) return;
+  el.innerHTML = FAQS.map((f,i) => `
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFAQS(${i})">
+        <span class="faq-q-text">${f.q}</span>
+        <span class="faq-chev" id="fchev-s-${i}">▼</span>
+      </div>
+      <div class="faq-a" id="fans-s-${i}">${f.a}</div>
+    </div>`).join('');
+}
+
+function toggleFAQS(i) {
+  document.getElementById(`fans-s-${i}`).classList.toggle('open');
+  document.getElementById(`fchev-s-${i}`).classList.toggle('open');
+}
+
 // ── LANGUAGE ─────────────────────────────────────────
 function setLanguage(lang) {
   localStorage.setItem('landed_lang', lang);
@@ -1326,8 +1743,9 @@ function addToCalendar(i) {
   showToast('📅 Opening calendar…');
 }
 loadState();
+loadScores();
 renderTimeline();
-renderFAQ();
+renderFAQStandalone();
 renderDocs();
 renderChecklist();
 renderTips();
@@ -1336,9 +1754,10 @@ updateSnapDays();
 updateHomeProgress();
 updateCurrentStep();
 updateLifeGraphic();
+renderScoreHistory();
 startTicker();
 startAffirmations();
-loadLanguage(); // Must be LAST — after all DOM renders
+loadLanguage();
 </script>
 
 <!-- ── MIA ── -->
