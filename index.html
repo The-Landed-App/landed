@@ -210,7 +210,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 .nav-item.active{color:var(--forest);}
 .nav-item.active .nav-lbl{font-weight:500;}
 
-/* ── AFFIRMATION TICKER ── */
+/* ── GOOGLE TRANSLATE ── */
+.goog-te-banner-frame{display:none!important;}
+body{top:0!important;}
+#gt-hidden{display:none;}
 .affirmation-wrap{max-width:260px;display:flex;align-items:center;justify-content:flex-end;}
 .affirmation-text{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.2px;text-align:left;}
 .affirmation-text:hover{color:rgba(255,255,255,0.95);}
@@ -221,6 +224,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 </head>
 <body>
 
+<div id="gt-hidden"></div>
 <div id="offline">You're offline — cached content is available</div>
 
 <header>
@@ -242,6 +246,20 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
         </div>
       </div>
       <div class="affirmation-wrap">
+        <select id="lang-select" onchange="setLanguage(this.value)" style="background:var(--forest2);border:1px solid rgba(255,255,255,0.2);border-radius:6px;color:var(--cream2);font-size:11px;padding:4px 8px;font-family:inherit;cursor:pointer;margin-right:12px;outline:none;appearance:none;-webkit-appearance:none;">
+          <option value="en">🌐 EN</option>
+          <option value="es">ES</option>
+          <option value="fr">FR</option>
+          <option value="pt">PT</option>
+          <option value="zh-CN">中文</option>
+          <option value="hi">हिन्दी</option>
+          <option value="ar">AR</option>
+          <option value="ru">RU</option>
+          <option value="ko">한국어</option>
+          <option value="vi">VI</option>
+          <option value="tl">TL</option>
+          <option value="ht">HT</option>
+        </select>
         <span class="affirmation-text" id="affirmation-text" onclick="cycleAffirmation()"></span>
       </div>
     </div>
@@ -444,14 +462,14 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 <script>
 // ── DATA ──────────────────────────────────────────────
 const STEPS = [
-  {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', status:'done'},
-  {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', status:'done'},
-  {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', status:'active'},
-  {emoji:'🔎', name:'Background Checks', time:'3–6 months', status:'pending'},
-  {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', status:'pending'},
-  {emoji:'📨', name:'Receive a Decision', time:'Same day*', status:'pending'},
-  {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', status:'pending'},
-  {emoji:'🎫', name:'Receive Certificate', time:'Same day', status:'pending'},
+  {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', status:'done', canSchedule:false},
+  {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', status:'done', canSchedule:false},
+  {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', status:'active', canSchedule:true},
+  {emoji:'🔎', name:'Background Checks', time:'3–6 months', status:'pending', canSchedule:false},
+  {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', status:'pending', canSchedule:true},
+  {emoji:'📨', name:'Receive a Decision', time:'Same day*', status:'pending', canSchedule:false},
+  {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', status:'pending', canSchedule:true},
+  {emoji:'🎫', name:'Receive Certificate', time:'Same day', status:'pending', canSchedule:false},
 ];
 
 const FAQS = [
@@ -551,46 +569,42 @@ const CHECKLIST = [
 ];
 
 const TIPS = [
-  {section:'Confirming eligibility', warn:false, items:[
-    "Don't just count the years — count carefully. If you traveled outside the U.S. a lot, those days abroad can affect your continuous residence requirement. Pull your passport and add up every trip. One miscalculation can get your application rejected and cost you the filing fee.",
+  {section:'Confirming eligibility', items:[
+    {text:"Don't just count the years — count carefully. If you traveled outside the U.S. a lot, those days abroad can affect your continuous residence requirement. Pull your passport and add up every trip. One miscalculation can get your application rejected and cost you the filing fee.", warn:false},
   ]},
-  {section:'Filing N-400', warn:false, items:[
-    "The form asks about every address you've lived at for the past 5 years, every job, every trip outside the country. Start gathering that information weeks before you sit down to fill it out.",
-    "The question that trips most people up: \"Have you ever been a member of an organization?\" Think broadly — unions, community groups, religious organizations all count. When in doubt, disclose.",
+  {section:'Filing N-400', items:[
+    {text:"The form asks about every address you've lived at for the past 5 years, every job, every trip outside the country. Start gathering that information weeks before you sit down to fill it out.", warn:false},
+    {text:"The question that trips most people up: \"Have you ever been a member of an organization?\" Think broadly — unions, community groups, religious organizations all count. When in doubt, disclose.", warn:false},
+    {text:"Speeding tickets count as crimes or offenses on your application. Keep it under the speed limit!", warn:true},
   ]},
-  {section:'Filing N-400 — watch out', warn:true, items:[
-    "Speeding tickets count as crimes or offenses on your application. Keep it under the speed limit!",
+  {section:'Biometrics appointment', items:[
+    {text:"Rescheduling adds weeks — don't miss it.", warn:false},
+    {text:"Bring your Green Card and appointment notice.", warn:false},
+    {text:"Lotion up your hands the night before but not the morning of. Dry fingertips scan better than moisturized ones.", warn:false},
   ]},
-  {section:'Biometrics appointment', warn:false, items:[
-    "Rescheduling adds weeks — don't miss it.",
-    "Bring your Green Card and appointment notice.",
-    "Lotion up your hands the night before but not the morning of. Dry fingertips scan better than moisturized ones.",
+  {section:'Background checks', items:[
+    {text:"This stage is mostly waiting and there's nothing you can do to speed it up.", warn:false},
+    {text:"Check your USCIS online account every few weeks and make sure your address is always current. Cases get delayed because mail goes to an old address.", warn:false},
+    {text:"Don't call USCIS repeatedly. It doesn't help and can sometimes flag your case for extra review.", warn:true},
+    {text:"Always attend your scheduled USCIS appointments in person. Reschedule requests don't always process correctly, and a missed appearance can be recorded as a no-show.", warn:true},
   ]},
-  {section:'Background checks', warn:false, items:[
-    "This stage is mostly waiting and there's nothing you can do to speed it up.",
-    "Check your USCIS online account every few weeks and make sure your address is always current. Cases get delayed because mail goes to an old address.",
+  {section:'Interview', items:[
+    {text:"The civics questions feel intimidating but they're straightforward once you drill them.", warn:false},
+    {text:"The officer will ask you to confirm everything on your N-400 out loud. If anything changed since you filed (new job, new address, travel), tell them upfront before they ask. Surprises make officers uncomfortable. Honesty doesn't.", warn:false},
   ]},
-  {section:'Background checks — watch out', warn:true, items:[
-    "Don't call USCIS repeatedly. It doesn't help and can sometimes flag your case for extra review.",
-    "Always attend your scheduled USCIS appointments in person. Reschedule requests don't always process correctly, and a missed appearance can be recorded as a no-show.",
+  {section:'Receiving your decision', items:[
+    {text:"Most people get approved same day at the interview. If you don't, don't panic — it usually means a background check is still pending, not that something is wrong.", warn:false},
+    {text:"If it's been more than 120 days since your interview with no word, you have the legal right to sue USCIS for a decision. This actually works and they know it.", warn:false},
   ]},
-  {section:'Interview', warn:false, items:[
-    "The civics questions feel intimidating but they're straightforward once you drill them.",
-    "The officer will ask you to confirm everything on your N-400 out loud. If anything changed since you filed (new job, new address, travel), tell them upfront before they ask. Surprises make officers uncomfortable. Honesty doesn't.",
+  {section:'Oath of allegiance ceremony', items:[
+    {text:"Bring your Green Card — you will need to surrender it on this day.", warn:false},
+    {text:"Bring your family and friends! Some ceremonies are small and quiet, others are in ballparks with hundreds of people. Either way it hits differently than you expect. Bring tissues.", warn:false},
+    {text:"Take tons of pictures!", warn:false},
   ]},
-  {section:'Receiving your decision', warn:false, items:[
-    "Most people get approved same day at the interview. If you don't, don't panic — it usually means a background check is still pending, not that something is wrong.",
-    "If it's been more than 120 days since your interview with no word, you have the legal right to sue USCIS for a decision. This actually works and they know it.",
-  ]},
-  {section:'Oath of allegiance ceremony', warn:false, items:[
-    "Bring your Green Card — you will need to surrender it on this day.",
-    "Bring your family and friends! Some ceremonies are small and quiet, others are in ballparks with hundreds of people. Either way it hits differently than you expect. Bring tissues.",
-    "Take tons of pictures!",
-  ]},
-  {section:'Receiving your certificate', warn:false, items:[
-    "Guard this document like your life. Make several certified copies immediately — you'll need them for your passport application, Social Security update, and employer records.",
-    "Inspect it before you leave the building. Check your name, date of birth, and details are correct. Fixing errors after requires Form N-565 and months of waiting.",
-    "The first thing you do after the ceremony is go straight to start your U.S. passport application.",
+  {section:'Receiving your certificate', items:[
+    {text:"Guard this document like your life. Make several certified copies immediately — you'll need them for your passport application, Social Security update, and employer records.", warn:false},
+    {text:"Inspect it before you leave the building. Check your name, date of birth, and details are correct. Fixing errors after requires Form N-565 and months of waiting.", warn:false},
+    {text:"The first thing you do after the ceremony is go straight to start your U.S. passport application.", warn:false},
   ]},
 ];
 
@@ -598,6 +612,7 @@ const TIPS = [
 let clState = {};
 let docState = {};
 let filingDate = null;
+let stepDates = {}; // key: step index, value: YYYY-MM-DD
 
 function loadState() {
   try {
@@ -607,12 +622,13 @@ function loadState() {
       clState = p.cl || {};
       docState = p.doc || {};
       filingDate = p.filingDate || null;
+      stepDates = p.stepDates || {};
     }
   } catch(e) {}
 }
 
 function saveState() {
-  try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate})); } catch(e) {}
+  try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate, stepDates})); } catch(e) {}
 }
 
 // ── RENDER TIMELINE ───────────────────────────────────
@@ -623,7 +639,11 @@ function renderTimeline() {
       <span class="tl-card-title">Naturalization process</span>
       <span class="tl-card-sub">Est. 12–24 months total</span>
     </div>
-    ${STEPS.map((s,i) => `
+    ${STEPS.map((s,i) => {
+      const date = stepDates[i];
+      const dateDisplay = date ? new Date(date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : null;
+      const countdown = date ? Math.ceil((new Date(date+'T12:00:00') - Date.now()) / 86400000) : null;
+      return `
       <div class="tl-row">
         <div class="tl-left">
           <div class="tl-dot ${s.status}"></div>
@@ -636,13 +656,69 @@ function renderTimeline() {
             <span class="tl-time">${s.time}</span>
             <span class="status-pill ${s.status==='done'?'pill-done':s.status==='active'?'pill-active':'pill-pending'}">${s.status==='done'?'Complete':s.status==='active'?'In progress':'Upcoming'}</span>
           </div>
+          ${dateDisplay ? `
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+              <span style="font-size:11px;color:var(--forest);font-weight:500;">📅 ${dateDisplay}</span>
+              ${countdown !== null ? `<span style="font-size:10px;color:${countdown < 0 ? 'var(--muted)' : countdown <= 7 ? '#c8952a' : 'var(--muted)'};">${countdown < 0 ? 'Passed' : countdown === 0 ? 'Today!' : `${countdown} days away`}</span>` : ''}
+              <button onclick="addToCalendar(${i})" style="font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--grass);background:var(--approved-bg);color:var(--forest);cursor:pointer;font-family:inherit;">Add to calendar</button>
+              <button onclick="clearStepDate(${i})" style="font-size:10px;padding:2px 6px;border-radius:99px;border:1px solid var(--cream2);background:none;color:var(--muted);cursor:pointer;font-family:inherit;">×</button>
+            </div>
+          ` : s.canSchedule ? `
+            <button onclick="setStepDate(${i})" style="margin-top:6px;font-size:10px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">+ Set date</button>
+          ` : ''}
         </div>
-      </div>
-    `).join('')}
+      </div>`;
+    }).join('')}
   `;
 }
 
-// ── RENDER FAQ ────────────────────────────────────────
+// ── STEP DATES & CALENDAR ────────────────────────────
+function setStepDate(i) {
+  const step = STEPS[i];
+  const current = stepDates[i] || '';
+  const d = prompt(`Enter date for "${step.name}" (YYYY-MM-DD):`, current);
+  if (d && !isNaN(new Date(d))) {
+    stepDates[i] = d;
+    saveState();
+    renderTimeline();
+    updateCurrentStep();
+  }
+}
+
+function clearStepDate(i) {
+  delete stepDates[i];
+  saveState();
+  renderTimeline();
+}
+
+function addToCalendar(i) {
+  const step = STEPS[i];
+  const date = stepDates[i];
+  if (!date) return;
+  const d = date.replace(/-/g, '');
+  const title = encodeURIComponent(`Landed: ${step.name}`);
+  const details = encodeURIComponent(`Your ${step.name} appointment. Prepared with Landed.`);
+  // Generate .ics file
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Landed//EN',
+    'BEGIN:VEVENT',
+    `DTSTART:${d}`,
+    `DTEND:${d}`,
+    `SUMMARY:${step.name} — Landed`,
+    `DESCRIPTION:Your ${step.name} appointment. Prepared with Landed.`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\n');
+  const blob = new Blob([ics], {type:'text/calendar'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `landed-${step.name.toLowerCase().replace(/\s+/g,'-')}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 function renderFAQ() {
   const el = document.getElementById('faq-list');
   el.innerHTML = FAQS.map((f,i) => `
@@ -780,7 +856,7 @@ function updateHomeProgress() {
 }
 
 // ── RENDER TIPS (filterable, smart collapse) ──────────
-const TIP_COLLAPSE_THRESHOLD = 80; // chars — tips longer than this get collapsed
+const TIP_COLLAPSE_THRESHOLD = 80;
 let _activeTipFilter = 'All';
 
 function renderTips() {
@@ -795,31 +871,20 @@ function renderTips() {
   const cards = [];
   TIPS.forEach(sec => {
     if (_activeTipFilter !== 'All' && sec.section !== _activeTipFilter) return;
-    sec.items.forEach(t => cards.push({ text: t, section: sec.section, warn: sec.warn }));
+    sec.items.forEach(item => cards.push({ text: item.text, section: sec.section, warn: item.warn }));
   });
 
   el.innerHTML = cards.length ? cards.map((c, i) => {
     const tag = `<span class="tip-tag ${c.warn ? 'tip-tag-warn' : 'tip-tag-normal'}">${c.warn ? '⚠️ Watch out' : '💡 ' + c.section}</span>`;
     const isLong = c.text.length > TIP_COLLAPSE_THRESHOLD;
-
     if (!isLong) {
-      // Short tip — always fully visible, no toggle needed
-      return `
-        <div class="tip-card-static">
-          ${tag}
-          <div class="tip-card-static-text">${c.text}</div>
-        </div>`;
+      return `<div class="tip-card-static">${tag}<div class="tip-card-static-text">${c.text}</div></div>`;
     }
-
-    // Long tip — collapsible with preview
     const preview = c.text.slice(0, TIP_COLLAPSE_THRESHOLD).trimEnd() + '…';
     return `
       <div class="tip-card" id="tipcard-${i}">
         <div class="tip-card-header" onclick="toggleTipCard(${i})">
-          <div class="tip-card-header-left">
-            ${tag}
-            <div class="tip-preview" id="tip-preview-${i}">${preview}</div>
-          </div>
+          <div class="tip-card-header-left">${tag}<div class="tip-preview" id="tip-preview-${i}">${preview}</div></div>
           <span class="tip-chevron" id="tip-chev-${i}">▼</span>
         </div>
         <div class="tip-card-body" id="tip-body-${i}">${c.text}</div>
@@ -831,20 +896,11 @@ function toggleTipCard(i) {
   const card = document.getElementById(`tipcard-${i}`);
   const body = document.getElementById(`tip-body-${i}`);
   const preview = document.getElementById(`tip-preview-${i}`);
-  const chev = document.getElementById(`tip-chev-${i}`);
   const isOpen = body.classList.contains('open');
   body.classList.toggle('open', !isOpen);
   card.classList.toggle('expanded', !isOpen);
-  // When expanded, show full text in header too so it reads naturally
-  if (!isOpen) {
-    preview.style.whiteSpace = 'normal';
-    preview.style.overflow = 'visible';
-    preview.style.textOverflow = 'unset';
-  } else {
-    preview.style.whiteSpace = 'nowrap';
-    preview.style.overflow = 'hidden';
-    preview.style.textOverflow = 'ellipsis';
-  }
+  if (!isOpen) { preview.style.whiteSpace='normal';preview.style.overflow='visible';preview.style.textOverflow='unset'; }
+  else { preview.style.whiteSpace='nowrap';preview.style.overflow='hidden';preview.style.textOverflow='ellipsis'; }
 }
 
 function setTipFilter(cat) {
@@ -858,7 +914,28 @@ let _tickerInterval = null;
 const FLAT_TIPS = [];
 
 function buildFlatTips() {
-  TIPS.forEach(sec => sec.items.forEach(t => FLAT_TIPS.push({ text: t, section: sec.section, warn: sec.warn })));
+  TIPS.forEach(sec => sec.items.forEach(item => FLAT_TIPS.push({ text: item.text, section: sec.section, warn: item.warn })));
+}
+
+// ── LANGUAGE ──────────────────────────────────────────
+function setLanguage(lang) {
+  localStorage.setItem('landed_lang', lang);
+  // Store language so Mia responds in that language
+  window._landedLang = lang;
+  const note = lang === 'en' ? '' : `Please respond in ${getLangName(lang)}.`;
+  window._langNote = note;
+}
+
+function getLangName(code) {
+  const names = {es:'Spanish',fr:'French',pt:'Portuguese',zh:'Chinese',hi:'Hindi',ar:'Arabic',ru:'Russian',ko:'Korean',vi:'Vietnamese',tl:'Filipino',ha:'Haitian Creole'};
+  return names[code] || 'English';
+}
+
+function loadLanguage() {
+  const lang = localStorage.getItem('landed_lang') || 'en';
+  const sel = document.getElementById('lang-select');
+  if (sel) sel.value = lang;
+  setLanguage(lang);
 }
 
 function showTip(idx) {
@@ -1123,7 +1200,112 @@ function startAffirmations() {
   showAffirmation(_affirmIdx);
   setInterval(cycleAffirmation, 8000);
 }
-loadState();
+
+// ── TOAST ─────────────────────────────────────────────
+function showToast(msg) {
+  let t = document.getElementById('landed-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'landed-toast';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--forest3);color:var(--cream2);font-size:13px;padding:10px 20px;border-radius:99px;z-index:500;opacity:0;transition:opacity 0.3s;white-space:nowrap;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,0.2);';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
+}
+
+// ── LANGUAGE ─────────────────────────────────────────
+function setLanguage(lang) {
+  localStorage.setItem('landed_lang', lang);
+  if (lang === 'en') {
+    // Remove translation cookie to revert to English
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + location.hostname;
+    location.reload();
+  } else {
+    document.cookie = `googtrans=/en/${lang}; path=/`;
+    document.cookie = `googtrans=/en/${lang}; path=/; domain=${location.hostname}`;
+    // Load Google Translate script dynamically
+    if (!window._gtLoaded) {
+      window._gtLoaded = true;
+      window.googleTranslateElementInit = function() {
+        new google.translate.TranslateElement({pageLanguage:'en',autoDisplay:false},'gt-hidden');
+      };
+      const s = document.createElement('script');
+      s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(s);
+      setTimeout(() => location.reload(), 1500);
+    } else {
+      location.reload();
+    }
+  }
+}
+
+function loadLanguage() {
+  const lang = localStorage.getItem('landed_lang') || 'en';
+  const sel = document.getElementById('lang-select');
+  if (sel) sel.value = lang;
+}
+
+// ── STEP DATES & CALENDAR ────────────────────────────
+function setStepDate(i) {
+  const step = STEPS[i];
+  const existing = document.getElementById('date-modal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'date-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(10,24,16,0.5);z-index:400;display:flex;align-items:center;justify-content:center;padding:16px;';
+  modal.innerHTML = `
+    <div style="background:var(--white);border-radius:16px;padding:24px;width:100%;max-width:320px;">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--forest);margin-bottom:6px;">${step.emoji} ${step.name}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Set your appointment date</div>
+      <input type="date" id="date-input-modal" value="${stepDates[i]||''}" style="width:100%;border:1.5px solid var(--cream2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;margin-bottom:16px;">
+      <div style="display:flex;gap:8px;">
+        <button onclick="confirmStepDate(${i})" style="flex:1;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:11px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Save date</button>
+        <button onclick="document.getElementById('date-modal').remove()" style="flex:1;background:var(--cream);color:var(--muted);border:1px solid var(--cream2);border-radius:99px;padding:11px;font-size:13px;font-family:inherit;cursor:pointer;">Cancel</button>
+      </div>
+    </div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
+function confirmStepDate(i) {
+  const val = document.getElementById('date-input-modal').value;
+  document.getElementById('date-modal').remove();
+  if (val) {
+    stepDates[i] = val;
+    saveState();
+    renderTimeline();
+    updateCurrentStep();
+    showToast('📅 Date saved');
+  }
+}
+
+function clearStepDate(i) {
+  delete stepDates[i];
+  saveState();
+  renderTimeline();
+  showToast('Date removed');
+}
+
+function addToCalendar(i) {
+  const step = STEPS[i];
+  const date = stepDates[i];
+  if (!date) return;
+  const d = date.replace(/-/g,'');
+  const ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Landed//EN','BEGIN:VEVENT',`DTSTART:${d}`,`DTEND:${d}`,`SUMMARY:${step.name} — Landed`,`DESCRIPTION:Your ${step.name} appointment. Prepared with Landed.`,'END:VEVENT','END:VCALENDAR'].join('\n');
+  const blob = new Blob([ics],{type:'text/calendar'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `landed-${step.name.toLowerCase().replace(/\s+/g,'-')}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📅 Opening calendar…');
+}
+loadLanguage();
 renderTimeline();
 renderFAQ();
 renderDocs();
@@ -1231,8 +1413,9 @@ async function sendMia(){
   input.value='';
   addMiaMsg(text,'user');
   addMiaTyping();
+  const langNote = window._langNote || '';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:'You are Mia, a warm document assistant for Landed, helping immigrants with U.S. naturalization. Answer questions about USCIS forms, documents, and the naturalization process. Never give legal advice. For legal strategy or representation questions, direct users to an immigration attorney. Be concise and friendly.',messages:[{role:'user',content:text}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:`You are Mia, a warm document assistant for Landed, helping immigrants with U.S. naturalization. Answer questions about USCIS forms, documents, and the naturalization process. Never give legal advice. For legal strategy or representation questions, direct users to an immigration attorney. Be concise and friendly. ${langNote}`,messages:[{role:'user',content:text}]})});
     const data=await res.json();
     removeMiaTyping();
     addMiaMsg(data.content?.[0]?.text||"I'm not sure — an immigration attorney would be best for that question.",'mia');
