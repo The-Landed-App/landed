@@ -659,74 +659,74 @@ const DOCS = [
 
 const CHECKLIST = [
   {section:'Personal information', items:[
-    {t:'Your legal name matches exactly across all documents', n:'N-400, green card, passport, and supporting docs must all match'},
-    {t:'All other names ever used are listed (maiden name, aliases, name changes)'},
-    {t:'Date of birth is correct and consistent across all documents'},
-    {t:'Country of birth is listed exactly as it appears on your birth certificate'},
-    {t:'All addresses for the past 5 years are listed with correct dates'},
-    {t:'Phone number and email address are current'},
+    {t:'Your legal name matches exactly across all documents', n:'N-400, green card, passport, and supporting docs must all match', e:'USCIS cross-references your name across every document. Even small differences — a missing middle name, a hyphen, a spelling variation — can trigger a Request for Evidence (RFE) and delay your case by months. Check every document side by side before submitting.'},
+    {t:'All other names ever used are listed (maiden name, aliases, name changes)', e:'USCIS runs background checks under every name you\'ve ever used. Missing a name — even one used briefly or decades ago — can look like intentional concealment, which is a serious red flag. Include married names, names from your home country, and any informal names that appear on official documents.'},
+    {t:'Date of birth is correct and consistent across all documents', e:'Your date of birth must match exactly on your N-400, green card, passport, and birth certificate. Even a day or month transposition can cause problems. If documents conflict, you\'ll need to explain the discrepancy in writing.'},
+    {t:'Country of birth is listed exactly as it appears on your birth certificate', e:'List your country of birth as it appears on your birth certificate — not the current country name if it has changed. For example, if you were born in what is now a different country, use the name that existed at the time of your birth.'},
+    {t:'All addresses for the past 5 years are listed with correct dates', e:'USCIS uses your address history to verify your continuous residence. Gaps or overlapping dates will raise questions. Include every place you lived, even temporarily — college dorms, short-term rentals, time staying with family all count.'},
+    {t:'Phone number and email address are current', e:'USCIS and your attorney (if you have one) may need to reach you quickly. An outdated phone number or email can cause you to miss important notices, which can delay or even jeopardize your case.'},
   ]},
   {section:'Eligibility', items:[
-    {t:'You meet the continuous residence requirement', n:'5 years for most; 3 years if married to a U.S. citizen'},
-    {t:'No single trip outside the U.S. was longer than 6 months'},
-    {t:'Total time abroad calculated and does not break continuous residence'},
-    {t:'Physically present in the U.S. for at least 30 months of the past 5 years'},
-    {t:'Lived in the same USCIS district for at least 3 months before filing'},
+    {t:'You meet the continuous residence requirement', n:'5 years for most; 3 years if married to a U.S. citizen', e:'Continuous residence means you have maintained a primary home in the U.S. for the required period. It is NOT the same as physical presence. A single trip abroad of more than 6 months can break continuous residence entirely and reset your eligibility clock.'},
+    {t:'No single trip outside the U.S. was longer than 6 months', e:'A single trip of 6 months or more is presumed to have broken your continuous residence. If this applies to you, you must provide documentation showing you maintained ties to the U.S. (job, family, property) and consult an immigration attorney before filing.'},
+    {t:'Total time abroad calculated and does not break continuous residence', e:'Add up all your time outside the U.S. over the past 5 years. You must have been physically present in the U.S. for at least 30 months out of the past 60. Use your passport stamps and travel records to calculate this carefully.'},
+    {t:'Physically present in the U.S. for at least 30 months of the past 5 years', e:'This is the physical presence requirement — different from continuous residence. Count the actual days you were in the U.S. It must total at least 913 days (30 months) over the past 5 years. Travel records and passport stamps are your evidence.'},
+    {t:'Lived in the same USCIS district for at least 3 months before filing', e:'You must have lived in the jurisdiction where you are filing for at least 3 months. If you recently moved, wait until the 3-month mark before filing to avoid having your case transferred or rejected.'},
   ]},
   {section:'Travel history', items:[
-    {t:'Every trip outside the U.S. in the past 5 years is listed', n:'Include short weekend trips — all of them'},
-    {t:'Exact departure and return dates recorded for each trip'},
-    {t:'Countries visited listed for each trip'},
-    {t:'No trip is longer than 6 months (or you have documentation explaining it)'},
+    {t:'Every trip outside the U.S. in the past 5 years is listed', n:'Include short weekend trips — all of them', e:'Include every trip, no matter how short — weekend trips to Canada or Mexico count. USCIS checks your passport stamps and entry/exit records. Omitting trips, even innocent ones, looks like dishonesty and can derail your application.'},
+    {t:'Exact departure and return dates recorded for each trip', e:'Approximate dates are not acceptable. Use your passport stamps, airline records, or travel itineraries to find the exact dates. If you can\'t find exact dates, get records from your airline or travel agent.'},
+    {t:'Countries visited listed for each trip', e:'List every country you visited during each trip, including layovers where you passed through immigration. This is important for background check purposes, especially for certain countries.'},
+    {t:'No trip is longer than 6 months (or you have documentation explaining it)', e:'Any trip over 6 months is a major red flag that can break continuous residence. If this happened, you need documentation showing you maintained U.S. ties (employment, family, taxes, property) and should strongly consider consulting an immigration attorney.'},
   ]},
   {section:'Employment history', items:[
-    {t:'All employers for the past 5 years listed with correct dates'},
-    {t:'Self-employment periods are noted'},
-    {t:'Unemployment or gaps in employment are accounted for'},
-    {t:'Employer addresses are included'},
+    {t:'All employers for the past 5 years listed with correct dates', e:'Include every employer — full-time, part-time, contract, and self-employment. Gaps in employment must be explained. USCIS may verify your work history through tax records, so make sure dates match what you filed on your taxes.'},
+    {t:'Self-employment periods are noted', e:'If you were self-employed at any point, list your business name and address. USCIS will look for corresponding tax filings. Undeclared self-employment income combined with claimed self-employment on the N-400 can create serious problems.'},
+    {t:'Unemployment or gaps in employment are accounted for', e:'Any gap in employment needs a brief explanation — looking for work, raising children, in school, illness. USCIS is not penalizing you for being unemployed, but unexplained gaps look suspicious. A simple one-line note resolves this.'},
+    {t:'Employer addresses are included', e:'List complete addresses for each employer. If a company has since moved or closed, use the address that was current during your employment. This helps USCIS verify the record if needed.'},
   ]},
   {section:'Marital and family history', items:[
-    {t:'Current marital status is accurately listed'},
-    {t:'All previous marriages listed with start and end dates', n:'Even marriages that ended decades ago'},
-    {t:'If divorced, divorce decrees are available as supporting documents'},
-    {t:'All children (biological, adopted, step) are listed regardless of where they live'},
+    {t:'Current marital status is accurately listed', e:'Your current marital status must match your supporting documents. If you are married, your marriage certificate must be included. If divorced, you need divorce decrees. Inconsistencies between your stated status and your documents will trigger follow-up questions.'},
+    {t:'All previous marriages listed with start and end dates', n:'Even marriages that ended decades ago', e:'There is no statute of limitations on marriages for immigration purposes. A marriage from 30 years ago that ended in divorce still needs to be disclosed. Failure to list a prior marriage is considered misrepresentation — one of the most serious grounds for denial.'},
+    {t:'If divorced, divorce decrees are available as supporting documents', e:'You need the final divorce decree — not just a separation agreement — for each prior marriage. If you divorced abroad, you may need a certified translation and possibly an evaluation of the decree\'s validity under U.S. law.'},
+    {t:'All children (biological, adopted, step) are listed regardless of where they live', e:'List every child, including those who live in another country, children from previous relationships, and stepchildren. USCIS is not checking on your children — they use this information to verify your family history is consistent with other records.'},
   ]},
   {section:'Tax and financial', items:[
-    {t:'Filed U.S. taxes for the past 5 years (or have a valid reason you didn\'t)'},
-    {t:'Tax transcripts or returns are available if requested at interview'},
-    {t:'You have not claimed non-resident status on tax returns to avoid taxes', n:'This is a common flag that can affect eligibility'},
-    {t:'Any unpaid taxes have a payment plan in place'},
+    {t:'Filed U.S. taxes for the past 5 years (or have a valid reason you didn\'t)', e:'Failing to file taxes when required is a moral character issue that can result in denial. If you didn\'t file because your income was below the threshold, document that. If you were required to file and didn\'t, file amended returns and pay any owed taxes before applying.'},
+    {t:'Tax transcripts or returns are available if requested at interview', e:'The USCIS officer may ask to see your tax returns at the interview. Have transcripts from the IRS (Form 4506-T) or copies of your returns for the past 5 years ready. This is one of the most common documentation requests at interviews.'},
+    {t:'You have not claimed non-resident status on tax returns to avoid taxes', n:'This is a common flag that can affect eligibility', e:'Claiming non-resident tax status while holding a green card is a serious problem. It can be interpreted as abandoning your permanent resident status, which would make you ineligible for citizenship. If this applies to you, consult an immigration attorney immediately.'},
+    {t:'Any unpaid taxes have a payment plan in place', e:'Owing taxes alone is not disqualifying, but ignoring tax obligations shows lack of good moral character. If you owe taxes, set up an IRS payment plan (installment agreement) before filing your N-400. Bring documentation of the plan to your interview.'},
   ]},
   {section:'Moral character questions', items:[
-    {t:'All arrests, citations, or charges are disclosed — even if charges were dropped', n:'When in doubt, disclose. Omission is worse than the incident'},
-    {t:'Any DUIs or traffic violations resulting in arrest are listed'},
-    {t:'Membership in all organizations, clubs, and groups is listed', n:'Includes community groups, unions, and religious organizations'},
-    {t:'You have never claimed to be a U.S. citizen falsely'},
-    {t:'You have never voted in a U.S. federal election as a non-citizen'},
+    {t:'All arrests, citations, or charges are disclosed — even if charges were dropped', n:'When in doubt, disclose. Omission is worse than the incident', e:'Disclose everything — arrests without charges, charges that were dropped, expunged records, juvenile records, and DUIs. USCIS runs an FBI background check and will find arrests you don\'t disclose. Not disclosing is considered misrepresentation and is far more damaging than the underlying incident.'},
+    {t:'Any DUIs or traffic violations resulting in arrest are listed', e:'A DUI or traffic arrest must be disclosed even if it resulted in no conviction. A single DUI is often not disqualifying on its own, but failure to disclose it is. Bring the police report, court records, and any documentation of completed sentence or probation.'},
+    {t:'Membership in all organizations, clubs, and groups is listed', n:'Includes community groups, unions, and religious organizations', e:'List every organization you\'ve been a member of — religious groups, cultural organizations, professional associations, unions, clubs, and political parties. USCIS is looking for membership in groups associated with terrorism or persecution, not your book club. When in doubt, include it.'},
+    {t:'You have never claimed to be a U.S. citizen falsely', e:'Falsely claiming to be a U.S. citizen — on a job application, to vote, or for any other reason — is a permanent bar to citizenship with almost no exceptions. If this ever happened, consult an immigration attorney before filing.'},
+    {t:'You have never voted in a U.S. federal election as a non-citizen', e:'Voting in a U.S. federal election as a non-citizen is both a crime and a permanent bar to naturalization in most cases. State and local elections vary — some jurisdictions allow non-citizens to vote in local elections. Federal elections are never permitted.'},
   ]},
   {section:'Supporting documents', items:[
-    {t:'Copy of both sides of your Permanent Resident Card (green card)'},
-    {t:'Birth certificate with certified English translation if not in English'},
-    {t:'Passport photos — 2 identical, 2×2 inches, taken within 30 days'},
-    {t:'Marriage certificate if applying on the 3-year path or listing a spouse'},
-    {t:'Divorce decrees for all prior marriages'},
-    {t:'Tax returns or transcripts for past 5 years'},
-    {t:'Arrest records or court dispositions for any disclosed incidents'},
-    {t:'All translations are certified with a signed translator statement'},
+    {t:'Copy of both sides of your Permanent Resident Card (green card)', e:'USCIS needs to verify your green card details. Make clear photocopies of both the front and back. If your green card has expired but your status is current (you have a renewal receipt), include that too.'},
+    {t:'Birth certificate with certified English translation if not in English', e:'Your birth certificate must be translated by a certified translator who signs a statement of competency. Family members cannot translate. Online translation services are generally not acceptable unless they provide a certified translator statement.'},
+    {t:'Passport photos — 2 identical, 2×2 inches, taken within 30 days', e:'Photos must be taken within 30 days of filing. They must be 2x2 inches, in color, with a white background, and show a full front view of your face. Photos taken at a pharmacy or USPS are usually acceptable. Selfies and phone photos are not.'},
+    {t:'Marriage certificate if applying on the 3-year path or listing a spouse', e:'If you are applying based on 3 years of marriage to a U.S. citizen, your marriage certificate and evidence of your spouse\'s citizenship are required. You will also need to show you have lived with your spouse for the entire 3 years.'},
+    {t:'Divorce decrees for all prior marriages', e:'Every prior marriage needs a final divorce decree. USCIS needs to confirm each marriage was legally terminated before your current marriage. Separations and annulments have different documentation requirements — confirm what applies in your jurisdiction.'},
+    {t:'Tax returns or transcripts for past 5 years', e:'IRS transcripts (free from irs.gov) are more reliable than copies of returns. Request them in advance as they can take a few weeks. Transcripts show exactly what was filed and reduce the risk of discrepancies.'},
+    {t:'Arrest records or court dispositions for any disclosed incidents', e:'For every arrest or charge you disclose, you need official court records showing the final disposition — dismissal, conviction, sentence completed. "I don\'t remember the case number" is not acceptable. Contact the courthouse directly to obtain records.'},
+    {t:'All translations are certified with a signed translator statement', e:'Every non-English document needs a certified translation. The translator must sign a statement saying they are competent in both languages and that the translation is accurate and complete. This statement must be attached to every translated document.'},
   ]},
   {section:'Form review', items:[
-    {t:'Every question has an answer — no blanks left empty', n:'Write N/A if a question doesn\'t apply'},
-    {t:'Form is signed and dated on page 15'},
-    {t:'If someone helped prepare the form, Part 14 (preparer) is completed'},
-    {t:'All answers are in English'},
-    {t:'Form version is current — check edition date on the bottom', n:'USCIS rejects outdated form versions'},
+    {t:'Every question has an answer — no blanks left empty', n:'Write N/A if a question doesn\'t apply', e:'USCIS returns forms with blank fields. Every single question needs an answer. If a question doesn\'t apply to you, write "N/A". If the answer is zero, write "0". Blanks are interpreted as incomplete, not as "none."'},
+    {t:'Form is signed and dated on page 15', e:'An unsigned N-400 is automatically rejected. Sign and date on the day you mail it — not weeks before. Using the wrong date (like dating it when you started filling it out) can cause issues.'},
+    {t:'If someone helped prepare the form, Part 14 (preparer) is completed', e:'If anyone other than yourself helped fill out the form — a friend, paralegal, or attorney — they must complete the preparer section. Failing to disclose a preparer is a form of misrepresentation.'},
+    {t:'All answers are in English', e:'The N-400 must be completed entirely in English, even if you are applying for an exemption from the English requirement. Your answers, not the supporting documents, must be in English.'},
+    {t:'Form version is current — check edition date on the bottom', n:'USCIS rejects outdated form versions', e:'USCIS updates form versions periodically. The edition date is printed at the bottom of each page. If you\'re using an old version, your application will be rejected outright — no refund. Always download the current version from uscis.gov right before you file.'},
   ]},
   {section:'Filing', items:[
-    {t:'Filing fee of $725 is included (check or money order to U.S. Dept. of Homeland Security)', n:'Or fee waiver Form I-912 if applicable'},
-    {t:'Mailing to the correct USCIS address for your state'},
-    {t:'Complete copy of your entire packet made before mailing'},
-    {t:'Envelope has sufficient postage and return address'},
-    {t:'Sending via certified mail or a trackable method'},
+    {t:'Filing fee of $725 is included (check or money order to U.S. Dept. of Homeland Security)', n:'Or fee waiver Form I-912 if applicable', e:'Make the check or money order payable to "U.S. Department of Homeland Security." Do not abbreviate. Do not make it payable to USCIS, the government, or any other name. Personal checks are accepted. If the check bounces, your case is rejected and you may owe a returned check fee.'},
+    {t:'Mailing to the correct USCIS address for your state', e:'USCIS has different lockbox addresses depending on your state and whether you\'re filing with or without a fee waiver. Using the wrong address means your application goes to the wrong office and may be rejected or significantly delayed. Verify your address at uscis.gov the day you mail.'},
+    {t:'Complete copy of your entire packet made before mailing', e:'Make a complete copy of everything in your packet — the form, all supporting documents, the check. If USCIS loses your packet (it happens), you\'ll need to recreate it. Without a copy, you\'re starting from scratch.'},
+    {t:'Envelope has sufficient postage and return address', e:'Insufficient postage means your package gets returned — or worse, delivered with postage due and refused. Weigh your complete packet at the post office. Include your return address so it can be returned to you if undeliverable.'},
+    {t:'Sending via certified mail or a trackable method', e:'Never send your N-400 by regular mail. Send it via USPS Certified Mail with Return Receipt, UPS, or FedEx. Keep the tracking number and receipt. You need proof of the exact date USCIS received your packet — this is your official filing date.'},
   ]},
 ];
 
@@ -956,11 +956,15 @@ function renderChecklist() {
         </div>
         <div class="cl-body ${si===0?'open':''}" id="clbody-${si}">
           ${s.items.map((item,ii) => `
-            <div class="cl-item ${clState[`${si}-${ii}`]?'checked':''}" id="clitem-${si}-${ii}" onclick="toggleCL(${si},${ii})">
-              <div class="cl-cb"><div class="cl-check"></div></div>
-              <div>
-                <div class="cl-text">${item.t}</div>
-                ${item.n?`<div class="cl-note">${item.n}</div>`:''}
+            <div class="cl-item ${clState[`${si}-${ii}`]?'checked':''}" id="clitem-${si}-${ii}">
+              <div class="cl-cb" onclick="toggleCL(${si},${ii})"><div class="cl-check"></div></div>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:flex-start;gap:6px;">
+                  <div class="cl-text" onclick="toggleCL(${si},${ii})" style="flex:1;">${item.t}</div>
+                  ${item.e ? `<button onclick="toggleCLExplain('${si}-${ii}')" style="background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;margin-top:1px;font-size:14px;color:#c8952a;line-height:1;" title="Why this matters">ℹ</button>` : ''}
+                </div>
+                ${item.n ? `<div class="cl-note">${item.n}</div>` : ''}
+                ${item.e ? `<div id="clexp-${si}-${ii}" style="display:none;margin-top:8px;padding:10px 12px;background:#fff8e8;border-left:3px solid #c8952a;border-radius:0 8px 8px 0;font-size:12px;color:#5a4010;line-height:1.6;">${item.e}</div>` : ''}
               </div>
             </div>
           `).join('')}
@@ -969,6 +973,12 @@ function renderChecklist() {
     `;
   }).join('');
   updateCLProgress();
+}
+
+function toggleCLExplain(key) {
+  const el = document.getElementById(`clexp-${key}`);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 function toggleCLSection(si) {
@@ -2097,6 +2107,94 @@ function unlockMia(){
   document.getElementById('mia-gate').style.display='none';
   document.getElementById('mia-input-row').style.display='flex';
 }
+function buildMiaSystemPrompt() {
+  // ── User's live app state ──────────────────────────
+  const activeStep = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const doneSteps = STEPS.filter(s => s.status === 'done').map(s => s.name).join(', ') || 'None yet';
+  const civicsScores = scores.filter(s => s.type === 'civics');
+  const englishScores = scores.filter(s => s.type === 'english');
+  const latestCivics = civicsScores.length ? `${Math.round(civicsScores[civicsScores.length-1].val/civicsScores[civicsScores.length-1].total*100)}% (${civicsScores[civicsScores.length-1].val}/${civicsScores[civicsScores.length-1].total})` : 'Not taken yet';
+  const latestEnglish = englishScores.length ? `${Math.round(englishScores[englishScores.length-1].val/englishScores[englishScores.length-1].total*100)}% (${englishScores[englishScores.length-1].val}/${englishScores[englishScores.length-1].total})` : 'Not taken yet';
+  const civicsWrong = civicsScores.length && civicsScores[civicsScores.length-1].wrong ? civicsScores[civicsScores.length-1].wrong.map(w => w.q).join('; ') : 'None';
+  const englishWrong = englishScores.length && englishScores[englishScores.length-1].wrong ? englishScores[englishScores.length-1].wrong.map(w => w.q).join('; ') : 'None';
+
+  // Checklist progress
+  let clDone = 0, clTotal = 0;
+  const clIncomplete = [];
+  CHECKLIST.forEach((sec, si) => sec.items.forEach((item, ii) => {
+    clTotal++;
+    if (clState[`${si}-${ii}`]) clDone++;
+    else clIncomplete.push(`[${sec.section}] ${item.t}`);
+  }));
+
+  // Docs progress
+  const docDone = DOCS.filter(d => docState[d.key]).map(d => d.name).join(', ') || 'None';
+  const docMissing = DOCS.filter(d => !docState[d.key]).map(d => d.name).join(', ') || 'None';
+
+  // Badges + streak
+  const earnedBadges = (gamification.badges||[]).map(id => { const b = BADGE_DEFS.find(d => d.id === id); return b ? b.label : ''; }).filter(Boolean).join(', ') || 'None yet';
+  const streak = gamification.streak || 0;
+
+  // Scheduled dates
+  const scheduledDates = STEPS.map((s, i) => stepDates[i] ? `${s.name}: ${stepDates[i]}` : null).filter(Boolean).join(', ') || 'None set';
+
+  // All tips flattened
+  const allTips = TIPS.map(sec => sec.items.map(item => `[${sec.section}${item.warn?' - WATCH OUT':''}] ${item.text}`).join('\n')).join('\n');
+
+  // All checklist explanations
+  const allExplains = CHECKLIST.map(sec => sec.items.map(item => item.e ? `Q: ${item.t}\nA: ${item.e}` : '').filter(Boolean).join('\n')).join('\n');
+
+  const langNote = window._langNote || '';
+
+  return `You are Mia, a warm and knowledgeable guide inside the Landed app, which helps green card holders navigate U.S. naturalization.
+
+YOUR PERSONALITY:
+- Warm, clear, and encouraging — like a knowledgeable friend who has been through this process
+- Concise: give direct answers, not lengthy essays
+- Honest about what you don't know
+- Never act as a lawyer or give legal strategy advice
+
+YOUR KNOWLEDGE — you know everything inside the Landed app:
+
+1. THE NATURALIZATION TIMELINE (8 steps):
+${STEPS.map(s => `- ${s.emoji} ${s.name} (${s.time}) — ${s.status}`).join('\n')}
+
+2. THE N-400 CHECKLIST (${clTotal} items across 9 sections):
+${allExplains}
+
+3. PRO TIPS:
+${allTips}
+
+4. THE CIVICS TEST: 100 official USCIS questions covering American history, government, geography, symbols, and holidays. Users practice 10 at a time.
+
+5. THE ENGLISH TEST: 10 reading comprehension sentences. This test is always in English regardless of language setting.
+
+6. FAQ ANSWERS: Processing times average 12–24 months. Fastest: 8–10 months. Slowest (NYC/LA/Chicago): 24–36 months. ~91% approval rate at interview. Most denials are for failure to meet continuous residence. After 120 days post-interview with no decision, the user has the legal right to sue USCIS.
+
+THIS USER'S CURRENT STATUS:
+- Current step: ${activeStep ? activeStep.name : 'Not started'}
+- Completed steps: ${doneSteps}
+- Scheduled dates: ${scheduledDates}
+- N-400 checklist: ${clDone}/${clTotal} items complete
+- Incomplete checklist items: ${clIncomplete.slice(0,10).join(' | ')}${clIncomplete.length > 10 ? ` ... and ${clIncomplete.length - 10} more` : ''}
+- Documents filed: ${docDone}
+- Documents still needed: ${docMissing}
+- Latest civics score: ${latestCivics}
+- Civics questions missed: ${civicsWrong}
+- Latest English score: ${latestEnglish}
+- English questions missed: ${englishWrong}
+- Practice streak: ${streak} days
+- Badges earned: ${earnedBadges}
+
+STRICT RULES:
+1. Only answer questions about things in this app and the naturalization process as described above.
+2. If asked something outside this scope, say: "I don't have information about that in Landed. For anything beyond what's covered here, an immigration attorney would be the right person to ask."
+3. NEVER give legal strategy advice ("should I disclose X", "will this disqualify me", "what are my chances"). Instead say: "That's a legal question I can't answer — an immigration attorney can give you a proper assessment."
+4. You CAN explain what the N-400 asks, what a question means, and what the general rule is. You CANNOT advise on a specific person's legal situation.
+5. Be specific about the user's data when relevant — e.g. "I can see you haven't completed the Tax section yet" or "Your civics score was 70% last time."
+${langNote}`;
+}
+
 async function sendMia(){
   if(!window._miaUnlocked)return;
   const input=document.getElementById('mia-input');
@@ -2105,12 +2203,11 @@ async function sendMia(){
   input.value='';
   addMiaMsg(text,'user');
   addMiaTyping();
-  const langNote = window._langNote || '';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:`You are Mia, a warm document assistant for Landed, helping immigrants with U.S. naturalization. Answer questions about USCIS forms, documents, and the naturalization process. Never give legal advice. For legal strategy or representation questions, direct users to an immigration attorney. Be concise and friendly. ${langNote}`,messages:[{role:'user',content:text}]})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:buildMiaSystemPrompt(),messages:[{role:'user',content:text}]})});
     const data=await res.json();
     removeMiaTyping();
-    addMiaMsg(data.content?.[0]?.text||"I'm not sure — an immigration attorney would be best for that question.",'mia');
+    addMiaMsg(data.content?.[0]?.text||"I'm not sure about that one. An immigration attorney would be the right person to ask.",'mia');
   }catch(e){removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
 }
 function addMiaMsg(text,role){
