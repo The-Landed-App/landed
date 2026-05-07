@@ -2204,7 +2204,7 @@ async function sendMia(){
   addMiaMsg(text,'user');
   addMiaTyping();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:buildMiaSystemPrompt(),messages:[{role:'user',content:text}]})});
+    const res=await fetch('https://landed-mia.ksjbrown.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:buildMiaSystemPrompt(),messages:[{role:'user',content:text}]})});
     const data=await res.json();
     removeMiaTyping();
     addMiaMsg(data.content?.[0]?.text||"I'm not sure about that one. An immigration attorney would be the right person to ask.",'mia');
