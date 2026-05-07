@@ -37,8 +37,8 @@ input,select,textarea{font-family:inherit;}
 
 /* ── HEADER ── */
 header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
-.header-inner{padding:16px 20px 0;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.header-inner{padding:16px 20px 12px;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 
 /* ── LOGO ── */
 .logo-wrap{display:flex;align-items:center;gap:12px;}
@@ -47,14 +47,6 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .logo-tagline-text{font-size:10px;font-weight:400;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
 
 .tagline{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:18px;line-height:1.5;max-width:300px;font-style:normal;letter-spacing:0.2px;}
-
-/* ── NAV TABS ── */
-.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(255,255,255,0.08);}
-.nav-tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:11px 16px;font-size:12px;color:rgba(255,255,255,0.4);border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.18s;}
-.tab svg{flex-shrink:0;color:inherit;}
-.tab.active{color:var(--white);border-bottom-color:var(--grass);}
-.tab:hover:not(.active){color:rgba(255,255,255,0.75);}
 
 /* ── PAGES ── */
 .page{display:none;padding:24px 32px 100px;}
@@ -88,7 +80,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .tl-left{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:3px;}
 .tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .tl-dot.done{background:var(--grass);}
-.tl-dot.active{background:var(--forest);box-shadow:0 0 0 3px rgba(26,61,43,0.15);}
+.tl-dot.active{background:#c8952a;box-shadow:0 0 0 3px rgba(200,149,42,0.2);}
 .tl-dot.pending{background:var(--cream3);border:1px solid var(--cream3);}
 .tl-line{width:1px;height:100%;background:var(--cream2);flex:1;min-height:8px;}
 .tl-body{flex:1;}
@@ -99,7 +91,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .tl-time{font-size:11px;color:var(--muted);}
 .status-pill{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500;}
 .pill-done{background:var(--approved-bg);color:var(--approved-text);}
-.pill-active{background:var(--linen);color:var(--forest);}
+.pill-active{background:#fff8e8;color:#8a6820;}
 .pill-pending{background:var(--cream2);color:var(--muted);}
 .tl-emoji{font-size:18px;margin-top:1px;}
 
@@ -114,15 +106,42 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .faq-a{display:none;padding:0 14px 12px;font-size:13px;color:var(--muted);line-height:1.6;background:var(--white);border-top:1px solid var(--cream2);}
 .faq-a.open{display:block;}
 
-/* ── PRO TIPS ── */
-.tips-by{font-size:12px;color:var(--muted);margin-bottom:16px;}
-.tip-section{margin-bottom:20px;}
-.tip-section-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);margin-bottom:8px;padding-left:10px;border-left:3px solid var(--grass);}
-.tip-item{display:flex;gap:10px;padding:10px 12px;background:var(--white);border-radius:var(--rs);border:1px solid var(--cream2);margin-bottom:6px;}
-.tip-dot{width:6px;height:6px;border-radius:50%;background:var(--grass);flex-shrink:0;margin-top:6px;}
-.tip-text{font-size:13px;line-height:1.55;color:var(--text);}
-.tip-warn{background:var(--pending-bg);border-color:var(--pending-border);}
-.tip-warn .tip-dot{background:var(--pending-text);}
+/* ── PRO TIPS FEED ── */
+.tips-by{font-size:12px;color:var(--muted);margin-bottom:12px;}
+.tip-filter-chip{padding:6px 14px;border-radius:99px;border:1.5px solid var(--cream2);background:var(--white);font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.tip-filter-chip.active{background:var(--forest);border-color:var(--forest);color:var(--cream2);}
+.tip-filter-chip:hover:not(.active){border-color:var(--grass);color:var(--forest);}
+.tip-feed{display:flex;flex-direction:column;gap:10px;}
+.tip-card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);overflow:hidden;transition:border-color 0.15s;}
+.tip-card:hover{border-color:var(--cream3);}
+.tip-card.expanded{border-color:var(--grass);}
+.tip-card-header{display:flex;align-items:flex-start;gap:10px;padding:13px 16px;cursor:pointer;}
+.tip-card-header-left{flex:1;min-width:0;}
+.tip-tag{font-size:10px;font-weight:500;padding:3px 10px;border-radius:99px;letter-spacing:0.3px;white-space:nowrap;display:inline-block;margin-bottom:7px;}
+.tip-tag-warn{background:var(--pending-bg);color:var(--pending-text);}
+.tip-tag-normal{background:var(--approved-bg);color:var(--forest);}
+.tip-preview{font-size:13px;color:var(--text);line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.tip-card.expanded .tip-preview{white-space:normal;overflow:visible;text-overflow:unset;}
+.tip-chevron{font-size:11px;color:var(--muted);transition:transform 0.2s;flex-shrink:0;margin-top:18px;}
+.tip-card.expanded .tip-chevron{transform:rotate(180deg);}
+.tip-card-body{display:none;padding:0 16px 14px;font-size:13px;color:var(--muted);line-height:1.7;border-top:1px solid var(--cream2);}
+.tip-card-body.open{display:block;}
+.tip-card-static{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:13px 16px;}
+.tip-card-static .tip-tag{margin-bottom:7px;}
+.tip-card-static-text{font-size:13px;line-height:1.65;color:var(--text);}
+
+.global-search{position:relative;padding:4px 20px 10px;}
+.search-inner{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:7px 12px;transition:border-color 0.15s;max-width:320px;}
+.search-inner:focus-within{border-color:var(--grass);}
+#search-input{color:var(--white);font-size:12px;width:100%;}
+#search-input::placeholder{color:rgba(255,255,255,0.4);}
+.search-results-drop{display:none;position:absolute;top:calc(100% - 4px);left:20px;width:320px;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.18);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;}
+
+/* ── TIP TICKER (home) ── */
+.tip-ticker{background:var(--forest);border-radius:var(--r);padding:14px 16px;overflow:hidden;}
+.tip-ticker-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage);margin-bottom:6px;font-weight:500;}
+.tip-ticker-text{font-size:12px;color:var(--cream2);line-height:1.55;transition:opacity 0.4s;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.tip-ticker-tag{font-size:10px;color:var(--grass2);margin-top:6px;font-weight:500;}
 
 /* ── DOCUMENT CENTER ── */
 .doc-progress{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;margin-bottom:16px;}
@@ -191,7 +210,10 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 .nav-item.active{color:var(--forest);}
 .nav-item.active .nav-lbl{font-weight:500;}
 
-/* ── UTIL ── */
+/* ── AFFIRMATION TICKER ── */
+.affirmation-wrap{max-width:260px;display:flex;align-items:center;justify-content:flex-end;}
+.affirmation-text{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.2px;text-align:left;}
+.affirmation-text:hover{color:rgba(255,255,255,0.95);}
 .card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;}
 .mt8{margin-top:8px;}
 .mt16{margin-top:16px;}
@@ -219,67 +241,74 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
           <span class="logo-tagline-text">Your path home</span>
         </div>
       </div>
+      <div class="affirmation-wrap">
+        <span class="affirmation-text" id="affirmation-text" onclick="cycleAffirmation()"></span>
+      </div>
     </div>
-    <p class="tagline">Your path from green card to U.S. citizenship</p>
   </div>
-  <div class="nav-tabs" id="tabs">
-    <button class="tab active" data-page="home">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.25"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
-      Home
-    </button>
-    <button class="tab" data-page="timeline">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      Timeline
-    </button>
-    <button class="tab" data-page="documents">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
-      Documents
-    </button>
-    <button class="tab" data-page="n400">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg>
-      N-400
-    </button>
-    <button class="tab" data-page="interview">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Interview
-    </button>
-    <button class="tab" data-page="tips">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg>
-      Pro Tips
-    </button>
-    <button class="tab" data-page="legal">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
-      Legal Help
-    </button>
+
+  <!-- Global search bar -->
+  <div class="global-search">
+    <div class="search-inner">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;color:var(--sage);"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="search-input" type="text" placeholder="Search timelines, documents, N-400, tips…" style="flex:1;border:none;outline:none;font-family:inherit;font-size:13px;background:transparent;color:var(--white);" oninput="runSearch(this.value)" onfocus="this.closest('.search-inner').style.borderColor='var(--grass)'" onblur="setTimeout(()=>{this.closest('.search-inner').style.borderColor='var(--cream2)';hideSearch()},150)"/>
+      <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--sage);font-size:18px;line-height:1;padding:0;cursor:pointer;">×</button>
+    </div>
+    <div id="search-results" class="search-results-drop"></div>
   </div>
 </header>
 
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
 
-  <!-- Search bar -->
-  <div style="position:relative;margin-top:16px;margin-bottom:20px;">
-    <div style="display:flex;align-items:center;gap:10px;background:var(--white);border:1.5px solid var(--cream2);border-radius:12px;padding:10px 14px;transition:border-color 0.15s;" id="search-wrap">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;color:var(--muted);"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <input id="search-input" type="text" placeholder="Search timelines, documents, N-400, tips…" style="flex:1;border:none;outline:none;font-family:inherit;font-size:14px;background:transparent;color:var(--text);" oninput="runSearch(this.value)" onfocus="document.getElementById('search-wrap').style.borderColor='var(--grass)'" onblur="setTimeout(()=>{document.getElementById('search-wrap').style.borderColor='var(--cream2)';hideSearch()},150)"/>
-      <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--muted);font-size:18px;line-height:1;padding:0;cursor:pointer;">×</button>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;margin-bottom:16px;">
+
+    <!-- Current step on timeline -->
+    <div style="background:var(--forest);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;" onclick="switchPage('timeline')">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage);font-weight:500;margin-bottom:8px;">Current step</div>
+      <div id="home-current-step" style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--cream2);line-height:1.3;">—</div>
+      <div id="home-step-status" style="font-size:11px;color:var(--grass2);margin-top:6px;">Tap to view timeline →</div>
     </div>
-    <!-- Results dropdown -->
-    <div id="search-results" style="display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.12);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;"></div>
+
+    <!-- Documents obtained -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:18px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;" onclick="switchPage('documents')">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">Documents</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;line-height:1;" id="snap-docs">0/5</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">obtained</div>
+    </div>
+
+    <!-- Days since filing -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:18px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">Days filed</div>
+      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;line-height:1;" id="snap-days">—</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">since N-400</div>
+    </div>
+
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;margin-bottom:24px;">
-    <div style="background:var(--forest);border-radius:var(--r);padding:20px;grid-column:1/2;">
-      <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--cream2);line-height:1.25;margin-bottom:6px;">Helps you prepare</div>
-      <div style="font-size:12px;color:var(--sage);line-height:1.5;">for every stage of your naturalization journey</div>
+
+  <!-- Second row: interview score + tip ticker -->
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:20px;">
+
+    <!-- Last practice scores -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:0;display:flex;flex-direction:column;cursor:pointer;overflow:hidden;" onclick="switchPage('interview')">
+      <div style="padding:10px 14px 8px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:2px;">Civics</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--forest);font-weight:500;line-height:1;" id="home-score">—</div>
+      </div>
+      <div style="height:1px;background:var(--cream2);"></div>
+      <div style="padding:8px 14px 10px;">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:2px;">English</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--forest);font-weight:500;line-height:1;" id="home-english-score">—</div>
+      </div>
     </div>
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:20px;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;" id="snap-docs">0/5</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px;">Documents obtained</div>
+
+    <!-- Tip ticker -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('tips')">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">💡 Pro tip <span style="font-size:9px;color:var(--sage);margin-left:4px;">See all →</span></div>
+      <div class="tip-ticker-text" id="tip-ticker-text" style="color:var(--forest);font-size:13px;line-height:1.55;">Loading tip…</div>
+      <div class="tip-ticker-tag" id="tip-ticker-tag" style="color:var(--grass);font-size:10px;margin-top:6px;font-weight:500;"></div>
     </div>
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:20px;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;" id="snap-days">—</div>
-      <div style="font-size:12px;color:var(--muted);margin-top:4px;">Days since filing</div>
-    </div>
+
   </div>
 
   <!-- Progress bar -->
@@ -287,7 +316,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
     <span style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">Your progress</span>
     <span style="font-size:12px;color:var(--grass);font-weight:500;" id="progress-pct">0% complete</span>
   </div>
-  <div style="background:var(--cream2);border-radius:99px;height:5px;margin-bottom:28px;">
+  <div style="background:var(--cream2);border-radius:99px;height:5px;margin-bottom:24px;">
     <div id="progress-bar" style="height:5px;border-radius:99px;background:var(--grass);width:0%;transition:width 0.4s;"></div>
   </div>
 
@@ -301,10 +330,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
     <div class="mod-card" onclick="switchPage('legal')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#1a3d2b"/></svg></div><div class="mod-title">Legal Resources</div><div class="mod-sub">Find legal help</div></div>
   </div>
 
-  <div class="slabel">About this kit</div>
-  <div class="card" style="font-size:13px;color:var(--muted);line-height:1.7;">
-    This kit is designed for Lawful Permanent Residents navigating the transition to U.S. citizenship. <strong style="color:var(--text);">Created by an immigrant who personally went through the process</strong>, it provides practical guidance, checklists, and trackers to help you stay organized and move confidently through your naturalization journey.
-  </div>
+  <div style="text-align:center;padding:8px 0 12px;font-size:11px;color:var(--cream3);">Built by immigrants, for immigrants.</div>
 </div>
 
 <!-- ══ TIMELINE ══ -->
@@ -362,7 +388,9 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 <!-- ══ PRO TIPS ══ -->
 <div class="page" id="page-tips">
   <p class="tips-by">By immigrants. For immigrants. Together.</p>
-  <div id="tips-list"></div>
+  <!-- Filter chips -->
+  <div id="tip-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;"></div>
+  <div class="tip-feed" id="tips-list"></div>
 </div>
 
 <!-- ══ LEGAL ══ -->
@@ -384,24 +412,32 @@ nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1p
 <!-- ══ BOTTOM NAV ══ -->
 <nav>
   <button class="nav-item active" data-page="home">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.2"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg></div>
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.2"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg></div>
     <div class="nav-lbl">Home</div>
   </button>
   <button class="nav-item" data-page="timeline">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
     <div class="nav-lbl">Timeline</div>
   </button>
   <button class="nav-item" data-page="documents">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg></div>
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg></div>
     <div class="nav-lbl">Docs</div>
   </button>
   <button class="nav-item" data-page="n400">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg></div>
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg></div>
     <div class="nav-lbl">N-400</div>
   </button>
   <button class="nav-item" data-page="interview">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
     <div class="nav-lbl">Coach</div>
+  </button>
+  <button class="nav-item" data-page="tips">
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg></div>
+    <div class="nav-lbl">Tips</div>
+  </button>
+  <button class="nav-item" data-page="legal">
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg></div>
+    <div class="nav-lbl">Legal</div>
   </button>
 </nav>
 
@@ -743,20 +779,123 @@ function updateHomeProgress() {
   if(pctEl) pctEl.textContent = `${pct}% complete`;
 }
 
-// ── RENDER TIPS ───────────────────────────────────────
+// ── RENDER TIPS (filterable, smart collapse) ──────────
+const TIP_COLLAPSE_THRESHOLD = 80; // chars — tips longer than this get collapsed
+let _activeTipFilter = 'All';
+
 function renderTips() {
-  const el = document.getElementById('tips-list');
-  el.innerHTML = TIPS.map(sec => `
-    <div class="tip-section">
-      <div class="tip-section-title">${sec.section}</div>
-      ${sec.items.map(t => `
-        <div class="tip-item ${sec.warn?'tip-warn':''}">
-          <div class="tip-dot"></div>
-          <div class="tip-text">${t}</div>
-        </div>
-      `).join('')}
-    </div>
+  const filterEl = document.getElementById('tip-filters');
+  const categories = ['All', ...TIPS.map(s => s.section)];
+  filterEl.innerHTML = categories.map(cat => `
+    <button class="tip-filter-chip ${cat === _activeTipFilter ? 'active' : ''}"
+      onclick="setTipFilter('${cat}')">${cat === 'All' ? 'All tips' : cat}</button>
   `).join('');
+
+  const el = document.getElementById('tips-list');
+  const cards = [];
+  TIPS.forEach(sec => {
+    if (_activeTipFilter !== 'All' && sec.section !== _activeTipFilter) return;
+    sec.items.forEach(t => cards.push({ text: t, section: sec.section, warn: sec.warn }));
+  });
+
+  el.innerHTML = cards.length ? cards.map((c, i) => {
+    const tag = `<span class="tip-tag ${c.warn ? 'tip-tag-warn' : 'tip-tag-normal'}">${c.warn ? '⚠️ Watch out' : '💡 ' + c.section}</span>`;
+    const isLong = c.text.length > TIP_COLLAPSE_THRESHOLD;
+
+    if (!isLong) {
+      // Short tip — always fully visible, no toggle needed
+      return `
+        <div class="tip-card-static">
+          ${tag}
+          <div class="tip-card-static-text">${c.text}</div>
+        </div>`;
+    }
+
+    // Long tip — collapsible with preview
+    const preview = c.text.slice(0, TIP_COLLAPSE_THRESHOLD).trimEnd() + '…';
+    return `
+      <div class="tip-card" id="tipcard-${i}">
+        <div class="tip-card-header" onclick="toggleTipCard(${i})">
+          <div class="tip-card-header-left">
+            ${tag}
+            <div class="tip-preview" id="tip-preview-${i}">${preview}</div>
+          </div>
+          <span class="tip-chevron" id="tip-chev-${i}">▼</span>
+        </div>
+        <div class="tip-card-body" id="tip-body-${i}">${c.text}</div>
+      </div>`;
+  }).join('') : `<div style="font-size:13px;color:var(--muted);padding:12px 0;">No tips in this category.</div>`;
+}
+
+function toggleTipCard(i) {
+  const card = document.getElementById(`tipcard-${i}`);
+  const body = document.getElementById(`tip-body-${i}`);
+  const preview = document.getElementById(`tip-preview-${i}`);
+  const chev = document.getElementById(`tip-chev-${i}`);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  card.classList.toggle('expanded', !isOpen);
+  // When expanded, show full text in header too so it reads naturally
+  if (!isOpen) {
+    preview.style.whiteSpace = 'normal';
+    preview.style.overflow = 'visible';
+    preview.style.textOverflow = 'unset';
+  } else {
+    preview.style.whiteSpace = 'nowrap';
+    preview.style.overflow = 'hidden';
+    preview.style.textOverflow = 'ellipsis';
+  }
+}
+
+function setTipFilter(cat) {
+  _activeTipFilter = cat;
+  renderTips();
+}
+
+// ── TIP TICKER ────────────────────────────────────────
+let _tickerIdx = 0;
+let _tickerInterval = null;
+const FLAT_TIPS = [];
+
+function buildFlatTips() {
+  TIPS.forEach(sec => sec.items.forEach(t => FLAT_TIPS.push({ text: t, section: sec.section, warn: sec.warn })));
+}
+
+function showTip(idx) {
+  const tip = FLAT_TIPS[idx % FLAT_TIPS.length];
+  const el = document.getElementById('tip-ticker-text');
+  const tag = document.getElementById('tip-ticker-tag');
+  if (!el || !tip) return;
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.textContent = tip.text;
+    tag.textContent = (tip.warn ? '⚠️ ' : '💡 ') + tip.section;
+    el.style.opacity = 1;
+  }, 200);
+}
+
+function cycleTip() {
+  _tickerIdx = (_tickerIdx + 1) % FLAT_TIPS.length;
+  showTip(_tickerIdx);
+}
+
+function startTicker() {
+  buildFlatTips();
+  if (!FLAT_TIPS.length) return;
+  _tickerIdx = Math.floor(Math.random() * FLAT_TIPS.length);
+  showTip(_tickerIdx);
+  _tickerInterval = setInterval(cycleTip, 6000);
+}
+
+// ── CURRENT STEP ──────────────────────────────────────
+function updateCurrentStep() {
+  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const el = document.getElementById('home-current-step');
+  const sub = document.getElementById('home-step-status');
+  if (el && active) {
+    el.textContent = active.name;
+    sub.textContent = active.status === 'active' ? 'In progress · ' + active.time : 'Up next · ' + active.time;
+  }
 }
 
 // ── SNAP: DAYS SINCE FILING ───────────────────────────
@@ -903,6 +1042,87 @@ function hideSearch() {
   document.getElementById('search-results').style.display = 'none';
 }
 
+// ── PROGRESSIVE LIFE GRAPHIC ─────────────────────────
+const GRAPHIC_LAYERS = [
+  { id:'g-pin',     step:0, label:'Your journey begins' },
+  { id:'g-road',    step:1, label:'N-400 filed — the path opens' },
+  { id:'g-house-l', step:2, label:'Biometrics done — first roots' },
+  { id:'g-house-r', step:3, label:'Background clear — neighbors arrive' },
+  { id:'g-house-c', step:4, label:'Interview passed — home takes shape' },
+  { id:'g-trees',   step:5, label:'Decision received — life grows in' },
+  { id:'g-flag',    step:6, label:'Oath taken — you are home' },
+  { id:'g-family',  step:7, label:'Certificate in hand — a life built' },
+];
+
+function updateLifeGraphic() {
+  const doneCount = STEPS.filter(s => s.status === 'done').length;
+  const activeIdx = STEPS.findIndex(s => s.status === 'active');
+  const currentStep = activeIdx >= 0 ? activeIdx : doneCount;
+
+  GRAPHIC_LAYERS.forEach(layer => {
+    const el = document.getElementById(layer.id);
+    if (!el) return;
+    const show = layer.step <= currentStep;
+    el.style.transition = 'opacity 0.8s ease';
+    el.style.opacity = show ? '1' : '0';
+  });
+
+  const label = document.getElementById('graphic-milestone-label');
+  if (label) {
+    const current = GRAPHIC_LAYERS.slice().reverse().find(l => l.step <= currentStep) || GRAPHIC_LAYERS[0];
+    label.textContent = current.label;
+  }
+}
+const AFFIRMATIONS = [
+  "Keep breathing.",
+  "You've got this.",
+  "One step at a time.",
+  "You belong here.",
+  "Progress, not perfection.",
+  "This is hard. You're doing it anyway.",
+  "Millions walked this path. So will you.",
+  "Rest if you need to. Then keep going.",
+  "Your story matters.",
+  "You are more than a form.",
+  "Patience is part of the process.",
+  "Every document filed is a step forward.",
+  "You left everything to build something better.",
+  "The wait is not the answer. It's part of the journey.",
+  "You've already survived harder days than this.",
+  "Breathe. Then open the next tab.",
+  "This country is lucky to have you.",
+  "You are not alone in this waiting room.",
+  "Small steps still count.",
+  "Your family is watching you do something remarkable.",
+  "The oath is coming. Keep going.",
+  "Courage isn't the absence of fear. It's filing anyway.",
+  "You've crossed borders most people can't imagine.",
+  "Almost there. Not yet. But almost.",
+  "Today you prepared. That matters.",
+];
+
+let _affirmIdx = 0;
+
+function showAffirmation(idx) {
+  const el = document.getElementById('affirmation-text');
+  if (!el) return;
+  el.style.opacity = 0;
+  setTimeout(() => {
+    el.textContent = AFFIRMATIONS[idx % AFFIRMATIONS.length];
+    el.style.opacity = 1;
+  }, 400);
+}
+
+function cycleAffirmation() {
+  _affirmIdx = (_affirmIdx + 1) % AFFIRMATIONS.length;
+  showAffirmation(_affirmIdx);
+}
+
+function startAffirmations() {
+  _affirmIdx = Math.floor(Math.random() * AFFIRMATIONS.length);
+  showAffirmation(_affirmIdx);
+  setInterval(cycleAffirmation, 8000);
+}
 loadState();
 renderTimeline();
 renderFAQ();
@@ -912,6 +1132,126 @@ renderTips();
 updateSnapDocs();
 updateSnapDays();
 updateHomeProgress();
+updateCurrentStep();
+updateLifeGraphic();
+startTicker();
+startAffirmations();
+</script>
+
+<!-- ── MIA ── -->
+<style>
+  #mia-btn{position:fixed;bottom:72px;right:16px;z-index:300;background:var(--forest);border:none;border-radius:99px;padding:10px 16px 10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 16px rgba(26,61,43,0.35);font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;}
+  #mia-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,61,43,0.4);}
+  .mia-btn-avatar{width:28px;height:28px;border-radius:50%;background:var(--forest2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mia-btn-label{font-size:12px;font-weight:500;color:var(--cream2);white-space:nowrap;}
+  .mia-btn-pulse{width:7px;height:7px;border-radius:50%;background:var(--grass2);animation:mpulse 2s ease-in-out infinite;}
+  @keyframes mpulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(1.3);}}
+
+  #mia-panel{position:fixed;bottom:130px;right:16px;width:320px;background:var(--white);border-radius:18px;box-shadow:0 8px 32px rgba(26,61,43,0.18);z-index:299;display:flex;flex-direction:column;overflow:hidden;transform:translateY(16px) scale(0.96);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.34,1.4,0.64,1);transform-origin:bottom right;}
+  #mia-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+  .mia-hdr{background:var(--forest);padding:14px 16px;display:flex;align-items:center;gap:10px;}
+  .mia-hdr-avatar{width:32px;height:32px;border-radius:50%;background:var(--forest2);display:flex;align-items:center;justify-content:center;}
+  .mia-hdr-name{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--cream2);flex:1;}
+  .mia-hdr-sub{font-size:10px;color:var(--sage);}
+  .mia-close-btn{background:none;border:none;color:rgba(232,223,200,0.45);font-size:20px;cursor:pointer;line-height:1;padding:0;}
+  .mia-msgs{padding:14px;display:flex;flex-direction:column;gap:10px;max-height:260px;overflow-y:auto;background:#faf8f4;}
+  .mia-msg{display:flex;gap:8px;align-items:flex-end;}
+  .mia-msg-ico{width:22px;height:22px;border-radius:50%;background:var(--forest2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mia-bubble{background:var(--white);border-radius:12px 12px 12px 3px;padding:9px 12px;font-size:12px;color:var(--forest);line-height:1.55;border:1px solid var(--cream2);max-width:220px;}
+  .mia-bubble.user{background:var(--forest);color:var(--cream2);border-color:var(--forest);border-radius:12px 12px 3px 12px;margin-left:auto;}
+  .mia-msg.user{flex-direction:row-reverse;}
+  .mia-disc{font-size:10px;color:#a0a89a;text-align:center;padding:0 14px 6px;line-height:1.5;}
+  .mia-gate{padding:14px;background:#faf8f4;border-top:1px solid var(--cream2);display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  .mia-gate-ico{width:32px;height:32px;border-radius:50%;background:var(--cream2);display:flex;align-items:center;justify-content:center;}
+  .mia-gate-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:500;color:var(--forest);}
+  .mia-gate-sub{font-size:11px;color:var(--muted);line-height:1.5;max-width:220px;}
+  .mia-gate-cta{background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:9px 20px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;width:100%;}
+  .mia-gate-note{font-size:10px;color:var(--muted);}
+  .mia-input-row{padding:10px 12px;border-top:1px solid var(--cream2);display:flex;gap:8px;align-items:center;background:var(--white);}
+  .mia-input{flex:1;border:1px solid var(--cream2);border-radius:99px;padding:8px 12px;font-size:12px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;}
+  .mia-input:focus{border-color:var(--grass);}
+  .mia-send{width:30px;height:30px;border-radius:50%;background:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+</style>
+
+<button id="mia-btn" onclick="toggleMia()">
+  <div class="mia-btn-avatar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="mia-btn-label">Ask Mia</div>
+  <div class="mia-btn-pulse"></div>
+</button>
+
+<div id="mia-panel">
+  <div class="mia-hdr">
+    <div class="mia-hdr-avatar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div><div class="mia-hdr-name">Mia</div><div class="mia-hdr-sub">Document assistant · Not legal advice</div></div>
+    <button class="mia-close-btn" onclick="toggleMia()">×</button>
+  </div>
+  <div class="mia-msgs" id="mia-msgs">
+    <div class="mia-msg">
+      <div class="mia-msg-ico"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="mia-bubble">Hi! I'm Mia. I can help with your N-400, documents, and the naturalization process. What's on your mind?</div>
+    </div>
+  </div>
+  <p class="mia-disc">Not legal advice. Consult an immigration attorney for legal questions.</p>
+  <div class="mia-gate" id="mia-gate">
+    <div class="mia-gate-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="mia-gate-title">Mia is a paid feature</div>
+    <div class="mia-gate-sub">Get Landed for $0.99 to unlock Mia — yours forever.</div>
+    <button class="mia-gate-cta" onclick="toggleMia()">Get Landed — $0.99</button>
+    <span class="mia-gate-note">One-time · Instant access</span>
+  </div>
+  <div class="mia-input-row" id="mia-input-row" style="display:none;">
+    <input class="mia-input" id="mia-input" type="text" placeholder="Ask about your documents…" onkeydown="if(event.key==='Enter')sendMia()"/>
+    <button class="mia-send" onclick="sendMia()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+function toggleMia(){
+  document.getElementById('mia-panel').classList.toggle('open');
+  if(document.getElementById('mia-panel').classList.contains('open') && window._miaUnlocked){
+    setTimeout(()=>document.getElementById('mia-input').focus(),250);
+  }
+}
+function unlockMia(){
+  window._miaUnlocked=true;
+  document.getElementById('mia-gate').style.display='none';
+  document.getElementById('mia-input-row').style.display='flex';
+}
+async function sendMia(){
+  if(!window._miaUnlocked)return;
+  const input=document.getElementById('mia-input');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  addMiaMsg(text,'user');
+  addMiaTyping();
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:400,system:'You are Mia, a warm document assistant for Landed, helping immigrants with U.S. naturalization. Answer questions about USCIS forms, documents, and the naturalization process. Never give legal advice. For legal strategy or representation questions, direct users to an immigration attorney. Be concise and friendly.',messages:[{role:'user',content:text}]})});
+    const data=await res.json();
+    removeMiaTyping();
+    addMiaMsg(data.content?.[0]?.text||"I'm not sure — an immigration attorney would be best for that question.",'mia');
+  }catch(e){removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
+}
+function addMiaMsg(text,role){
+  const msgs=document.getElementById('mia-msgs');
+  const d=document.createElement('div');
+  d.className=`mia-msg ${role==='user'?'user':''}`;
+  d.innerHTML=role==='mia'?`<div class="mia-msg-ico"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="mia-bubble">${text}</div>`:`<div class="mia-bubble user">${text}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function addMiaTyping(){
+  const msgs=document.getElementById('mia-msgs');
+  const d=document.createElement('div');d.className='mia-msg';d.id='mia-typing';
+  d.innerHTML=`<div class="mia-msg-ico"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="mia-bubble" style="color:#a0a89a;font-style:italic;">Mia is typing…</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+function removeMiaTyping(){const t=document.getElementById('mia-typing');if(t)t.remove();}
 </script>
 </body>
 </html>
