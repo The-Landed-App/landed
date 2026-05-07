@@ -1565,6 +1565,17 @@ function renderQuizQuestion() {
   document.getElementById('quiz-feedback').style.display = 'none';
   document.getElementById('quiz-next-btn').style.display = 'none';
   quizAnswered = false;
+
+  // Prevent translation of English quiz content
+  const wrap = document.getElementById('quiz-question-wrap');
+  if (quizType === 'english') {
+    wrap.setAttribute('translate', 'no');
+    wrap.classList.add('notranslate');
+  } else {
+    wrap.removeAttribute('translate');
+    wrap.classList.remove('notranslate');
+  }
+
   const opts = [...q.options].sort(() => Math.random() - 0.5);
   document.getElementById('quiz-options').innerHTML = opts.map(o => `
     <button onclick="answerQuestion(this)" data-answer="${o.replace(/"/g,'&quot;')}" style="text-align:left;background:var(--white);border:1.5px solid var(--cream2);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer;transition:all 0.15s;line-height:1.4;width:100%;">${o}</button>
