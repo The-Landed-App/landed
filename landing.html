@@ -2,1097 +2,845 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="theme-color" content="#1a3d2b"/>
-<meta name="description" content="Your path from green card to U.S. citizenship"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="Landed"/>
-<link rel="manifest" href="manifest.json"/>
 <title>Landed — Your Path Home</title>
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_bWF4aW11bS1waWdsZXQtNTQuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://maximum-piglet-54.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
-<script>
-const WORKER = 'https://landed-mia.ksjbrown.workers.dev';
-window.addEventListener('load', async () => {
-  await window.__clerk_loaded;
-  const clerk = window.Clerk;
-  if (!clerk) return;
-  await clerk.load();
-  if (!clerk.user) {
-    window.location.href = './landing.html';
-    return;
-  }
-  const token = await clerk.session.getToken();
-  const res = await fetch(`${WORKER}/check-access`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  });
-  const data = await res.json();
-  if (!data.hasAccess) {
-    window.location.href = './landing.html';
-  }
-});
-</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --forest:#1a3d2b;--forest2:#2d6647;--forest3:#0f2419;
-  --grass:#4a9e6b;--grass2:#5db87e;
-  --sage:#a8c4a8;
+  --grass:#4a9e6b;--grass2:#5db87e;--sage:#a8c4a8;
   --cream:#f0ebe0;--cream2:#e8dfc8;--cream3:#d4c9b0;
-  --linen:#e8dfc8;
-  --text:#1a1a1a;--muted:#4a6650;--white:#ffffff;
-  --card-border:#ddd6c4;
-  --approved-bg:#e8f5ee;--approved-text:#1a3d2b;
-  --pending-bg:#fff8e8;--pending-text:#8a6820;--pending-border:#e8d89a;
-  --action-bg:#1a3d2b;--action-text:#e8dfc8;
-  --r:14px;--rs:8px;
+  --muted:#4a6650;--white:#fff;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overscroll-behavior:none;}
-button{font-family:inherit;cursor:pointer;}
-input,select,textarea{font-family:inherit;}
+html,body{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);overflow-x:hidden;}
 
-/* ── OFFLINE NOTICE ── */
-#offline{display:none;background:var(--pending-bg);color:var(--pending-text);text-align:center;font-size:12px;padding:6px;font-weight:500;border-bottom:1px solid var(--pending-border);}
-#offline.on{display:block;}
+/* ── NAV ── */
+nav{background:var(--forest);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-wordmark{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--cream2);letter-spacing:-0.3px;}
+.nav-right{display:flex;align-items:center;gap:24px;}
+.nav-link{font-size:13px;color:rgba(232,223,200,0.6);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:none;transition:color 0.15s;}
+.nav-link:hover{color:var(--cream2);}
+.nav-cta{font-size:13px;font-weight:500;color:var(--cream2);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:99px;padding:7px 18px;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.nav-cta:hover{background:rgba(255,255,255,0.18);}
 
-/* ── HEADER ── */
-header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
-.header-inner{padding:16px 20px 0;}
-.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+/* ── HERO ── */
+.hero{min-height:85vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;height:85vh;overflow:hidden;background:var(--cream);}
 
-/* ── LOGO ── */
-.logo-wrap{display:flex;align-items:center;gap:12px;}
-.logo-mark{width:40px;height:40px;flex-shrink:0;}
-.logo-mark svg{display:block;}
-.logo-text{display:flex;flex-direction:column;}
-.logo-wordmark{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--cream2);letter-spacing:-0.3px;line-height:1;}
-.logo-tagline-text{font-size:10px;font-weight:400;color:rgba(232,223,200,0.6);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
-.tagline{font-family:'Playfair Display',serif;font-size:14px;color:rgba(232,223,200,0.85);margin-bottom:14px;line-height:1.5;}
+/* LEFT — animation panel */
+.hero-left{background:var(--cream);display:flex;align-items:center;justify-content:center;padding:0;height:85vh;overflow:hidden;position:relative;}
+.hero-left svg{width:100%;height:100%;display:block;}
 
-/* ── TOP NAV BAR (scrollable tabs) ── */
-.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(232,223,200,0.12);}
-.nav-tabs::-webkit-scrollbar{display:none;}
-.tab{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:11px 14px;font-size:12px;color:rgba(232,223,200,0.45);border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.18s;}
-.tab svg{flex-shrink:0;color:inherit;}
-.tab.active{color:var(--cream2);border-bottom-color:var(--grass);}
-.tab:hover:not(.active){color:rgba(232,223,200,0.75);}
+/* RIGHT — copy panel */
+.hero-right{padding:0 64px 0 48px;display:flex;flex-direction:column;justify-content:flex-start;gap:0;height:85vh;}
+.hero-right-top{display:flex;flex-direction:column;justify-content:flex-start;padding-top:calc(85vh * 0.02);}
+.hero-right-bottom{display:flex;flex-direction:column;margin-top:20px;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--grass);}
+.eyebrow-text{font-size:12px;font-weight:500;color:var(--forest);letter-spacing:0.6px;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(38px,4.5vw,58px);font-weight:500;color:var(--forest);line-height:1.12;margin-bottom:20px;letter-spacing:-0.5px;}
+.hero-title em{font-style:normal;color:var(--grass);}
+.hero-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:400px;margin-bottom:16px;}
+.price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:18px;}
+.price-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:500;color:var(--forest);line-height:1;}
+.price-note{font-size:11px;color:var(--muted);}
+.cta-btn{display:inline-flex;align-items:center;gap:12px;background:var(--forest);color:var(--cream2);padding:18px 42px;border-radius:99px;font-size:17px;font-weight:500;border:none;cursor:pointer;font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 18px rgba(26,61,43,0.22);width:fit-content;text-decoration:none;}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,61,43,0.32);}
+.cta-btn svg{flex-shrink:0;}
+.reassure{font-size:13px;color:var(--muted);margin-top:12px;}
 
-/* ── PAGES ── */
-.page{display:none;padding:20px 16px 0;max-width:520px;margin:0 auto;}
-.page.active{display:block;}
+/* ── FEATURES ── */
+.features{padding:80px 80px;background:var(--white);}
+.features-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:500;margin-bottom:12px;}
+.features-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,38px);font-weight:500;color:var(--forest);margin-bottom:48px;max-width:480px;line-height:1.25;}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.feat-card{background:var(--cream);border-radius:16px;padding:28px 24px;}
+.feat-icon{width:40px;height:40px;background:var(--forest);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.feat-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:var(--forest);margin-bottom:8px;}
+.feat-body{font-size:13px;color:var(--muted);line-height:1.7;}
 
-/* ── FOOTER DISCLAIMER ── */
-.page-footer{padding:24px 0 100px;margin-top:32px;border-top:0.5px solid var(--card-border);}
-.page-footer-text{font-size:11px;color:#a8b8a8;line-height:1.65;text-align:center;}
+/* ── SOCIAL PROOF ── */
+.proof{padding:80px;background:var(--forest);display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.proof-title{font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,42px);font-weight:500;color:var(--cream2);line-height:1.2;margin-bottom:16px;}
+.proof-sub{font-size:14px;color:var(--sage);line-height:1.7;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.stat-card{background:rgba(255,255,255,0.07);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;justify-content:center;}
+.stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:500;color:var(--grass2);line-height:1.15;}
+.stat-label{font-size:12px;color:var(--sage);line-height:1.5;margin-top:8px;}
 
-/* ── SECTION LABEL ── */
-.slabel{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#8a8070;margin-bottom:10px;margin-top:4px;font-weight:500;}
+/* ── FOOTER ── */
+footer{padding:20px 80px;background:var(--forest3);display:flex;align-items:flex-start;justify-content:flex-start;}
+footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:left;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--cream2);}
 
-/* ── HOME: HERO STATS ── */
-.hero-stat-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:16px;}
-.hero-stat-main{background:var(--forest);border-radius:var(--r);padding:14px;}
-.hero-stat-num{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--cream2);line-height:1.2;margin-bottom:4px;}
-.hero-stat-label{font-size:11px;color:var(--cream2);opacity:0.6;line-height:1.4;}
-.hero-stat-small{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:14px 12px;}
-.hero-stat-small-num{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);line-height:1;margin-bottom:3px;}
-.hero-stat-small-label{font-size:10px;color:var(--muted);line-height:1.3;}
+/* ── ANIMATION CSS ── */
+#pin-group{transform-origin:340px 170px;animation:pinDrop 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;}
+@keyframes pinDrop{from{transform:translateY(-160px) scale(0.4);opacity:0;}to{transform:translateY(0) scale(1);opacity:1;}}
 
-/* ── PROGRESS BAR ── */
-.progress-wrap{margin-bottom:20px;}
-.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
-.progress-title{font-size:11px;font-weight:500;color:var(--forest);letter-spacing:0.08em;text-transform:uppercase;}
-.progress-pct{font-size:12px;color:var(--grass);font-weight:500;}
-.prog-bar-bg{background:var(--cream3);border-radius:99px;height:5px;}
-.prog-bar-fill{height:5px;border-radius:99px;background:var(--grass);transition:width 0.4s;}
+#r1{animation:rip 1.1s ease-out 1.05s both;transform-origin:340px 232px;}
+#r2{animation:rip 1.1s ease-out 1.3s both;transform-origin:340px 232px;}
+#r3{animation:rip 1.1s ease-out 1.55s both;transform-origin:340px 232px;}
+@keyframes rip{from{r:0;opacity:0.55;}to{r:200;opacity:0;}}
 
-/* ── MODULE CARDS (home) ── */
-.mod-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px;}
-.mod-card{background:var(--white);border-radius:var(--r);padding:16px 14px 36px;border:0.5px solid var(--card-border);transition:border-color 0.15s;cursor:pointer;position:relative;}
-.mod-card:hover{border-color:var(--sage);}
-.mod-icon-wrap{width:36px;height:36px;border-radius:9px;background:var(--cream);display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
-.mod-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);margin-bottom:3px;line-height:1.3;}
-.mod-sub{font-size:11px;color:var(--muted);line-height:1.4;}
-.mod-arrow{position:absolute;bottom:12px;right:12px;width:20px;height:20px;border-radius:50%;background:var(--cream);display:flex;align-items:center;justify-content:center;}
+#ground{transform-origin:340px 318px;transform:scaleX(0);animation:gnd 0.9s ease-out 1.65s forwards;}
+#road{transform-origin:340px 325px;transform:scaleX(0);animation:gnd 0.9s ease-out 1.75s forwards;}
+@keyframes gnd{to{transform:scaleX(1);}}
 
-/* ── ABOUT CARD ── */
-.about-card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:20px;}
-.about-founder-label{font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#a8b8a8;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
-.about-founder-label::after{content:'';flex:1;height:0.5px;background:var(--card-border);}
-.about-quote{font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);line-height:1.65;margin-bottom:12px;}
-.about-quote span{font-style:normal;font-weight:500;border-bottom:1.5px solid var(--grass);}
-.about-body{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
-.about-meta{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:0.5px solid var(--cream);}
-.about-avatar{width:32px;height:32px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--cream2);flex-shrink:0;}
-.about-name{font-size:12px;font-weight:500;color:var(--forest);}
-.about-role{font-size:11px;color:#8a8070;}
+#path-l{stroke-dasharray:160;stroke-dashoffset:160;animation:dp 0.6s ease-out 2.05s forwards;}
+#path-r{stroke-dasharray:160;stroke-dashoffset:160;animation:dp 0.6s ease-out 2.15s forwards;}
+@keyframes dp{to{stroke-dashoffset:0;}}
 
-/* ── TIMELINE — horizontal scroll ── */
-.tl-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:20px;}
-.tl-scroll::-webkit-scrollbar{display:none;}
-.tl-step{flex-shrink:0;width:108px;background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:12px 10px;display:flex;flex-direction:column;gap:5px;}
-.tl-step.done{background:var(--approved-bg);border-color:#a8c4a8;}
-.tl-step.active{background:var(--forest);border-color:var(--forest);}
-.tl-step-top{display:flex;align-items:center;justify-content:space-between;}
-.tl-step-emoji{font-size:17px;line-height:1;}
-.tl-sdot{width:8px;height:8px;border-radius:50%;background:var(--cream3);flex-shrink:0;}
-.tl-sdot.done{background:var(--grass);}
-.tl-sdot.active{background:var(--cream2);}
-.tl-step-name{font-family:'Playfair Display',serif;font-size:11px;font-weight:500;color:var(--forest);line-height:1.3;}
-.tl-step-name.active{color:var(--cream2);}
-.tl-step-time{font-size:10px;color:var(--muted);}
-.tl-step-time.active{color:rgba(232,223,200,0.6);}
-.tl-step-pill{font-size:9px;padding:2px 7px;border-radius:99px;font-weight:500;align-self:flex-start;}
-.pill-done{background:var(--forest);color:var(--cream2);}
-.pill-active{background:rgba(255,255,255,0.15);color:var(--cream2);}
-.pill-pending{background:var(--cream);color:#8a8070;}
+#hl{transform-origin:195px 310px;transform:scale(0);opacity:0;animation:hp 0.5s cubic-bezier(0.34,1.4,0.64,1) 2.35s forwards;}
+#hc{transform-origin:340px 300px;transform:scale(0);opacity:0;animation:hp 0.55s cubic-bezier(0.34,1.5,0.64,1) 2.75s forwards;}
+#hr{transform-origin:485px 310px;transform:scale(0);opacity:0;animation:hp 0.5s cubic-bezier(0.34,1.4,0.64,1) 3.15s forwards;}
+#tl{transform-origin:105px 330px;transform:scale(0);opacity:0;animation:hp 0.4s cubic-bezier(0.34,1.4,0.64,1) 3.4s forwards;}
+#tr{transform-origin:575px 330px;transform:scale(0);opacity:0;animation:hp 0.4s cubic-bezier(0.34,1.4,0.64,1) 3.6s forwards;}
+#fam{transform-origin:340px 345px;transform:scale(0);opacity:0;animation:hp 0.55s cubic-bezier(0.34,1.6,0.64,1) 4.0s forwards;}
+@keyframes hp{to{transform:scale(1);opacity:1;}}
 
-/* ── N-400 2-col section grid ── */
-.cl-section-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.cl-section-grid .checklist-section{margin-bottom:0;}
-
-/* ── ASK MIA ── */
-#mia-btn{position:fixed;bottom:76px;right:16px;z-index:300;display:flex;align-items:center;gap:8px;background:var(--forest);border:none;border-radius:99px;padding:10px 18px 10px 10px;box-shadow:0 4px 16px rgba(26,61,43,0.35);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;}
-#mia-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,61,43,0.4);}
-.mia-btn-icon{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mia-btn-label{font-size:13px;font-weight:500;color:var(--cream2);white-space:nowrap;}
-
-#mia-sheet{position:fixed;inset:0;z-index:400;pointer-events:none;}
-#mia-overlay{position:absolute;inset:0;background:rgba(10,24,16,0);transition:background 0.3s;pointer-events:none;}
-#mia-panel{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-radius:20px 20px 0 0;padding:0;transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.32,0.72,0,1);max-height:88vh;display:flex;flex-direction:column;pointer-events:none;}
-#mia-sheet.open{pointer-events:all;}
-#mia-sheet.open #mia-overlay{background:rgba(10,24,16,0.45);pointer-events:all;}
-#mia-sheet.open #mia-panel{transform:translateY(0);pointer-events:all;}
-
-.mia-handle{width:36px;height:4px;background:var(--card-border);border-radius:2px;margin:12px auto 0;}
-.mia-header{display:flex;align-items:center;gap:10px;padding:14px 16px 12px;border-bottom:0.5px solid var(--card-border);}
-.mia-header-icon{width:34px;height:34px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.mia-header-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--forest);}
-.mia-header-sub{font-size:11px;color:var(--muted);}
-.mia-close{margin-left:auto;background:none;border:none;font-size:20px;color:var(--muted);line-height:1;padding:4px;cursor:pointer;}
-
-.mia-disclosure{background:var(--pending-bg);border-bottom:0.5px solid var(--pending-border);padding:10px 16px;display:flex;gap:8px;align-items:flex-start;}
-.mia-disclosure-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
-.mia-disclosure-text{font-size:11px;color:var(--pending-text);line-height:1.5;}
-
-.mia-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:200px;}
-.mia-msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55;}
-.mia-msg.mia{background:var(--cream);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;}
-.mia-msg.user{background:var(--forest);color:var(--cream2);align-self:flex-end;border-bottom-right-radius:4px;}
-.mia-typing{display:flex;gap:4px;align-items:center;padding:10px 13px;background:var(--cream);border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;}
-.mia-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:miaTyping 1.2s infinite;}
-.mia-typing span:nth-child(2){animation-delay:0.2s;}
-.mia-typing span:nth-child(3){animation-delay:0.4s;}
-@keyframes miaTyping{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
-
-.mia-input-row{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));border-top:0.5px solid var(--card-border);background:var(--white);}
-#mia-input{flex:1;background:var(--cream);border:0.5px solid var(--card-border);border-radius:99px;padding:9px 14px;font-size:13px;outline:none;font-family:inherit;color:var(--text);}
-#mia-input:focus{border-color:var(--sage);}
-#mia-send{width:36px;height:36px;border-radius:50%;background:var(--forest);border:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;}
-#mia-send:disabled{opacity:0.4;}
-
-/* ── FAQ ── */
-.faq-item{border-bottom:0.5px solid var(--card-border);}
-.faq-item:first-child{border-top:0.5px solid var(--card-border);}
-.faq-trigger{display:flex;justify-content:space-between;align-items:center;padding:14px 0;cursor:pointer;gap:16px;background:none;border:none;width:100%;text-align:left;}
-.faq-trigger-q{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);line-height:1.4;flex:1;}
-.faq-indicator{width:20px;height:20px;min-width:20px;border-radius:50%;border:0.5px solid var(--card-border);background:var(--white);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s,border-color 0.15s;}
-.faq-indicator-cross{position:relative;width:8px;height:8px;}
-.faq-indicator-h{position:absolute;top:50%;left:0;width:8px;height:1px;background:var(--muted);transform:translateY(-50%);}
-.faq-indicator-v{position:absolute;left:50%;top:0;width:1px;height:8px;background:var(--muted);transform:translateX(-50%);transition:transform 0.2s,opacity 0.2s;}
-.faq-trigger.open .faq-indicator{background:var(--approved-bg);border-color:var(--sage);}
-.faq-trigger.open .faq-indicator-v{transform:translateX(-50%) scaleY(0);opacity:0;}
-.faq-body{padding:0 0 14px;font-size:13px;color:var(--muted);line-height:1.65;display:none;}
-.faq-body.open{display:block;}
-
-/* ── PRO TIPS ── */
-.tips-by{font-size:12px;color:var(--muted);margin-bottom:16px;}
-.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.tip-section{border:0.5px solid var(--card-border);border-radius:var(--r);overflow:hidden;background:var(--white);}
-.tip-section.warn{background:var(--pending-bg);border-color:var(--pending-border);}
-.tip-trigger{display:flex;align-items:flex-start;gap:8px;padding:11px 12px;cursor:pointer;background:none;border:none;width:100%;text-align:left;}
-.tip-trigger-dot{width:7px;height:7px;border-radius:50%;background:var(--grass);flex-shrink:0;margin-top:4px;}
-.tip-trigger-dot.warn{background:var(--pending-text);}
-.tip-trigger-label{font-family:'Playfair Display',serif;font-size:12px;font-weight:500;color:var(--forest);flex:1;line-height:1.35;}
-.tip-trigger-label.warn{color:var(--pending-text);}
-.tip-chevron{font-size:9px;color:#a8b8a8;transition:transform 0.2s;margin-top:3px;flex-shrink:0;}
-.tip-chevron.open{transform:rotate(180deg);}
-.tip-body{display:none;border-top:0.5px solid var(--cream);padding:8px 12px 10px;flex-direction:column;gap:6px;}
-.tip-body.open{display:flex;}
-.tip-body.warn{border-top-color:var(--pending-border);}
-.tip-row{font-size:11px;color:var(--muted);line-height:1.55;padding-left:8px;border-left:1.5px solid var(--card-border);}
-.tip-row.warn{color:var(--pending-text);border-left-color:var(--pending-border);}
-
-/* ── DOCUMENT CENTER ── */
-.doc-progress{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:14px 16px;margin-bottom:16px;}
-.doc-progress-top{display:flex;justify-content:space-between;margin-bottom:8px;}
-.doc-progress-label{font-size:13px;font-weight:500;color:var(--forest);}
-.doc-progress-count{font-size:13px;color:var(--muted);}
-.doc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.doc-card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:12px;}
-.doc-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.doc-emoji{font-size:20px;}
-.doc-name{font-size:12px;font-weight:500;color:var(--forest);margin-bottom:2px;}
-.doc-status{font-size:11px;color:var(--muted);}
-.doc-btn{font-size:10px;padding:3px 10px;border-radius:99px;border:0.5px solid var(--card-border);background:var(--cream);color:var(--text);white-space:nowrap;cursor:pointer;font-family:inherit;}
-.doc-btn.uploaded{background:var(--approved-bg);border-color:var(--grass);color:var(--forest);font-weight:500;}
-
-/* ── N-400 GUIDE ── */
-.n400-link{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--forest);border-radius:var(--r);color:var(--white);text-decoration:none;margin-bottom:16px;}
-.n400-link-text{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--cream2);}
-.n400-link-sub{font-size:11px;color:rgba(232,223,200,0.6);margin-top:3px;}
-.n400-link-arrow{font-size:16px;margin-left:auto;color:var(--cream2);opacity:0.7;}
-.checklist-section{margin-bottom:8px;border:0.5px solid var(--card-border);border-radius:var(--r);overflow:hidden;}
-.cl-section-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--white);cursor:pointer;}
-.cl-section-header:hover{background:var(--cream);}
-.cl-section-title{font-size:13px;font-weight:500;color:var(--forest);}
-.cl-badge{font-size:10px;padding:2px 8px;border-radius:99px;}
-.cl-badge-done{background:var(--approved-bg);color:var(--forest);}
-.cl-badge-partial{background:var(--pending-bg);color:var(--pending-text);}
-.cl-badge-empty{background:var(--cream2);color:var(--muted);}
-.cl-body{display:none;}
-.cl-body.open{display:block;}
-.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;cursor:pointer;border-top:0.5px solid var(--card-border);}
-.cl-item:hover{background:var(--cream);}
-.cl-item.checked .cl-text{color:var(--muted);text-decoration:line-through;}
-.cl-cb{width:16px;height:16px;min-width:16px;border-radius:4px;border:1px solid var(--cream3);background:var(--white);display:flex;align-items:center;justify-content:center;margin-top:2px;}
-.cl-item.checked .cl-cb{background:var(--grass);border-color:var(--grass);}
-.cl-check{display:none;width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px);}
-.cl-item.checked .cl-check{display:block;}
-.cl-text{font-size:13px;line-height:1.5;}
-.cl-note{font-size:11px;color:var(--muted);margin-top:2px;}
-.cl-prog-wrap{margin-bottom:16px;}
-
-/* ── INTERVIEW COACH ── */
-.coach-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
-.widget-frame-wrap{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);overflow:hidden;margin-bottom:16px;}
-.widget-frame-label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#8a8070;padding:10px 14px;border-bottom:0.5px solid var(--card-border);background:var(--cream);}
-.widget-frame{width:100%;border:none;display:block;}
-
-/* ── LEGAL RESOURCES ── */
-.legal-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
-
-/* ── PAGE INTROS ── */
-.page-intro{font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;}
-.page-intro strong{color:var(--forest);}
-
-/* ── INSTALL BANNER ── */
-#install-banner{display:none;position:fixed;bottom:68px;left:12px;right:12px;background:var(--forest3);color:var(--white);padding:14px 16px;border-radius:var(--r);z-index:200;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
-#install-banner.on{display:flex;}
-.ib-text strong{display:block;font-size:13px;margin-bottom:2px;color:var(--cream2);}
-.ib-text span{font-size:11px;color:var(--sage);}
-.ib-btn{background:var(--grass);color:var(--white);border:none;padding:8px 16px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap;}
-.ib-x{background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;line-height:1;padding:0 2px;}
-
-/* ── BOTTOM NAV ── */
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:0.5px solid var(--card-border);display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:100;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--cream3);}
-.nav-ico{line-height:1;color:inherit;}
-.nav-ico svg{display:block;color:inherit;}
-.nav-lbl{font-size:9px;color:inherit;letter-spacing:0.02em;}
-.nav-item.active{color:var(--forest);}
-.nav-item.active .nav-lbl{font-weight:500;}
-
-/* ── UTIL ── */
-.card{background:var(--white);border-radius:var(--r);border:0.5px solid var(--card-border);padding:16px;}
-.mt8{margin-top:8px;}
-.mt16{margin-top:16px;}
+@keyframes sunFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes cloudDrift1{0%,100%{transform:translateX(0);}50%{transform:translateX(18px);}}
+@keyframes cloudDrift2{0%,100%{transform:translateX(0);}50%{transform:translateX(-14px);}}
+@keyframes cloudDrift3{0%,100%{transform:translateX(0);}50%{transform:translateX(10px);}}
+@keyframes birdFly1{0%{transform:translateX(-120px);}100%{transform:translateX(740px);}}
+@keyframes birdFly2{0%{transform:translateX(200px);}100%{transform:translateX(-600px);}}
+.s2{animation-delay:.5s;}.s3{animation-delay:1s;}.s4{animation-delay:1.4s;}
+@keyframes twk{0%,100%{opacity:0.15;}50%{opacity:0.85;}}
 </style>
 </head>
 <body>
 
-<div id="offline">You're offline — cached content is available</div>
-
-<header>
-  <div class="header-inner">
-    <div class="header-top">
-      <div class="logo-wrap">
-        <div class="logo-mark">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="10" fill="#1a3d2b"/>
-            <path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/>
-            <circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/>
-            <circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/>
-          </svg>
-        </div>
-        <div class="logo-text">
-          <span class="logo-wordmark">Landed</span>
-          <span class="logo-tagline-text">Your path home</span>
-        </div>
-      </div>
-    </div>
-    <p class="tagline">You've arrived. Now, let's stay.</p>
-  </div>
-  <div class="nav-tabs" id="tabs">
-    <button class="tab active" data-page="home">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.2"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
-      Home
-    </button>
-    <button class="tab" data-page="timeline">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      Timeline
-    </button>
-    <button class="tab" data-page="documents">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg>
-      Documents
-    </button>
-    <button class="tab" data-page="n400">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg>
-      N-400
-    </button>
-    <button class="tab" data-page="interview">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      Interview
-    </button>
-    <button class="tab" data-page="tips">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg>
-      Pro Tips
-    </button>
-    <button class="tab" data-page="legal">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg>
-      Legal Help
-    </button>
-  </div>
-</header>
-
-<!-- ══ HOME ══ -->
-<div class="page active" id="page-home">
-
-  <div style="margin-top:16px;">
-    <div class="hero-stat-row">
-      <div class="hero-stat-main">
-        <div class="hero-stat-num">Helps you prepare</div>
-        <div class="hero-stat-label">for every stage of your naturalization journey</div>
-      </div>
-      <div class="hero-stat-small">
-        <div class="hero-stat-small-num" id="snap-docs">0/5</div>
-        <div class="hero-stat-small-label">Documents obtained</div>
-      </div>
-      <div class="hero-stat-small">
-        <div class="hero-stat-small-num" id="snap-days">—</div>
-        <div class="hero-stat-small-label">Days since filing</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-top">
-      <span class="progress-title">Your progress</span>
-      <span class="progress-pct" id="home-prog-pct">0% complete</span>
-    </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="home-prog-fill" style="width:0%"></div></div>
-  </div>
-
-  <div class="slabel">What's included</div>
-  <div class="mod-grid">
-    <div class="mod-card" onclick="switchPage('timeline')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/><circle cx="12" cy="5.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="12" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><circle cx="12" cy="18.5" r="2.5" stroke="#1a3d2b" stroke-width="1.4" fill="#1a3d2b" fill-opacity="0.15"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-      <div class="mod-title">My Timeline</div>
-      <div class="mod-sub">Track every milestone</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('documents')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="#1a3d2b" fill-opacity="0.1"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><line x1="9" y1="10" x2="15" y2="10" stroke="#1a3d2b" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/><path d="M12 14L14 16.5L17 13" stroke="#4a9e6b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="mod-title">Document Center</div>
-      <div class="mod-sub">Organize your files</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('n400')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M8 4V2.5M16 4V2.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="#1a3d2b" stroke-width="1.2" opacity="0.4"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="#1a3d2b" letter-spacing="0.3">N-400</text></svg></div>
-      <div class="mod-title">N-400 Guide</div>
-      <div class="mod-sub">Application steps</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('interview')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.1"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="#1a3d2b" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="#4a9e6b" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-      <div class="mod-title">Interview Coach</div>
-      <div class="mod-sub">Civics & English prep</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('tips')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="#1a3d2b" stroke-width="1.4" stroke-linejoin="round" fill="#1a3d2b" fill-opacity="0.1"/><circle cx="12" cy="11.5" r="2" fill="#4a9e6b"/></svg></div>
-      <div class="mod-title">Pro Tips</div>
-      <div class="mod-sub">Avoid common mistakes</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-    <div class="mod-card" onclick="switchPage('legal')">
-      <div class="mod-icon-wrap"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#1a3d2b"/></svg></div>
-      <div class="mod-title">Legal Resources</div>
-      <div class="mod-sub">Find legal help</div>
-      <div class="mod-arrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </div>
-  </div>
-
-  <div class="slabel">About this kit</div>
-  <div class="about-card">
-    <div class="about-founder-label">From the founder</div>
-    <p class="about-quote">"The process is confusing, expensive, and <span>designed without you in mind.</span> This kit changes that."</p>
-    <p class="about-body">Landed was built for Lawful Permanent Residents navigating the path to U.S. citizenship — by someone who personally went through every step. It gives you practical checklists, guides, and tools to stay organized and move through naturalization with confidence.</p>
-    <div class="about-meta">
-      <div class="about-avatar">L</div>
-      <div>
-        <div class="about-name">Landed Team</div>
-        <div class="about-role">Naturalized U.S. citizens</div>
-      </div>
-    </div>
-  </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ TIMELINE ══ -->
-<div class="page" id="page-timeline">
-  <p class="page-intro" style="margin-top:16px;">Based on FY 2025 processing times, the full journey takes <strong>12–24 months</strong> on average. Swipe to see each step.</p>
-
-  <div class="slabel">Your naturalization journey</div>
-  <div class="tl-scroll" id="tl-scroll"></div>
-
-  <div class="slabel mt16">Journey by the numbers</div>
-  <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5;">Real questions from people who've been exactly where you are.</p>
-  <div id="faq-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ DOCUMENTS ══ -->
-<div class="page" id="page-documents">
-  <div class="doc-progress">
-    <div class="doc-progress-top">
-      <span class="doc-progress-label">Documents obtained</span>
-      <span class="doc-progress-count" id="doc-count">0 / 5</span>
-    </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="doc-prog-fill" style="width:0%"></div></div>
-  </div>
-  <div class="slabel">Citizenship pathway documents</div>
-  <div class="doc-grid" id="doc-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ N-400 ══ -->
-<div class="page" id="page-n400">
-  <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank">
-    <div>
-      <div class="n400-link-text">Download Form N-400 + Instructions</div>
-      <div class="n400-link-sub">Official USCIS form and filing guide</div>
-    </div>
-    <div class="n400-link-arrow">↗</div>
-  </a>
-
-  <div class="slabel">Pre-submit checklist</div>
-  <div class="cl-prog-wrap">
-    <div class="doc-progress-top">
-      <span style="font-size:13px;font-weight:500;color:var(--forest);">Checklist progress</span>
-      <span class="doc-progress-count" id="cl-count">0 / 47</span>
-    </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%"></div></div>
-  </div>
-  <div class="cl-section-grid" id="cl-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ INTERVIEW ══ -->
-<div class="page" id="page-interview">
-  <p class="coach-intro">Practice common USCIS interview questions. The civics questions feel intimidating but they're straightforward once you drill them. Use the widgets below to prepare.</p>
-
-  <div class="widget-frame-wrap">
-    <div class="widget-frame-label">Civics practice test</div>
-    <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/practice-test-civics.html" height="500" loading="lazy" title="Civics practice test"></iframe>
-  </div>
-
-  <div class="widget-frame-wrap">
-    <div class="widget-frame-label">English practice test</div>
-    <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/practice-test-english.html" height="400" loading="lazy" title="English practice test"></iframe>
-  </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ PRO TIPS ══ -->
-<div class="page" id="page-tips">
-  <p class="tips-by">By immigrants. For immigrants. Together.</p>
-  <div class="tips-grid" id="tips-list"></div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ LEGAL ══ -->
-<div class="page" id="page-legal">
-  <p class="legal-intro">A searchable library of immigration legal resources to help you find the right support.</p>
-  <div class="widget-frame-wrap">
-    <div class="widget-frame-label">Find legal help</div>
-    <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/find-legal-help-search.html" height="600" loading="lazy" title="Find legal help"></iframe>
-  </div>
-  <div class="page-footer">
-    <p class="page-footer-text">Landed is an educational tool designed to help you organize and understand the U.S. naturalization process. It does not provide legal advice and is not a substitute for consultation with a licensed immigration attorney. Use of this app does not create an attorney-client relationship.</p>
-  </div>
-</div>
-
-<!-- ══ ASK MIA ══ -->
-<button id="mia-btn" onclick="openMia()">
-  <div class="mia-btn-icon">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <circle cx="10" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/>
-      <path d="M4 20C4 16.69 6.69 14 10 14" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-      <path d="M17 11L20 14" stroke="#4a9e6b" stroke-width="1.6" stroke-linecap="round"/>
-      <circle cx="20.5" cy="14.5" r="2" fill="#4a9e6b"/>
-    </svg>
-  </div>
-  <span class="mia-btn-label">Ask Mia</span>
-</button>
-
-<div id="mia-sheet">
-  <div id="mia-overlay" onclick="closeMia()"></div>
-  <div id="mia-panel">
-    <div class="mia-handle"></div>
-    <div class="mia-header">
-      <div class="mia-header-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <circle cx="10" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/>
-          <path d="M4 20C4 16.69 6.69 14 10 14" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
-          <path d="M17 11L20 14" stroke="#4a9e6b" stroke-width="1.6" stroke-linecap="round"/>
-          <circle cx="20.5" cy="14.5" r="2" fill="#4a9e6b"/>
-        </svg>
-      </div>
-      <div>
-        <div class="mia-header-name">Mia</div>
-        <div class="mia-header-sub">Immigration guide · Always here</div>
-      </div>
-      <button class="mia-close" onclick="closeMia()">×</button>
-    </div>
-    <div class="mia-disclosure">
-      <span class="mia-disclosure-icon">ℹ️</span>
-      <span class="mia-disclosure-text">Mia is an AI assistant that helps with general questions about immigration documents and the naturalization process. Her responses are for informational purposes only and do not constitute legal advice. For questions about your specific legal situation, please consult a licensed immigration attorney.</span>
-    </div>
-    <div class="mia-messages" id="mia-messages"></div>
-    <div class="mia-input-row">
-      <input id="mia-input" type="text" placeholder="Ask Mia anything…" autocomplete="off" onkeydown="if(event.key==='Enter')sendMia()"/>
-      <button id="mia-send" onclick="sendMia()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ INSTALL BANNER ══ -->
-<div id="install-banner">
-  <div class="ib-text"><strong>Add to home screen</strong><span>Install for offline access</span></div>
-  <button class="ib-btn" id="ib-install">Install</button>
-  <button class="ib-x" id="ib-dismiss">×</button>
-</div>
-
-<!-- ══ BOTTOM NAV ══ -->
+<!-- NAV -->
 <nav>
-  <button class="nav-item active" data-page="home">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" fill="currentColor" opacity="0.2"/><path d="M3 10.5L12 3L21 10.5V20C21 20.55 20.55 21 20 21H15V15H9V21H4C3.45 21 3 20.55 3 20V10.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg></div>
-    <div class="nav-lbl">Home</div>
-  </button>
-  <button class="nav-item" data-page="timeline">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-    <div class="nav-lbl">Timeline</div>
-  </button>
-  <button class="nav-item" data-page="documents">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="3.5" width="12" height="15" rx="1.5" fill="currentColor" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="13" x2="12" y2="13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/></svg></div>
-    <div class="nav-lbl">Docs</div>
-  </button>
-  <button class="nav-item" data-page="n400">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="currentColor" letter-spacing="0.3">N-400</text></svg></div>
-    <div class="nav-lbl">N-400</div>
-  </button>
-  <button class="nav-item" data-page="interview">
-    <div class="nav-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
-    <div class="nav-lbl">Coach</div>
-  </button>
+  <div class="nav-logo">
+    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+      <rect width="40" height="40" rx="10" fill="#2d6647"/>
+      <path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/>
+      <circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/>
+      <circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/>
+    </svg>
+    <span class="nav-wordmark">Landed</span>
+  </div>
+  <div class="nav-right">
+    <span id="nav-affirmation" style="font-size:13px;color:rgba(232,223,200,0.6);font-family:'Playfair Display',serif;font-style:italic;transition:opacity 0.5s;"></span>
+    <button class="nav-cta" onclick="openAuth('signIn')">Sign in</button>
+  </div>
 </nav>
 
+<!-- HERO -->
+<section class="hero">
+
+  <!-- LEFT: Animation -->
+  <div class="hero-left">
+    <svg id="msv" viewBox="0 0 680 590" fill="none" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="680" height="700" fill="#f0ebe0"/>
+
+      <!-- Sun -->
+      <g style="animation:sunFloat 8s ease-in-out infinite;">
+        <circle cx="580" cy="130" r="36" fill="#f5d080" opacity="0.35"/>
+        <circle cx="580" cy="130" r="26" fill="#f5c842" opacity="0.55"/>
+        <circle cx="580" cy="130" r="18" fill="#f0b429" opacity="0.7"/>
+      </g>
+
+      <!-- Cloud 1 — large, drifts slowly left to right -->
+      <g style="animation:cloudDrift1 28s ease-in-out infinite;">
+        <ellipse cx="120" cy="150" rx="55" ry="22" fill="white" opacity="0.7"/>
+        <ellipse cx="90"  cy="158" rx="34" ry="18" fill="white" opacity="0.7"/>
+        <ellipse cx="152" cy="158" rx="30" ry="16" fill="white" opacity="0.7"/>
+      </g>
+
+      <!-- Cloud 2 — small, drifts opposite direction -->
+      <g style="animation:cloudDrift2 22s ease-in-out infinite;">
+        <ellipse cx="430" cy="108" rx="40" ry="16" fill="white" opacity="0.55"/>
+        <ellipse cx="408" cy="116" rx="24" ry="13" fill="white" opacity="0.55"/>
+        <ellipse cx="456" cy="116" rx="22" ry="12" fill="white" opacity="0.55"/>
+      </g>
+
+      <!-- Cloud 3 — wispy, top right -->
+      <g style="animation:cloudDrift3 34s ease-in-out infinite;">
+        <ellipse cx="260" cy="92" rx="32" ry="12" fill="white" opacity="0.45"/>
+        <ellipse cx="242" cy="98" rx="18" ry="10" fill="white" opacity="0.45"/>
+        <ellipse cx="280" cy="98" rx="16" ry="9"  fill="white" opacity="0.45"/>
+      </g>
+
+      <!-- Birds — two pairs gliding across -->
+      <g style="animation:birdFly1 18s linear infinite;">
+        <!-- Bird 1 -->
+        <path d="M80 200 Q86 195 92 200" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <!-- Bird 2 -->
+        <path d="M100 194 Q106 189 112 194" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
+      </g>
+      <g style="animation:birdFly2 24s linear infinite;">
+        <!-- Bird 3 -->
+        <path d="M500 170 Q507 164 514 170" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <!-- Bird 4 -->
+        <path d="M522 162 Q529 156 536 162" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <!-- Bird 5 -->
+        <path d="M510 178 Q517 172 524 178" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+      </g>
+
+      <!-- Stars (fade out as sun is present — subtle) -->
+      <circle class="star"    cx="80"  cy="60"  r="2.5" fill="#4a9e6b"/>
+      <circle class="star s2" cx="180" cy="32"  r="2"   fill="#4a9e6b"/>
+      <circle class="star s3" cx="500" cy="55"  r="2.5" fill="#4a9e6b"/>
+      <circle class="star s4" cx="600" cy="28"  r="2"   fill="#4a9e6b"/>
+
+      <!-- Ripples from pin tip -->
+      <circle id="r1" cx="340" cy="310" r="0" fill="none" stroke="#4a9e6b" stroke-width="1.5" opacity="0"/>
+      <circle id="r2" cx="340" cy="310" r="0" fill="none" stroke="#4a9e6b" stroke-width="1"   opacity="0"/>
+      <circle id="r3" cx="340" cy="310" r="0" fill="none" stroke="#3a8a5a" stroke-width="0.8" opacity="0"/>
+
+      <!-- Ground -->
+      <g id="ground">
+        <rect x="20" y="480" width="640" height="100" fill="#c8e6cc"/>
+        <rect x="20" y="480" width="640" height="26"  fill="#d8eedb"/>
+      </g>
+
+      <!-- Flowers in grass -->
+      <g id="flowers">
+        <!-- Flower 1 -->
+        <line x1="60" y1="480" x2="60" y2="465" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="60" cy="462" r="5" fill="#f5c842" opacity="0.85"/>
+        <circle cx="60" cy="462" r="2.5" fill="#e8a020"/>
+        <!-- petals -->
+        <ellipse cx="60" cy="456" rx="2" ry="3.5" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="60" cy="468" rx="2" ry="3.5" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="54" cy="462" rx="3.5" ry="2" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="66" cy="462" rx="3.5" ry="2" fill="#f5c842" opacity="0.7"/>
+
+        <!-- Flower 2 — small white -->
+        <line x1="160" y1="480" x2="160" y2="468" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="160" cy="465" r="4" fill="white" opacity="0.9"/>
+        <circle cx="160" cy="465" r="2" fill="#f5d080"/>
+        <ellipse cx="160" cy="460" rx="1.5" ry="3" fill="white" opacity="0.8"/>
+        <ellipse cx="160" cy="470" rx="1.5" ry="3" fill="white" opacity="0.8"/>
+        <ellipse cx="155" cy="465" rx="3" ry="1.5" fill="white" opacity="0.8"/>
+        <ellipse cx="165" cy="465" rx="3" ry="1.5" fill="white" opacity="0.8"/>
+
+        <!-- Flower 3 — pink -->
+        <line x1="280" y1="480" x2="280" y2="466" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="280" cy="463" r="5" fill="#f0a8b0" opacity="0.85"/>
+        <circle cx="280" cy="463" r="2.5" fill="#e87080"/>
+        <ellipse cx="280" cy="457" rx="2" ry="3.5" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="280" cy="469" rx="2" ry="3.5" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="274" cy="463" rx="3.5" ry="2" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="286" cy="463" rx="3.5" ry="2" fill="#f0a8b0" opacity="0.7"/>
+
+        <!-- Flower 4 — yellow small -->
+        <line x1="430" y1="480" x2="430" y2="469" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="430" cy="466" r="4" fill="#f5c842" opacity="0.85"/>
+        <circle cx="430" cy="466" r="2" fill="#e8a020"/>
+        <ellipse cx="430" cy="461" rx="1.5" ry="3" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="430" cy="471" rx="1.5" ry="3" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="425" cy="466" rx="3" ry="1.5" fill="#f5c842" opacity="0.7"/>
+        <ellipse cx="435" cy="466" rx="3" ry="1.5" fill="#f5c842" opacity="0.7"/>
+
+        <!-- Flower 5 — white -->
+        <line x1="540" y1="480" x2="540" y2="467" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="540" cy="464" r="5" fill="white" opacity="0.9"/>
+        <circle cx="540" cy="464" r="2.5" fill="#f5d080"/>
+        <ellipse cx="540" cy="458" rx="2" ry="3.5" fill="white" opacity="0.8"/>
+        <ellipse cx="540" cy="470" rx="2" ry="3.5" fill="white" opacity="0.8"/>
+        <ellipse cx="534" cy="464" rx="3.5" ry="2" fill="white" opacity="0.8"/>
+        <ellipse cx="546" cy="464" rx="3.5" ry="2" fill="white" opacity="0.8"/>
+
+        <!-- Flower 6 — pink small -->
+        <line x1="620" y1="480" x2="620" y2="469" stroke="#3a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="620" cy="466" r="4" fill="#f0a8b0" opacity="0.85"/>
+        <circle cx="620" cy="466" r="2" fill="#e87080"/>
+        <ellipse cx="620" cy="461" rx="1.5" ry="3" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="620" cy="471" rx="1.5" ry="3" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="615" cy="466" rx="3" ry="1.5" fill="#f0a8b0" opacity="0.7"/>
+        <ellipse cx="625" cy="466" rx="3" ry="1.5" fill="#f0a8b0" opacity="0.7"/>
+      </g>
+
+      <!-- Road -->
+      <g id="road">
+        <rect x="20"  y="494" width="640" height="14" rx="3" fill="#b8d4bc" opacity="0.45"/>
+        <rect x="120" y="497" width="20"  height="5"  rx="1" fill="#e8dfc8" opacity="0.6"/>
+        <rect x="162" y="497" width="20"  height="5"  rx="1" fill="#e8dfc8" opacity="0.6"/>
+        <rect x="440" y="497" width="20"  height="5"  rx="1" fill="#e8dfc8" opacity="0.6"/>
+        <rect x="482" y="497" width="20"  height="5"  rx="1" fill="#e8dfc8" opacity="0.6"/>
+      </g>
+
+      <!-- Garden paths to side houses -->
+      <path id="path-l" d="M282 470 Q230 478 195 476" stroke="#b8d4bc" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path id="path-r" d="M398 470 Q450 478 485 476" stroke="#b8d4bc" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+      <!-- HOUSE LEFT -->
+      <g id="hl">
+        <polygon points="138,360 195,320 252,360" fill="#1a3d2b"/>
+        <rect x="146" y="360" width="98" height="126" rx="2" fill="#2d6647"/>
+        <rect x="156" y="374" width="20" height="20" rx="1" fill="#a8dbb8"/>
+        <line x1="166" y1="374" x2="166" y2="394" stroke="#2d6647" stroke-width="1"/>
+        <line x1="156" y1="384" x2="176" y2="384" stroke="#2d6647" stroke-width="1"/>
+        <rect x="214" y="374" width="20" height="20" rx="1" fill="#a8dbb8"/>
+        <line x1="224" y1="374" x2="224" y2="394" stroke="#2d6647" stroke-width="1"/>
+        <line x1="214" y1="384" x2="234" y2="384" stroke="#2d6647" stroke-width="1"/>
+        <rect x="174" y="408" width="40" height="78" rx="3" fill="#1a3d2b"/>
+        <circle cx="208" cy="448" r="3"  fill="#a8dbb8"/>
+        <rect x="228" y="336" width="12" height="24" rx="2" fill="#1a3d2b"/>
+        <circle cx="234" cy="332" r="7"  fill="#e8dfc8" opacity="0.4"/>
+        <circle cx="238" cy="326" r="5"  fill="#e8dfc8" opacity="0.28"/>
+      </g>
+
+      <!-- HOUSE CENTER (hero) -->
+      <g id="hc">
+        <polygon points="248,380 340,322 432,380" fill="#1a3d2b"/>
+        <line x1="340" y1="322" x2="340" y2="332" stroke="#3a8a5a" stroke-width="2"/>
+        <rect x="258" y="380" width="164" height="106" rx="2" fill="#2d6647"/>
+        <rect x="270" y="396" width="28" height="28" rx="2" fill="#a8dbb8"/>
+        <line x1="284" y1="396" x2="284" y2="424" stroke="#2d6647" stroke-width="1"/>
+        <line x1="270" y1="410" x2="298" y2="410" stroke="#2d6647" stroke-width="1"/>
+        <rect x="382" y="396" width="28" height="28" rx="2" fill="#a8dbb8"/>
+        <line x1="396" y1="396" x2="396" y2="424" stroke="#2d6647" stroke-width="1"/>
+        <line x1="382" y1="410" x2="410" y2="410" stroke="#2d6647" stroke-width="1"/>
+        <rect x="314" y="424" width="52" height="62" rx="3" fill="#1a3d2b"/>
+        <circle cx="360" cy="456" r="3.5" fill="#a8dbb8"/>
+        <rect x="408" y="348" width="14" height="30" rx="2" fill="#1a3d2b"/>
+        <circle cx="415" cy="344" r="9"  fill="#e8dfc8" opacity="0.42"/>
+        <circle cx="421" cy="337" r="6"  fill="#e8dfc8" opacity="0.28"/>
+        <circle cx="426" cy="331" r="4"  fill="#e8dfc8" opacity="0.18"/>
+      </g>
+
+      <!-- HOUSE RIGHT -->
+      <g id="hr">
+        <polygon points="428,360 485,320 542,360" fill="#1a3d2b"/>
+        <rect x="436" y="360" width="98" height="126" rx="2" fill="#2d6647"/>
+        <rect x="446" y="374" width="20" height="20" rx="1" fill="#a8dbb8"/>
+        <line x1="456" y1="374" x2="456" y2="394" stroke="#2d6647" stroke-width="1"/>
+        <line x1="446" y1="384" x2="466" y2="384" stroke="#2d6647" stroke-width="1"/>
+        <rect x="504" y="374" width="20" height="20" rx="1" fill="#a8dbb8"/>
+        <line x1="514" y1="374" x2="514" y2="394" stroke="#2d6647" stroke-width="1"/>
+        <line x1="504" y1="384" x2="524" y2="384" stroke="#2d6647" stroke-width="1"/>
+        <rect x="464" y="408" width="40" height="78" rx="3" fill="#1a3d2b"/>
+        <circle cx="498" cy="448" r="3"  fill="#a8dbb8"/>
+        <rect x="440" y="336" width="12" height="24" rx="2" fill="#1a3d2b"/>
+      </g>
+
+      <!-- TREES -->
+      <g id="tl">
+        <rect x="72" y="436" width="8" height="40" rx="2" fill="#2d6647"/>
+        <ellipse cx="76"  cy="418" rx="28" ry="24" fill="#3a8a5a"/>
+        <ellipse cx="66"  cy="428" rx="20" ry="18" fill="#4a9e6b"/>
+      </g>
+      <g id="tr">
+        <rect x="600" y="436" width="8" height="40" rx="2" fill="#2d6647"/>
+        <ellipse cx="604" cy="418" rx="28" ry="24" fill="#3a8a5a"/>
+        <ellipse cx="614" cy="428" rx="20" ry="18" fill="#4a9e6b"/>
+      </g>
+      <!-- Small trees between houses -->
+      <ellipse cx="258" cy="458" rx="14" ry="12" fill="#4a9e6b" opacity="0.7"/>
+      <ellipse cx="422" cy="458" rx="14" ry="12" fill="#4a9e6b" opacity="0.7"/>
+
+      <!-- FAMILY -->
+      <g id="fam">
+        <circle cx="312" cy="452" r="13"   fill="#C68642"/>
+        <rect x="300"  y="466" width="24" height="28" rx="5" fill="#1a3d2b"/>
+        <circle cx="340" cy="458" r="10"   fill="#C68642"/>
+        <rect x="330"  y="469" width="20" height="22" rx="5" fill="#4a9e6b"/>
+        <circle cx="368" cy="452" r="13"   fill="#C68642"/>
+        <rect x="356"  y="466" width="24" height="28" rx="5" fill="#2d6647"/>
+        <line x1="324" y1="476" x2="330" y2="476" stroke="#a0714f" stroke-width="3" stroke-linecap="round"/>
+        <line x1="350" y1="476" x2="356" y2="476" stroke="#a0714f" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- PIN -->
+      <g id="pin-group">
+        <ellipse cx="340" cy="314" rx="18" ry="6" fill="#1a3d2b" opacity="0.1"/>
+        <!-- Outer green stroke -->
+        <path d="M340 312 C340 312 294 276 294 244
+                 C294 215.7 315 194 340 194
+                 C365 194 386 215.7 386 244
+                 C386 276 340 312 340 312Z"
+              fill="#1a3d2b" stroke="#4a9e6b" stroke-width="7" stroke-linejoin="round"/>
+        <!-- Inner dark body -->
+        <path d="M340 306 C340 306 300 272 300 244
+                 C300 219 318.5 200 340 200
+                 C361.5 200 380 219 380 244
+                 C380 272 340 306 340 306Z"
+              fill="#1a3d2b"/>
+        <!-- Cream ring -->
+        <circle cx="340" cy="242" r="30" fill="#e8dfc8"/>
+        <!-- Dark center -->
+        <circle cx="340" cy="242" r="18" fill="#1a3d2b"/>
+        <!-- Pin tip -->
+        <circle cx="340" cy="311" r="4.5" fill="#1a3d2b"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- RIGHT: Copy -->
+  <div class="hero-right">
+    <div class="hero-right-top">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">For green card holders</span>
+      </div>
+      <h1 class="hero-title">Your path to<br><em>citizenship</em><br>starts here.</h1>
+      <p class="hero-sub">The only kit built by immigrants, for immigrants. Timeline, documents, N-400 guide, interview prep — everything in one place.</p>
+    </div>
+    <div class="hero-right-bottom">
+      <div class="price-row">
+        <span class="price-num">$0.99</span>
+        <span class="price-note">one-time · yours forever</span>
+      </div>
+      <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
+        Get Landed
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="reassure">Secure checkout · Instant access</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="features-label">What's inside</p>
+  <h2 class="features-title">Everything you need, nothing you don't — and Mia is always there if you get stuck.</h2>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#e8dfc8" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/><circle cx="12" cy="6" r="3" fill="#e8dfc8"/><circle cx="12" cy="12" r="3" fill="#e8dfc8"/><circle cx="12" cy="18" r="3" fill="#e8dfc8"/><line x1="15" y1="6" x2="20" y2="6" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/><line x1="9" y1="12" x2="4" y2="12" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/><line x1="15" y1="18" x2="20" y2="18" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <h3 class="feat-title">My Timeline</h3>
+      <p class="feat-body">Know exactly where you are in the process — and what comes next. Real processing time estimates by city.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#e8dfc8" stroke-width="1.5" fill="none"/><path d="M8 4V2.5M16 4V2.5" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="#e8dfc8" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="5.5" font-weight="700" fill="#e8dfc8" letter-spacing="0.3">N-400</text></svg>
+      </div>
+      <h3 class="feat-title">N-400 Guide</h3>
+      <p class="feat-body">A 47-item pre-submit checklist, plain-English question breakdowns, and the most common mistakes to avoid.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.5" fill="none"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="#e8dfc8" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="#e8dfc8" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <h3 class="feat-title">Interview Coach</h3>
+      <p class="feat-body">Practice all 100 civics questions and English reading tests. Know exactly what to expect walking in.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="12" height="16" rx="1.5" fill="#e8dfc8" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="#e8dfc8" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><path d="M13 15L14.5 16.5L17 13.5" stroke="#e8dfc8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 class="feat-title">Document Center</h3>
+      <p class="feat-body">Track every document you need. Mark them filed as you go. Never lose track of what's missing.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="#e8dfc8" stroke-width="1.4" stroke-linejoin="round" fill="#e8dfc8" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="#e8dfc8"/></svg>
+      </div>
+      <h3 class="feat-title">Pro Tips</h3>
+      <p class="feat-body">Hard-won advice from someone who went through it. Biometrics, background checks, the interview — what nobody tells you.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#e8dfc8" stroke-width="1.5" fill="none"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#e8dfc8"/></svg>
+      </div>
+      <h3 class="feat-title">Legal Help Finder</h3>
+      <p class="feat-body">Find USCIS-certified translators, notaries, and free legal aid near you. Never overpay for document help.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF / STATS -->
+<section class="proof">
+  <div>
+    <h2 class="proof-title">10 million people are eligible. Most just don't know where to start.</h2>
+    <p class="proof-sub">Most eligible green card holders delay applying for years — not because they're unready, but because the process feels overwhelming. Landed changes that.</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" style="font-size:28px;line-height:1.2;">Walk in<br>confident</div>
+      <div class="stat-label">Know exactly what to expect before your interview day</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">$0.99</div>
+      <div class="stat-label">One-time cost — no subscription, no upsells</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">47</div>
+      <div class="stat-label">Item checklist so nothing slips through</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">65+</div>
+      <div class="stat-label">Languages supported for document translation</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+    <span class="footer-logo">Landed</span>
+    <p>Boston, Massachusetts · 2026</p>
+    <p style="font-size:10px;color:rgba(168,196,168,0.4);">Landed is an educational tool and does not provide legal advice. Not a substitute for a licensed immigration attorney. © 2026 Landed.</p>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<style>
+  #auth-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(10,24,16,0.55);align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+  #auth-modal.open{display:flex;}
+  #auth-box{background:var(--white);border-radius:20px;padding:40px 40px 36px;width:100%;max-width:440px;margin:16px;position:relative;}
+  .auth-header{margin-bottom:28px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:0;}
+  .auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;}
+  .auth-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;color:var(--forest);margin-bottom:8px;}
+  .auth-sub{font-size:14px;color:var(--muted);line-height:1.5;}
+  .auth-price-pill{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;border-radius:99px;padding:7px 18px;font-size:13px;font-weight:500;color:var(--forest);margin-top:14px;}
+  .auth-form{display:flex;flex-direction:column;gap:14px;}
+  .auth-input{width:100%;border:1.5px solid var(--cream3);border-radius:12px;padding:14px 16px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;transition:border-color 0.15s;}
+  .auth-input:focus{border-color:var(--grass);}
+  .auth-submit{width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;margin-top:2px;}
+  .auth-submit:hover{background:var(--forest2);}
+  .auth-divider{display:flex;align-items:center;gap:12px;margin:2px 0;}
+  .auth-divider span{font-size:13px;color:var(--cream3);}
+  .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--cream2);}
+  .auth-switch{text-align:center;font-size:13px;color:var(--muted);}
+  .auth-switch button{background:none;border:none;color:var(--forest);font-weight:500;cursor:pointer;font-family:inherit;font-size:13px;text-decoration:underline;}
+  .auth-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;color:var(--cream3);cursor:pointer;line-height:1;}
+  .auth-close:hover{color:var(--muted);}
+  .auth-error{font-size:12px;color:#c0392b;background:#fdf0f0;border-radius:8px;padding:8px 12px;display:none;}
+  .auth-error.show{display:block;}
+</style>
+
+<div id="auth-modal">
+  <div id="auth-box">
+    <button class="auth-close" onclick="closeAuth()">×</button>
+    <div class="auth-header">
+      <div class="auth-logo">
+        <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#2d6647"/><path d="M20 33C20 33 11 25.5 11 18.5C11 13.2 15.03 9 20 9C24.97 9 29 13.2 29 18.5C29 25.5 20 33 20 33Z" fill="#4a9e6b" fill-opacity="0.25" stroke="#5db87e" stroke-width="1.4"/><circle cx="20" cy="18.5" r="4" fill="#e8dfc8"/><circle cx="20" cy="18.5" r="1.8" fill="#1a3d2b"/></svg>
+        <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--forest);">Landed</span>
+      </div>
+      <div id="auth-title" class="auth-title">Create your account</div>
+      <div id="auth-sub" class="auth-sub">Start your path to citizenship today.</div>
+      <div class="auth-price-pill">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        $0.99 one-time · instant access
+      </div>
+    </div>
+    <div class="auth-form">
+      <div id="auth-error" class="auth-error"></div>
+      <div id="name-field" style="display:flex;gap:10px;">
+        <input class="auth-input" id="auth-fname" type="text" placeholder="First name" style="flex:1;"/>
+        <input class="auth-input" id="auth-lname" type="text" placeholder="Last name" style="flex:1;"/>
+      </div>
+      <input class="auth-input" id="auth-email" type="email" placeholder="Email address"/>
+      <input class="auth-input" id="auth-password" type="password" placeholder="Password"/>
+      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $0.99</button>
+      <div class="auth-divider"><span>or</span></div>
+      <div class="auth-switch" id="auth-switch-text">
+        Already have an account? <button onclick="switchAuthMode('signIn')">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-const STEPS = [
-  {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', status:'done'},
-  {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', status:'done'},
-  {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', status:'active'},
-  {emoji:'🔎', name:'Background Checks', time:'3–6 months', status:'pending'},
-  {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', status:'pending'},
-  {emoji:'📨', name:'Receive a Decision', time:'Same day*', status:'pending'},
-  {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', status:'pending'},
-  {emoji:'🎫', name:'Receive Certificate', time:'Same day', status:'pending'},
-];
+let _authMode = 'signUp';
 
-const FAQS = [
-  {q:'How long will this whole process take me?', a:'Average total time from filing to certificate: 12–24 months.'},
-  {q:"What's the fastest it could go?", a:'Fastest possible (small field office, clean background): 8–10 months.'},
-  {q:"What's the worst case scenario?", a:'Slowest common scenario (NYC, LA, Chicago): 24–36 months.'},
-  {q:'How many people are in the same position as me right now?', a:'10 million green card holders are currently eligible to apply but haven\'t.'},
-  {q:'When is the right time to file?', a:'File exactly on your eligibility date — not before, not years after.'},
-  {q:'How long does the background check usually take?', a:'90% of checks clear within 6 months.'},
-  {q:'What slows a background check down?', a:'Name matches to criminal databases are the #1 cause of delays.'},
-  {q:'Does where I was born affect my wait time?', a:'Yes. Country of birth is the biggest predictor of check length — some countries take significantly longer.'},
-  {q:'What are my chances of getting approved at the interview?', a:'~91% of applicants are approved at or shortly after the interview.'},
-  {q:'What gets people denied?', a:'Most common reason: failure to meet continuous residence requirement.'},
-  {q:"What happens if they don't decide on the spot?", a:'Most common reason for continuation: missing or inconsistent documents. You have the legal right to sue USCIS after 120 days with no decision.'},
-  {q:'How long is the wait in my city?', a:'Los Angeles: 20–30 months · New York: 18–26 months · Chicago: 14–20 months · Houston: 10–16 months · Charlotte: 8–12 months · Salt Lake City: 8–11 months.'},
-];
-
-const DOCS = [
-  {emoji:'🛃', name:'Passport', key:'passport'},
-  {emoji:'📋', name:'Marriage Certificate', key:'marriage'},
-  {emoji:'👮', name:'Police Certificate', key:'police'},
-  {emoji:'💊', name:'Medical Exam (I-693)', key:'medical'},
-  {emoji:'🧾', name:'Birth Certificate', key:'birth'},
-];
-
-const CHECKLIST = [
-  {section:'Personal information', items:[
-    {t:'Your legal name matches exactly across all documents', n:'N-400, green card, passport, and supporting docs must all match'},
-    {t:'All other names ever used are listed (maiden name, aliases, name changes)'},
-    {t:'Date of birth is correct and consistent across all documents'},
-    {t:'Country of birth is listed exactly as it appears on your birth certificate'},
-    {t:'All addresses for the past 5 years are listed with correct dates'},
-    {t:'Phone number and email address are current'},
-  ]},
-  {section:'Eligibility', items:[
-    {t:'You meet the continuous residence requirement', n:'5 years for most; 3 years if married to a U.S. citizen'},
-    {t:'No single trip outside the U.S. was longer than 6 months'},
-    {t:'Total time abroad calculated and does not break continuous residence'},
-    {t:'Physically present in the U.S. for at least 30 months of the past 5 years'},
-    {t:'Lived in the same USCIS district for at least 3 months before filing'},
-  ]},
-  {section:'Travel history', items:[
-    {t:'Every trip outside the U.S. in the past 5 years is listed', n:'Include short weekend trips — all of them'},
-    {t:'Exact departure and return dates recorded for each trip'},
-    {t:'Countries visited listed for each trip'},
-    {t:'No trip is longer than 6 months (or you have documentation explaining it)'},
-  ]},
-  {section:'Employment history', items:[
-    {t:'All employers for the past 5 years listed with correct dates'},
-    {t:'Self-employment periods are noted'},
-    {t:'Unemployment or gaps in employment are accounted for'},
-    {t:'Employer addresses are included'},
-  ]},
-  {section:'Marital and family history', items:[
-    {t:'Current marital status is accurately listed'},
-    {t:'All previous marriages listed with start and end dates', n:'Even marriages that ended decades ago'},
-    {t:'If divorced, divorce decrees are available as supporting documents'},
-    {t:'All children (biological, adopted, step) are listed regardless of where they live'},
-  ]},
-  {section:'Tax and financial', items:[
-    {t:'Filed U.S. taxes for the past 5 years (or have a valid reason you didn\'t)'},
-    {t:'Tax transcripts or returns are available if requested at interview'},
-    {t:'You have not claimed non-resident status on tax returns to avoid taxes', n:'This is a common flag that can affect eligibility'},
-    {t:'Any unpaid taxes have a payment plan in place'},
-  ]},
-  {section:'Moral character questions', items:[
-    {t:'All arrests, citations, or charges are disclosed — even if charges were dropped', n:'When in doubt, disclose. Omission is worse than the incident'},
-    {t:'Any DUIs or traffic violations resulting in arrest are listed'},
-    {t:'Membership in all organizations, clubs, and groups is listed', n:'Includes community groups, unions, and religious organizations'},
-    {t:'You have never claimed to be a U.S. citizen falsely'},
-    {t:'You have never voted in a U.S. federal election as a non-citizen'},
-  ]},
-  {section:'Supporting documents', items:[
-    {t:'Copy of both sides of your Permanent Resident Card (green card)'},
-    {t:'Birth certificate with certified English translation if not in English'},
-    {t:'Passport photos — 2 identical, 2×2 inches, taken within 30 days'},
-    {t:'Marriage certificate if applying on the 3-year path or listing a spouse'},
-    {t:'Divorce decrees for all prior marriages'},
-    {t:'Tax returns or transcripts for past 5 years'},
-    {t:'Arrest records or court dispositions for any disclosed incidents'},
-    {t:'All translations are certified with a signed translator statement'},
-  ]},
-  {section:'Form review', items:[
-    {t:'Every question has an answer — no blanks left empty', n:'Write N/A if a question doesn\'t apply'},
-    {t:'Form is signed and dated on page 15'},
-    {t:'If someone helped prepare the form, Part 14 (preparer) is completed'},
-    {t:'All answers are in English'},
-    {t:'Form version is current — check edition date on the bottom', n:'USCIS rejects outdated form versions'},
-  ]},
-  {section:'Filing', items:[
-    {t:'Filing fee of $725 is included (check or money order to U.S. Dept. of Homeland Security)', n:'Or fee waiver Form I-912 if applicable'},
-    {t:'Mailing to the correct USCIS address for your state'},
-    {t:'Complete copy of your entire packet made before mailing'},
-    {t:'Envelope has sufficient postage and return address'},
-    {t:'Sending via certified mail or a trackable method'},
-  ]},
-];
-
-const TIPS = [
-  {section:'Confirming eligibility', warn:false, items:[
-    "Don't just count the years — count carefully. If you traveled outside the U.S. a lot, those days abroad can affect your continuous residence requirement. Pull your passport and add up every trip. One miscalculation can get your application rejected and cost you the filing fee.",
-  ]},
-  {section:'Filing N-400', warn:false, items:[
-    "The form asks about every address you've lived at for the past 5 years, every job, every trip outside the country. Start gathering that information weeks before you sit down to fill it out.",
-    "The question that trips most people up: \"Have you ever been a member of an organization?\" Think broadly — unions, community groups, religious organizations all count. When in doubt, disclose.",
-  ]},
-  {section:'Filing N-400 — watch out', warn:true, items:[
-    "Speeding tickets count as crimes or offenses on your application. Keep it under the speed limit!",
-  ]},
-  {section:'Biometrics appointment', warn:false, items:[
-    "Rescheduling adds weeks — don't miss it.",
-    "Bring your Green Card and appointment notice.",
-    "Lotion up your hands the night before but not the morning of. Dry fingertips scan better than moisturized ones.",
-  ]},
-  {section:'Background checks', warn:false, items:[
-    "This stage is mostly waiting and there's nothing you can do to speed it up.",
-    "Check your USCIS online account every few weeks and make sure your address is always current. Cases get delayed because mail goes to an old address.",
-  ]},
-  {section:'Background checks — watch out', warn:true, items:[
-    "Don't call USCIS repeatedly. It doesn't help and can sometimes flag your case for extra review.",
-    "Always attend your scheduled USCIS appointments in person. Reschedule requests don't always process correctly, and a missed appearance can be recorded as a no-show.",
-  ]},
-  {section:'Interview', warn:false, items:[
-    "The civics questions feel intimidating but they're straightforward once you drill them.",
-    "The officer will ask you to confirm everything on your N-400 out loud. If anything changed since you filed (new job, new address, travel), tell them upfront before they ask. Surprises make officers uncomfortable. Honesty doesn't.",
-  ]},
-  {section:'Receiving your decision', warn:false, items:[
-    "Most people get approved same day at the interview. If you don't, don't panic — it usually means a background check is still pending, not that something is wrong.",
-    "If it's been more than 120 days since your interview with no word, you have the legal right to sue USCIS for a decision. This actually works and they know it.",
-  ]},
-  {section:'Oath of allegiance ceremony', warn:false, items:[
-    "Bring your Green Card — you will need to surrender it on this day.",
-    "Bring your family and friends! Some ceremonies are small and quiet, others are in ballparks with hundreds of people. Either way it hits differently than you expect. Bring tissues.",
-    "Take tons of pictures!",
-  ]},
-  {section:'Receiving your certificate', warn:false, items:[
-    "Guard this document like your life. Make several certified copies immediately — you'll need them for your passport application, Social Security update, and employer records.",
-    "Inspect it before you leave the building. Check your name, date of birth, and details are correct. Fixing errors after requires Form N-565 and months of waiting.",
-    "The first thing you do after the ceremony is go straight to start your U.S. passport application.",
-  ]},
-];
-
-let clState = {};
-let docState = {};
-let filingDate = null;
-
-function loadState() {
-  try {
-    const s = localStorage.getItem('cp_state');
-    if (s) {
-      const p = JSON.parse(s);
-      clState = p.cl || {};
-      docState = p.doc || {};
-      filingDate = p.filingDate || null;
-    }
-  } catch(e) {}
+function openAuth(mode){
+  _authMode = mode || 'signUp';
+  _authMode === 'signIn' ? setSignInMode() : setSignUpMode();
+  document.getElementById('auth-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('auth-email').focus(), 200);
 }
 
-function saveState() {
-  try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate})); } catch(e) {}
+function closeAuth(){
+  document.getElementById('auth-modal').classList.remove('open');
+  document.getElementById('auth-error').classList.remove('show');
 }
 
+function setSignUpMode(){
+  _authMode = 'signUp';
+  document.getElementById('auth-title').textContent = 'Create your account';
+  document.getElementById('auth-sub').textContent = 'Start your path to citizenship today.';
+  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $0.99';
+  document.getElementById('name-field').style.display = 'flex';
+  document.getElementById('auth-switch-text').innerHTML = 'Already have an account? <button onclick="switchAuthMode(\'signIn\')">Sign in</button>';
+}
 
-let miaHistory = [];
+function setSignInMode(){
+  _authMode = 'signIn';
+  document.getElementById('auth-title').textContent = 'Welcome back';
+  document.getElementById('auth-sub').textContent = 'Sign in to access your Landed kit.';
+  document.getElementById('auth-submit-btn').textContent = 'Sign in';
+  document.getElementById('name-field').style.display = 'none';
+  document.getElementById('auth-switch-text').innerHTML = 'New here? <button onclick="switchAuthMode(\'signUp\')">Create account</button>';
+}
 
-function openMia() {
-  const sheet = document.getElementById('mia-sheet');
-  sheet.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (miaHistory.length === 0) {
-    appendMiaMsg('mia', "Hi! I'm Mia 👋 I can help with questions about documents, timelines, the N-400, the interview — anything about the naturalization process. What's on your mind?");
-    miaHistory.push({role:'user',content:'[session start]'});
+function switchAuthMode(mode){
+  mode === 'signIn' ? setSignInMode() : setSignUpMode();
+}
+
+function handleAuth(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value.trim();
+  const err = document.getElementById('auth-error');
+  if(!email || !password){ err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
+  err.classList.remove('show');
+  // Hook your Clerk + Stripe logic here
+  // On success: closeAuth(); if paid, unlockMia();
+  alert(`${_authMode === 'signUp' ? 'Sign up' : 'Sign in'} flow — wire up Clerk + Stripe here.\n\nEmail: ${email}`);
+}
+
+// Close on backdrop click
+document.getElementById('auth-modal').addEventListener('click', e => {
+  if(e.target === document.getElementById('auth-modal')) closeAuth();
+});
+</script>
+<style>
+  #mia-btn{position:fixed;bottom:28px;right:28px;z-index:500;background:var(--forest);border:none;border-radius:99px;padding:12px 20px 12px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;box-shadow:0 4px 20px rgba(26,61,43,0.3);transition:transform 0.15s,box-shadow 0.15s;font-family:inherit;}
+  #mia-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,61,43,0.38);}
+  .mia-avatar{width:32px;height:32px;border-radius:50%;background:#2d6647;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .mia-btn-text{display:flex;flex-direction:column;align-items:flex-start;}
+  .mia-btn-name{font-size:13px;font-weight:500;color:var(--cream2);line-height:1;}
+  .mia-btn-sub{font-size:10px;color:var(--sage);margin-top:2px;}
+  .mia-pulse{width:8px;height:8px;border-radius:50%;background:var(--grass2);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.6;transform:scale(1.2);}}
+
+  #mia-panel{position:fixed;bottom:90px;right:28px;width:340px;background:var(--white);border-radius:20px;box-shadow:0 8px 40px rgba(26,61,43,0.18);z-index:499;display:flex;flex-direction:column;overflow:hidden;transform:translateY(20px) scale(0.96);opacity:0;pointer-events:none;transition:all 0.25s cubic-bezier(0.34,1.4,0.64,1);transform-origin:bottom right;}
+  #mia-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all;}
+
+  .mia-header{background:var(--forest);padding:16px 18px;display:flex;align-items:center;gap:12px;}
+  .mia-header-avatar{width:36px;height:36px;border-radius:50%;background:#2d6647;display:flex;align-items:center;justify-content:center;}
+  .mia-header-info{flex:1;}
+  .mia-header-name{font-size:14px;font-weight:500;color:var(--cream2);font-family:'Playfair Display',serif;}
+  .mia-header-status{font-size:11px;color:var(--sage);display:flex;align-items:center;gap:5px;}
+  .mia-status-dot{width:6px;height:6px;border-radius:50%;background:var(--grass2);}
+  .mia-close{background:none;border:none;color:rgba(232,223,200,0.5);font-size:20px;cursor:pointer;line-height:1;padding:0;}
+  .mia-close:hover{color:var(--cream2);}
+
+  .mia-messages{padding:16px;display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;background:#faf8f4;}
+  .mia-msg{display:flex;gap:8px;align-items:flex-end;}
+  .mia-msg-avatar{width:24px;height:24px;border-radius:50%;background:#2d6647;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-bottom:2px;}
+  .mia-bubble{background:var(--white);border-radius:14px 14px 14px 4px;padding:10px 13px;font-size:13px;color:var(--forest);line-height:1.55;border:1px solid var(--cream2);max-width:240px;}
+  .mia-bubble.user{background:var(--forest);color:var(--cream2);border-color:var(--forest);border-radius:14px 14px 4px 14px;margin-left:auto;}
+  .mia-msg.user{flex-direction:row-reverse;}
+  .mia-disclaimer{font-size:10px;color:#a0a89a;text-align:center;padding:0 16px 8px;line-height:1.5;}
+
+  .mia-input-row{padding:12px 14px;border-top:1px solid var(--cream2);display:flex;gap:8px;align-items:center;background:var(--white);}
+  .mia-input{flex:1;border:1px solid var(--cream2);border-radius:99px;padding:9px 14px;font-size:13px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;}
+  .mia-input:focus{border-color:var(--grass);}
+  .mia-send{width:34px;height:34px;border-radius:50%;background:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;}
+  .mia-send:hover{background:var(--forest2);}
+
+  /* Gate overlay */
+  .mia-gate{padding:16px;background:#faf8f4;border-top:1px solid var(--cream2);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;}
+  .mia-gate-lock{width:36px;height:36px;border-radius:50%;background:var(--cream2);display:flex;align-items:center;justify-content:center;margin-bottom:2px;}
+  .mia-gate-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:var(--forest);}
+  .mia-gate-sub{font-size:12px;color:var(--muted);line-height:1.5;max-width:240px;}
+  .mia-gate-btn{background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:10px 24px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;width:100%;transition:background 0.15s;}
+  .mia-gate-btn:hover{background:var(--forest2);}
+  .mia-gate-price{font-size:11px;color:var(--muted);}
+  .mia-input-row{padding:12px 14px;border-top:1px solid var(--cream2);display:flex;gap:8px;align-items:center;background:var(--white);}
+</style>
+
+<!-- Floating button -->
+<button id="mia-btn" onclick="toggleMia()">
+  <div class="mia-avatar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="mia-btn-text">
+    <span class="mia-btn-name">Ask Mia</span>
+    <span class="mia-btn-sub">Document assistant</span>
+  </div>
+  <div class="mia-pulse"></div>
+</button>
+
+<!-- Chat panel -->
+<div id="mia-panel">
+  <div class="mia-header">
+    <div class="mia-header-avatar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="mia-header-info">
+      <div class="mia-header-name">Mia</div>
+      <div class="mia-header-status"><div class="mia-status-dot"></div>Document assistant</div>
+    </div>
+    <button class="mia-close" onclick="toggleMia()">×</button>
+  </div>
+
+  <div class="mia-messages" id="mia-messages">
+    <div class="mia-msg">
+      <div class="mia-msg-avatar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="mia-bubble">Hi! I'm Mia. I can help with questions about your N-400, documents, and the naturalization process. What's on your mind?</div>
+    </div>
+  </div>
+
+  <p class="mia-disclaimer">Not legal advice. For legal questions, consult an immigration attorney.</p>
+
+  <!-- Gate — shown to non-paying users -->
+  <div class="mia-gate" id="mia-gate">
+    <div class="mia-gate-lock">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="mia-gate-title">Mia is a paid feature</div>
+    <div class="mia-gate-sub">Get Landed for $0.99 to unlock Mia and everything else — yours forever.</div>
+    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $0.99</button>
+    <span class="mia-gate-price">One-time · Instant access · No subscription</span>
+  </div>
+
+  <!-- Live input — shown to paying users only (hidden by default) -->
+  <div class="mia-input-row" id="mia-input-row" style="display:none;">
+    <input class="mia-input" id="mia-input" type="text" placeholder="Ask about your documents…" onkeydown="if(event.key==='Enter')sendMia()"/>
+    <button class="mia-send" onclick="sendMia()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+function toggleMia(){
+  document.getElementById('mia-panel').classList.toggle('open');
+  if(document.getElementById('mia-panel').classList.contains('open')){
+    setTimeout(()=>{
+      if(window._miaUnlocked) document.getElementById('mia-input').focus();
+    },300);
   }
-  setTimeout(() => document.getElementById('mia-input').focus(), 350);
 }
 
-function closeMia() {
-  document.getElementById('mia-sheet').classList.remove('open');
-  document.body.style.overflow = '';
+// Call this once user has paid and is authenticated
+function unlockMia(){
+  window._miaUnlocked = true;
+  document.getElementById('mia-gate').style.display = 'none';
+  document.getElementById('mia-input-row').style.display = 'flex';
 }
 
-function appendMiaMsg(role, text) {
-  const el = document.createElement('div');
-  el.className = `mia-msg ${role}`;
-  el.textContent = text;
-  const msgs = document.getElementById('mia-messages');
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
-}
+// Uncomment to test unlocked state:
+// unlockMia();
 
-function showMiaTyping() {
-  const el = document.createElement('div');
-  el.className = 'mia-typing';
-  el.id = 'mia-typing-indicator';
-  el.innerHTML = '<span></span><span></span><span></span>';
-  const msgs = document.getElementById('mia-messages');
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function hideMiaTyping() {
-  const el = document.getElementById('mia-typing-indicator');
-  if (el) el.remove();
-}
-
-async function sendMia() {
+async function sendMia(){
+  if(!window._miaUnlocked) return;
   const input = document.getElementById('mia-input');
   const text = input.value.trim();
-  if (!text) return;
+  if(!text) return;
   input.value = '';
-  document.getElementById('mia-send').disabled = true;
-  appendMiaMsg('user', text);
-  miaHistory.push({role:'user', content: text});
-  showMiaTyping();
+  addMsg(text, 'user');
+  addTyping();
   try {
-    const res = await fetch('https://landed-mia.ksjbrown.workers.dev', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: `You are Mia, a document assistant for immigrants with a U.S. green card going through the naturalization process. You help users understand USCIS forms, explain what documents they need, and flag potential issues. You do not give legal advice. For any question about legal strategy, eligibility edge cases, or representation, recommend consulting a licensed immigration attorney. Your responses are for informational purposes only and do not constitute legal advice. For questions about a user's specific legal situation, advise them to consult a licensed immigration attorney. You can only help users who already have a U.S. green card and are looking to naturalize. If someone indicates they do not have a green card, politely let them know you can only assist green card holders pursuing naturalization. You are fluent in the world's 25 most commonly spoken languages. Always respond in the same language the user writes to you in. Keep responses clear, warm, and concise — under 150 words unless the question truly requires more detail. Use plain language, never legal jargon.`,
-        messages: miaHistory.filter(m => m.role !== 'user' || m.content !== '[session start]').slice(-10)
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system:'You are Mia, a warm and knowledgeable document assistant for Landed, an app helping immigrants navigate U.S. naturalization. You help users understand USCIS forms, what documents they need, and general questions about the naturalization process. You are not a lawyer and never give legal advice. For anything involving specific legal strategy, eligibility edge cases, or representation, kindly direct them to an immigration attorney. Keep responses concise and friendly.',
+        messages:[{role:'user',content:text}]
       })
     });
     const data = await res.json();
-    hideMiaTyping();
-    const reply = data.content?.[0]?.text || "I'm sorry, I couldn't process that. Please try again.";
-    appendMiaMsg('mia', reply);
-    miaHistory.push({role:'assistant', content: reply});
-  } catch(e) {
-    hideMiaTyping();
-    appendMiaMsg('mia', "I'm having trouble connecting right now. Please try again in a moment.");
+    removeTyping();
+    const reply = data.content?.[0]?.text || "I'm not sure about that one — an immigration attorney would be the best person to ask.";
+    addMsg(reply, 'mia');
+  } catch(e){
+    removeTyping();
+    addMsg("Sorry, I'm having trouble connecting right now. Please try again in a moment.", 'mia');
   }
-  document.getElementById('mia-send').disabled = false;
-  document.getElementById('mia-input').focus();
 }
 
-function renderTimeline() {
-  const el = document.getElementById('tl-scroll');
-  if (!el) return;
-  el.innerHTML = STEPS.map(s => `
-    <div class="tl-step ${s.status}">
-      <div class="tl-step-top">
-        <span class="tl-step-emoji">${s.emoji}</span>
-        <span class="tl-sdot ${s.status}"></span>
-      </div>
-      <div class="tl-step-name ${s.status==='active'?'active':''}">${s.name}</div>
-      <div class="tl-step-time ${s.status==='active'?'active':''}">${s.time}</div>
-      <div class="tl-step-pill ${s.status==='done'?'pill-done':s.status==='active'?'pill-active':'pill-pending'}">${s.status==='done'?'Complete':s.status==='active'?'In progress':'Upcoming'}</div>
-    </div>
-  `).join('');
-}
-
-function renderFAQ() {
-  const el = document.getElementById('faq-list');
-  el.innerHTML = FAQS.map((f,i) => `
-    <div class="faq-item">
-      <button class="faq-trigger" onclick="toggleFAQ(${i})">
-        <span class="faq-trigger-q">${f.q}</span>
-        <span class="faq-indicator"><span class="faq-indicator-cross"><span class="faq-indicator-h"></span><span class="faq-indicator-v"></span></span></span>
-      </button>
-      <div class="faq-body" id="fans-${i}">${f.a}</div>
-    </div>
-  `).join('');
-}
-
-function toggleFAQ(i) {
-  const body = document.getElementById(`fans-${i}`);
-  const trigger = body.previousElementSibling;
-  const isOpen = body.classList.contains('open');
-  document.querySelectorAll('.faq-body.open').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.faq-trigger.open').forEach(t => t.classList.remove('open'));
-  if (!isOpen) { body.classList.add('open'); trigger.classList.add('open'); }
-}
-
-function renderDocs() {
-  const el = document.getElementById('doc-list');
-  el.innerHTML = DOCS.map(d => `
-    <div class="doc-card">
-      <div class="doc-card-top">
-        <div class="doc-emoji">${d.emoji}</div>
-        <button class="doc-btn ${docState[d.key]?'uploaded':''}" onclick="toggleDoc('${d.key}')">
-          ${docState[d.key] ? '✓ Filed' : 'Mark filed'}
-        </button>
-      </div>
-      <div class="doc-name">${d.name}</div>
-      <div class="doc-status">${docState[d.key] ? 'Filed' : 'Not yet filed'}</div>
-    </div>
-  `).join('');
-  updateDocProgress();
-}
-
-function toggleDoc(key) {
-  docState[key] = !docState[key];
-  saveState();
-  renderDocs();
-  updateSnapDocs();
-  updateHomeProgress();
-}
-
-function updateDocProgress() {
-  const done = Object.values(docState).filter(Boolean).length;
-  const total = DOCS.length;
-  document.getElementById('doc-count').textContent = `${done} / ${total}`;
-  document.getElementById('doc-prog-fill').style.width = `${Math.round(done/total*100)}%`;
-}
-
-function updateSnapDocs() {
-  const done = Object.values(docState).filter(Boolean).length;
-  document.getElementById('snap-docs').textContent = `${done}/${DOCS.length}`;
-}
-
-function updateHomeProgress() {
-  let clDone=0, clTotal=0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clTotal++; if(clState[`${si}-${ii}`]) clDone++; }));
-  const docDone = Object.values(docState).filter(Boolean).length;
-  const total = clTotal + DOCS.length;
-  const done = clDone + docDone;
-  const pct = total > 0 ? Math.round(done/total*100) : 0;
-  document.getElementById('home-prog-fill').style.width = `${pct}%`;
-  document.getElementById('home-prog-pct').textContent = `${pct}% complete`;
-}
-
-function renderChecklist() {
-  let total = 0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { if(!clState[`${si}-${ii}`]) clState[`${si}-${ii}`]=false; total++; }));
-  const el = document.getElementById('cl-list');
-  el.innerHTML = CHECKLIST.map((s,si) => {
-    const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
-    const badgeClass = done===s.items.length?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty';
-    const badgeText = done===s.items.length?'Complete':`${done}/${s.items.length}`;
-    return `
-      <div class="checklist-section">
-        <div class="cl-section-header" onclick="toggleCLSection(${si})">
-          <span class="cl-section-title">${s.section}</span>
-          <span class="cl-badge ${badgeClass}" id="clbadge-${si}">${badgeText}</span>
-        </div>
-        <div class="cl-body" id="clbody-${si}">
-          ${s.items.map((item,ii) => `
-            <div class="cl-item ${clState[`${si}-${ii}`]?'checked':''}" id="clitem-${si}-${ii}" onclick="toggleCL(${si},${ii})">
-              <div class="cl-cb"><div class="cl-check"></div></div>
-              <div>
-                <div class="cl-text">${item.t}</div>
-                ${item.n?`<div class="cl-note">${item.n}</div>`:''}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }).join('');
-  updateCLProgress();
-}
-
-function toggleCLSection(si) {
-  document.getElementById(`clbody-${si}`).classList.toggle('open');
-}
-
-function toggleCL(si,ii) {
-  const key = `${si}-${ii}`;
-  clState[key] = !clState[key];
-  saveState();
-  const el = document.getElementById(`clitem-${si}-${ii}`);
-  el.classList.toggle('checked', clState[key]);
-  updateCLBadge(si);
-  updateCLProgress();
-  updateHomeProgress();
-}
-
-function updateCLBadge(si) {
-  const s = CHECKLIST[si];
-  const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
-  const badge = document.getElementById(`clbadge-${si}`);
-  badge.textContent = done===s.items.length?'Complete':`${done}/${s.items.length}`;
-  badge.className = `cl-badge ${done===s.items.length?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty'}`;
-}
-
-function updateCLProgress() {
-  let done=0, total=0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { total++; if(clState[`${si}-${ii}`]) done++; }));
-  document.getElementById('cl-count').textContent = `${done} / ${total}`;
-  document.getElementById('cl-prog-fill').style.width = `${Math.round(done/total*100)}%`;
-}
-
-function renderTips() {
-  const el = document.getElementById('tips-list');
-  el.innerHTML = TIPS.map((sec, i) => `
-    <div class="tip-section ${sec.warn?'warn':''}">
-      <button class="tip-trigger" onclick="toggleTip(${i})">
-        <span class="tip-trigger-dot ${sec.warn?'warn':''}"></span>
-        <span class="tip-trigger-label ${sec.warn?'warn':''}">${sec.section}</span>
-        <span class="tip-chevron" id="tipchev-${i}">▼</span>
-      </button>
-      <div class="tip-body ${sec.warn?'warn':''}" id="tipbody-${i}">
-        ${sec.items.map(t => `<div class="tip-row ${sec.warn?'warn':''}">${t}</div>`).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleTip(i) {
-  const body = document.getElementById(`tipbody-${i}`);
-  const chev = document.getElementById(`tipchev-${i}`);
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  chev.classList.toggle('open', !isOpen);
-}
-
-function updateSnapDays() {
-  const el = document.getElementById('snap-days');
-  if (filingDate) {
-    const days = Math.floor((Date.now() - new Date(filingDate)) / 86400000);
-    el.textContent = days >= 0 ? days : '—';
+function addMsg(text, role){
+  const msgs = document.getElementById('mia-messages');
+  const wrap = document.createElement('div');
+  wrap.className = `mia-msg ${role === 'user' ? 'user' : ''}`;
+  if(role === 'mia'){
+    wrap.innerHTML = `<div class="mia-msg-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="mia-bubble">${text}</div>`;
   } else {
-    el.textContent = '—';
-    el.style.cursor = 'pointer';
-    el.title = 'Tap to set filing date';
-    el.onclick = () => {
-      const d = prompt('Enter your N-400 filing date (YYYY-MM-DD):');
-      if (d && !isNaN(new Date(d))) {
-        filingDate = d;
-        saveState();
-        updateSnapDays();
-      }
-    };
+    wrap.innerHTML = `<div class="mia-bubble user">${text}</div>`;
   }
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function switchPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab, .nav-item').forEach(t => t.classList.remove('active'));
-  document.getElementById(`page-${id}`).classList.add('active');
-  document.querySelectorAll(`[data-page="${id}"]`).forEach(t => t.classList.add('active'));
-  window.scrollTo(0,0);
+function addTyping(){
+  const msgs = document.getElementById('mia-messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'mia-msg';
+  wrap.id = 'mia-typing';
+  wrap.innerHTML = `<div class="mia-msg-avatar"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="mia-bubble" style="color:#a0a89a;font-style:italic;">Mia is typing…</div>`;
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-document.querySelectorAll('[data-page]').forEach(btn => {
-  btn.addEventListener('click', () => switchPage(btn.dataset.page));
-});
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-banner').classList.add('on');
-});
-document.getElementById('ib-install').addEventListener('click', async () => {
-  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt = null; }
-  document.getElementById('install-banner').classList.remove('on');
-});
-document.getElementById('ib-dismiss').addEventListener('click', () => {
-  document.getElementById('install-banner').classList.remove('on');
-});
-
-window.addEventListener('online', () => document.getElementById('offline').classList.remove('on'));
-window.addEventListener('offline', () => document.getElementById('offline').classList.add('on'));
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+function removeTyping(){
+  const t = document.getElementById('mia-typing');
+  if(t) t.remove();
 }
 
-loadState();
-renderTimeline();
-renderFAQ();
-renderDocs();
-renderChecklist();
-renderTips();
-updateSnapDocs();
-updateSnapDays();
-updateHomeProgress();
+// ── ALIGN GRAPHIC TO SECURE CHECKOUT ─────────────────
+function alignGraphic() {
+  const svg = document.getElementById('msv');
+  const reassure = document.querySelector('.reassure');
+  if (!svg || !reassure) return;
+
+  const colHeight = svg.parentElement.clientHeight;
+  const svgNaturalH = colHeight; // svg fills full height
+  const viewBoxH = 590;
+  const viewBoxGrassY = 580; // bottom of grass in viewBox
+
+  // Where does the grass bottom land in screen pixels when centered?
+  const scale = colHeight / viewBoxH;
+  const grassScreenY = viewBoxGrassY * scale;
+  const svgTop = (colHeight - svgNaturalH) / 2; // 0 since svg fills height
+  const grassAbsolute = svgTop + grassScreenY;
+
+  // Where is secure checkout?
+  const reassureY = reassure.getBoundingClientRect().bottom - svg.parentElement.getBoundingClientRect().top;
+
+  // Offset needed
+  const offset = reassureY - grassAbsolute;
+  svg.style.marginTop = `${offset}px`;
+}
+
+window.addEventListener('load', alignGraphic);
+window.addEventListener('resize', alignGraphic);
+
+const NAV_AFFIRMATIONS = [
+  "You've got this.",
+  "Keep breathing.",
+  "One step at a time.",
+  "You belong here.",
+  "Progress, not perfection.",
+  "This is hard. You're doing it anyway.",
+  "Millions walked this path. So will you.",
+  "Rest if you need to. Then keep going.",
+  "Your story matters.",
+  "You are more than a form.",
+  "Patience is part of the process.",
+  "Every step forward counts.",
+  "You left everything to build something better.",
+  "Almost there. Not yet. But almost.",
+  "Courage isn't the absence of fear. It's filing anyway.",
+  "You've crossed borders most people can't imagine.",
+  "This country is lucky to have you.",
+  "Small steps still count.",
+  "Breathe. Then open the next tab.",
+  "You are not alone in this.",
+];
+
+let _navIdx = Math.floor(Math.random() * NAV_AFFIRMATIONS.length);
+const _navEl = document.getElementById('nav-affirmation');
+
+function showNavAffirmation() {
+  if (!_navEl) return;
+  _navEl.style.opacity = 0;
+  setTimeout(() => {
+    _navEl.textContent = NAV_AFFIRMATIONS[_navIdx % NAV_AFFIRMATIONS.length];
+    _navEl.style.opacity = 1;
+    _navIdx++;
+  }, 400);
+}
+
+showNavAffirmation();
+setInterval(showNavAffirmation, 7000);
 </script>
+
 </body>
 </html>
