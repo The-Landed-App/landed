@@ -341,7 +341,10 @@ function googleTranslateElementInit(){
   <!-- Progress bar -->
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
     <span style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">Your progress</span>
-    <span style="font-size:12px;color:var(--grass);font-weight:500;" id="progress-pct">0% complete</span>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button onclick="openShareDashboard()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">Share progress</button>
+      <span style="font-size:12px;color:var(--grass);font-weight:500;" id="progress-pct">0% complete</span>
+    </div>
   </div>
   <div style="background:var(--cream2);border-radius:99px;height:5px;margin-bottom:24px;">
     <div id="progress-bar" style="height:5px;border-radius:99px;background:var(--grass);width:0%;transition:width 0.4s;"></div>
@@ -359,6 +362,19 @@ function googleTranslateElementInit(){
 
   <div style="text-align:center;padding:8px 0 12px;font-size:11px;color:var(--cream3);">Built by immigrants, for immigrants.</div>
 
+  <!-- Streak + Badges -->
+  <div class="slabel">Your achievements</div>
+  <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--cream2);">
+      <div style="text-align:center;flex-shrink:0;">
+        <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:500;color:var(--forest);" id="streak-count">0</div>
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;">day streak 🔥</div>
+      </div>
+      <div style="flex:1;font-size:12px;color:var(--muted);line-height:1.55;" id="streak-msg">Practice today to start your streak.</div>
+    </div>
+    <div id="badges-grid" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+  </div>
+
   <!-- Refer a friend -->
   <div style="background:var(--forest);border-radius:var(--r);padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
     <div>
@@ -366,6 +382,66 @@ function googleTranslateElementInit(){
       <div style="font-size:12px;color:var(--sage);line-height:1.5;">Share Landed with a friend — $0.99 gets them everything.</div>
     </div>
     <button onclick="referFriend()" style="background:var(--grass);color:var(--white);border:none;border-radius:99px;padding:10px 18px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;">Share →</button>
+  </div>
+</div>
+
+<!-- ══ SHARE DASHBOARD MODAL ══ -->
+<div id="share-dashboard-modal" style="display:none;position:fixed;inset:0;background:rgba(10,24,16,0.55);z-index:400;align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:var(--cream);border-radius:20px;width:100%;max-width:420px;overflow:hidden;position:relative;">
+    <button onclick="closeShareDashboard()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1;">×</button>
+
+    <!-- Dashboard card -->
+    <div id="share-card" style="padding:28px 24px 20px;">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+        <svg width="32" height="32" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#2d6647"/><path d="M20 34C20 34 10 26 10 19C10 13.48 14.48 9 20 9C25.52 9 30 13.48 30 19C30 26 20 34 20 34Z" fill="#1a3d2b" stroke="#4a9e6b" stroke-width="2.2" stroke-linejoin="round"/><path d="M20 32C20 32 11 25 11 19C11 13.48 15.03 10 20 10C24.97 10 29 13.48 29 19C29 25 20 32 20 32Z" fill="#1a3d2b"/><circle cx="20" cy="18.5" r="7" fill="#e8dfc8"/><circle cx="20" cy="18.5" r="4.2" fill="#1a3d2b"/></svg>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:var(--forest);">My Citizenship Journey</div>
+          <div style="font-size:11px;color:var(--muted);">Landed · Your path home</div>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div style="background:var(--forest);border-radius:12px;padding:14px;">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--sage);margin-bottom:4px;">Current step</div>
+          <div style="font-size:13px;font-weight:500;color:var(--cream2);line-height:1.3;" id="dash-step">—</div>
+        </div>
+        <div style="background:var(--white);border-radius:12px;padding:14px;border:1px solid var(--cream2);">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:4px;">Overall progress</div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);" id="dash-progress">0%</div>
+        </div>
+        <div style="background:var(--white);border-radius:12px;padding:14px;border:1px solid var(--cream2);">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:4px;">Civics score</div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);" id="dash-civics">—</div>
+        </div>
+        <div style="background:var(--white);border-radius:12px;padding:14px;border:1px solid var(--cream2);">
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:4px;">English score</div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);" id="dash-english">—</div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px;">Badges earned</div>
+        <div id="dash-badges" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+
+      <!-- Streak -->
+      <div style="background:var(--approved-bg);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">🔥</span>
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--forest);" id="dash-streak">0 day streak</div>
+          <div style="font-size:11px;color:var(--muted);">Practicing every day</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="padding:0 24px 24px;display:flex;gap:10px;">
+      <button onclick="shareProgress()" style="flex:1;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:12px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Share</button>
+      <button onclick="closeShareDashboard()" style="flex:1;background:var(--cream);color:var(--forest);border:1px solid var(--cream2);border-radius:99px;padding:12px;font-size:13px;font-family:inherit;cursor:pointer;">Close</button>
+    </div>
   </div>
 </div>
 
@@ -1436,7 +1512,168 @@ function updateHomeScores() {
   if (eEl) eEl.textContent = english.length ? Math.round(english[english.length-1].val/english[english.length-1].total*100) + '%' : '—';
 }
 
-// ── REFER A FRIEND ────────────────────────────────────
+// ── GAMIFICATION ──────────────────────────────────────
+const BADGE_DEFS = [
+  {id:'first_quiz',    emoji:'🎯', label:'First step',       desc:'Completed your first quiz'},
+  {id:'quiz_5',        emoji:'📚', label:'Study habit',      desc:'Completed 5 quizzes'},
+  {id:'quiz_10',       emoji:'🏅', label:'Dedicated',        desc:'Completed 10 quizzes'},
+  {id:'civics_80',     emoji:'⭐', label:'Civics star',      desc:'Scored 80%+ on civics'},
+  {id:'civics_100',    emoji:'🏆', label:'Perfect civics',   desc:'Scored 100% on civics'},
+  {id:'english_80',    emoji:'📖', label:'English star',     desc:'Scored 80%+ on English'},
+  {id:'english_100',   emoji:'✨', label:'Perfect English',  desc:'Scored 100% on English'},
+  {id:'both_done',     emoji:'🇺🇸', label:'Both tests',      desc:'Completed both civics and English'},
+  {id:'streak_3',      emoji:'🔥', label:'3-day streak',     desc:'Practiced 3 days in a row'},
+  {id:'streak_7',      emoji:'💪', label:'7-day streak',     desc:'Practiced 7 days in a row'},
+  {id:'improving',     emoji:'📈', label:'Improving',        desc:'Improved your score 3 times'},
+];
+
+let gamification = { badges:[], streak:0, lastPractice:null, practiceHistory:[] };
+
+function loadGamification() {
+  try {
+    const g = JSON.parse(localStorage.getItem('landed_game') || '{}');
+    gamification = { badges:[], streak:0, lastPractice:null, practiceHistory:[], ...g };
+  } catch(e) {}
+}
+
+function saveGamification() {
+  try { localStorage.setItem('landed_game', JSON.stringify(gamification)); } catch(e) {}
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (gamification.lastPractice === today) return; // already counted today
+  if (gamification.lastPractice === yesterday) {
+    gamification.streak = (gamification.streak || 0) + 1;
+  } else if (gamification.lastPractice !== today) {
+    gamification.streak = 1; // reset
+  }
+  gamification.lastPractice = today;
+  gamification.practiceHistory = [...(gamification.practiceHistory||[]), today].slice(-30);
+  saveGamification();
+  checkBadges();
+  renderGamification();
+}
+
+function checkBadges(latestScore) {
+  const earned = new Set(gamification.badges);
+  const total = scores.length;
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+
+  if (total >= 1) earned.add('first_quiz');
+  if (total >= 5) earned.add('quiz_5');
+  if (total >= 10) earned.add('quiz_10');
+  if (civics.some(s => s.val/s.total >= 0.8)) earned.add('civics_80');
+  if (civics.some(s => s.val === s.total)) earned.add('civics_100');
+  if (english.some(s => s.val/s.total >= 0.8)) earned.add('english_80');
+  if (english.some(s => s.val === s.total)) earned.add('english_100');
+  if (civics.length > 0 && english.length > 0) earned.add('both_done');
+  if ((gamification.streak||0) >= 3) earned.add('streak_3');
+  if ((gamification.streak||0) >= 7) earned.add('streak_7');
+
+  // Check for 3 consecutive improvements
+  if (civics.length >= 3) {
+    const last3 = civics.slice(-3);
+    if (last3[1].val/last3[1].total > last3[0].val/last3[0].total &&
+        last3[2].val/last3[2].total > last3[1].val/last3[1].total) earned.add('improving');
+  }
+  if (english.length >= 3) {
+    const last3 = english.slice(-3);
+    if (last3[1].val/last3[1].total > last3[0].val/last3[0].total &&
+        last3[2].val/last3[2].total > last3[1].val/last3[1].total) earned.add('improving');
+  }
+
+  // Toast new badges
+  const newBadges = [...earned].filter(b => !gamification.badges.includes(b));
+  newBadges.forEach(b => {
+    const def = BADGE_DEFS.find(d => d.id === b);
+    if (def) setTimeout(() => showToast(`${def.emoji} Badge unlocked: ${def.label}!`), 1000);
+  });
+
+  gamification.badges = [...earned];
+  saveGamification();
+}
+
+function renderGamification() {
+  // Streak
+  const streakEl = document.getElementById('streak-count');
+  const streakMsg = document.getElementById('streak-msg');
+  if (streakEl) streakEl.textContent = gamification.streak || 0;
+  if (streakMsg) {
+    const s = gamification.streak || 0;
+    streakMsg.textContent = s === 0 ? 'Practice today to start your streak.' :
+      s === 1 ? 'Great start! Come back tomorrow to keep it going.' :
+      s < 7 ? `${s} days strong — keep it up!` :
+      `${s} days! You're unstoppable. 🌟`;
+  }
+
+  // Badges
+  const badgesEl = document.getElementById('badges-grid');
+  if (badgesEl) {
+    const earned = gamification.badges || [];
+    badgesEl.innerHTML = BADGE_DEFS.map(b => `
+      <div title="${b.desc}" style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:99px;background:${earned.includes(b.id) ? 'var(--approved-bg)' : 'var(--cream2)'};opacity:${earned.includes(b.id) ? '1' : '0.4'};">
+        <span style="font-size:14px;">${b.emoji}</span>
+        <span style="font-size:11px;font-weight:500;color:var(--forest);">${b.label}</span>
+      </div>`).join('');
+  }
+}
+
+// ── SHARE DASHBOARD ───────────────────────────────────
+function openShareDashboard() {
+  // Populate dashboard data
+  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  document.getElementById('dash-step').textContent = active ? active.name : '—';
+
+  const pctEl = document.getElementById('progress-pct');
+  document.getElementById('dash-progress').textContent = pctEl ? pctEl.textContent.replace(' complete','') : '0%';
+
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+  document.getElementById('dash-civics').textContent = civics.length ? Math.round(civics[civics.length-1].val/civics[civics.length-1].total*100) + '%' : '—';
+  document.getElementById('dash-english').textContent = english.length ? Math.round(english[english.length-1].val/english[english.length-1].total*100) + '%' : '—';
+  document.getElementById('dash-streak').textContent = `${gamification.streak || 0} day streak`;
+
+  const earned = gamification.badges || [];
+  document.getElementById('dash-badges').innerHTML = earned.length ?
+    earned.map(id => { const b = BADGE_DEFS.find(d => d.id === id); return b ? `<span title="${b.desc}" style="font-size:20px;">${b.emoji}</span>` : ''; }).join('') :
+    '<span style="font-size:12px;color:var(--muted);">No badges yet — take a quiz to earn your first!</span>';
+
+  const modal = document.getElementById('share-dashboard-modal');
+  modal.style.display = 'flex';
+}
+
+function closeShareDashboard() {
+  document.getElementById('share-dashboard-modal').style.display = 'none';
+}
+
+function shareProgress() {
+  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const civics = scores.filter(s => s.type === 'civics');
+  const english = scores.filter(s => s.type === 'english');
+  const pctEl = document.getElementById('progress-pct');
+  const pct = pctEl ? pctEl.textContent : '0% complete';
+  const badges = (gamification.badges||[]).map(id => { const b = BADGE_DEFS.find(d => d.id === id); return b ? b.emoji : ''; }).join(' ');
+
+  const msg = `🇺🇸 My citizenship journey with Landed\n\n` +
+    `📍 Current step: ${active ? active.name : 'Getting started'}\n` +
+    `📊 Overall progress: ${pct}\n` +
+    `🏛️ Civics: ${civics.length ? Math.round(civics[civics.length-1].val/civics[civics.length-1].total*100) + '%' : 'Not started'}\n` +
+    `📖 English: ${english.length ? Math.round(english[english.length-1].val/english[english.length-1].total*100) + '%' : 'Not started'}\n` +
+    `🔥 Streak: ${gamification.streak || 0} days\n` +
+    (badges ? `\nBadges: ${badges}\n` : '') +
+    `\nGet Landed: https://the-landed-app.github.io/landed/landing.html`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'My Citizenship Journey', text: msg }).catch(() => {
+      navigator.clipboard.writeText(msg).then(() => showToast('📋 Progress copied!'));
+    });
+  } else {
+    navigator.clipboard.writeText(msg).then(() => showToast('📋 Progress copied to clipboard'));
+  }
+}
 function referFriend() {
   const url = 'https://the-landed-app.github.io/landed/landing.html';
   const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $0.99: ${url}`;
@@ -1636,6 +1873,8 @@ function showQuizResults() {
   } else { wrongWrap.style.display = 'none'; }
   scores.push({type:quizType, val:quizCorrect, total, date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'}), wrong:quizWrong});
   saveScores();
+  updateStreak();
+  checkBadges();
   renderScoreHistory();
   updateHomeScores();
 }
@@ -1755,6 +1994,7 @@ function addToCalendar(i) {
 }
 loadState();
 loadScores();
+loadGamification();
 renderTimeline();
 renderFAQStandalone();
 renderDocs();
@@ -1766,6 +2006,7 @@ updateHomeProgress();
 updateCurrentStep();
 updateLifeGraphic();
 renderScoreHistory();
+renderGamification();
 startTicker();
 startAffirmations();
 loadLanguage();
