@@ -221,6 +221,12 @@ body{top:0!important;position:static!important;}
 .card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;}
 .mt8{margin-top:8px;}
 .mt16{margin-top:16px;}
+/* ── STATE PICKER MODAL ── */
+#state-modal{display:none;position:fixed;inset:0;background:rgba(10,24,16,0.78);z-index:600;align-items:center;justify-content:center;padding:16px;}
+#state-modal.on{display:flex;}
+.state-modal-box{background:var(--cream);border-radius:20px;width:100%;max-width:360px;padding:28px 24px;}
+.state-select-el{width:100%;border:1.5px solid var(--cream2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--white);outline:none;margin-bottom:16px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a6650' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.state-indicator-bar{background:var(--white);border:1px solid var(--cream2);border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
 </style>
 <script>
 function googleTranslateElementInit(){
@@ -445,6 +451,20 @@ function googleTranslateElementInit(){
   </div>
 </div>
 
+<!-- ══ STATE PICKER MODAL ══ -->
+<div id="state-modal">
+  <div class="state-modal-box">
+    <div style="font-size:22px;margin-bottom:10px;">📍</div>
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);margin-bottom:6px;">Where do you live?</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Your state determines three civics questions — your governor, your senators, and your representative. We'll show you the right answers.</div>
+    <select id="state-select-modal" class="state-select-el">
+      <option value="">Select your state…</option>
+    </select>
+    <button onclick="saveStateFromModal()" style="width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Continue</button>
+    <button onclick="dismissStateModal()" style="display:block;width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:inherit;cursor:pointer;margin-top:10px;padding:6px;text-align:center;">Skip for now</button>
+  </div>
+</div>
+
 <!-- ══ TIMELINE ══ -->
 <div class="page" id="page-timeline">
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
@@ -483,6 +503,8 @@ function googleTranslateElementInit(){
   <!-- Home screen: choose quiz type -->
   <div id="quiz-home">
     <p class="coach-intro">Practice the 100 USCIS civics questions and English reading test. Your results are tracked and turned into a personal study plan.</p>
+
+    <div id="state-indicator" class="state-indicator-bar"></div>
 
     <!-- Score history -->
     <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
@@ -770,6 +792,70 @@ const TIPS = [
   ]},
 ];
 
+// ── CURRENT OFFICEHOLDERS ─────────────────────────────
+const NATIONAL_OFFICIALS = {
+  president:    { name:'Donald Trump',  party:'Republican' },
+  vicePresident:{ name:'JD Vance',      party:'Republican' },
+  chiefJustice: { name:'John Roberts' },
+  speakerHouse: { name:'Mike Johnson',  party:'Republican' },
+  senateLeader: { name:'John Thune',    party:'Republican' },
+};
+
+// ── STATE DATABASE ────────────────────────────────────
+// governor, senators, capital accurate as of May 2025
+const STATE_DB = {
+  'Alabama':        {abbr:'AL',capital:'Montgomery',    gov:{n:'Kay Ivey',             p:'R'},sens:[{n:'Tommy Tuberville',p:'R'},{n:'Katie Britt',         p:'R'}]},
+  'Alaska':         {abbr:'AK',capital:'Juneau',         gov:{n:'Mike Dunleavy',         p:'R'},sens:[{n:'Lisa Murkowski',    p:'R'},{n:'Dan Sullivan',         p:'R'}]},
+  'Arizona':        {abbr:'AZ',capital:'Phoenix',        gov:{n:'Katie Hobbs',           p:'D'},sens:[{n:'Mark Kelly',         p:'D'},{n:'Ruben Gallego',       p:'D'}]},
+  'Arkansas':       {abbr:'AR',capital:'Little Rock',    gov:{n:'Sarah Huckabee Sanders',p:'R'},sens:[{n:'Tom Cotton',          p:'R'},{n:'John Boozman',        p:'R'}]},
+  'California':     {abbr:'CA',capital:'Sacramento',     gov:{n:'Gavin Newsom',          p:'D'},sens:[{n:'Alex Padilla',        p:'D'},{n:'Adam Schiff',         p:'D'}]},
+  'Colorado':       {abbr:'CO',capital:'Denver',         gov:{n:'Jared Polis',           p:'D'},sens:[{n:'Michael Bennet',      p:'D'},{n:'John Hickenlooper',   p:'D'}]},
+  'Connecticut':    {abbr:'CT',capital:'Hartford',       gov:{n:'Ned Lamont',            p:'D'},sens:[{n:'Chris Murphy',        p:'D'},{n:'Richard Blumenthal',  p:'D'}]},
+  'Delaware':       {abbr:'DE',capital:'Dover',          gov:{n:'Matt Meyer',            p:'D'},sens:[{n:'Chris Coons',         p:'D'},{n:'Lisa Blunt Rochester', p:'D'}]},
+  'Florida':        {abbr:'FL',capital:'Tallahassee',    gov:{n:'Ron DeSantis',          p:'R'},sens:[{n:'Rick Scott',          p:'R'},{n:'Ashley Moody',        p:'R'}]},
+  'Georgia':        {abbr:'GA',capital:'Atlanta',        gov:{n:'Brian Kemp',            p:'R'},sens:[{n:'Jon Ossoff',          p:'D'},{n:'Raphael Warnock',     p:'D'}]},
+  'Hawaii':         {abbr:'HI',capital:'Honolulu',       gov:{n:'Josh Green',            p:'D'},sens:[{n:'Brian Schatz',        p:'D'},{n:'Mazie Hirono',        p:'D'}]},
+  'Idaho':          {abbr:'ID',capital:'Boise',          gov:{n:'Brad Little',           p:'R'},sens:[{n:'Mike Crapo',          p:'R'},{n:'Jim Risch',           p:'R'}]},
+  'Illinois':       {abbr:'IL',capital:'Springfield',    gov:{n:'JB Pritzker',           p:'D'},sens:[{n:'Dick Durbin',         p:'D'},{n:'Tammy Duckworth',     p:'D'}]},
+  'Indiana':        {abbr:'IN',capital:'Indianapolis',   gov:{n:'Mike Braun',            p:'R'},sens:[{n:'Todd Young',          p:'R'},{n:'Jim Banks',           p:'R'}]},
+  'Iowa':           {abbr:'IA',capital:'Des Moines',     gov:{n:'Kim Reynolds',          p:'R'},sens:[{n:'Chuck Grassley',      p:'R'},{n:'Joni Ernst',          p:'R'}]},
+  'Kansas':         {abbr:'KS',capital:'Topeka',         gov:{n:'Laura Kelly',           p:'D'},sens:[{n:'Jerry Moran',         p:'R'},{n:'Roger Marshall',      p:'R'}]},
+  'Kentucky':       {abbr:'KY',capital:'Frankfort',      gov:{n:'Andy Beshear',          p:'D'},sens:[{n:'Mitch McConnell',     p:'R'},{n:'Rand Paul',           p:'R'}]},
+  'Louisiana':      {abbr:'LA',capital:'Baton Rouge',    gov:{n:'Jeff Landry',           p:'R'},sens:[{n:'Bill Cassidy',        p:'R'},{n:'John Kennedy',        p:'R'}]},
+  'Maine':          {abbr:'ME',capital:'Augusta',        gov:{n:'Janet Mills',           p:'D'},sens:[{n:'Susan Collins',       p:'R'},{n:'Angus King',          p:'I'}]},
+  'Maryland':       {abbr:'MD',capital:'Annapolis',      gov:{n:'Wes Moore',             p:'D'},sens:[{n:'Chris Van Hollen',    p:'D'},{n:'Angela Alsobrooks',   p:'D'}]},
+  'Massachusetts':  {abbr:'MA',capital:'Boston',         gov:{n:'Maura Healey',          p:'D'},sens:[{n:'Elizabeth Warren',    p:'D'},{n:'Ed Markey',           p:'D'}]},
+  'Michigan':       {abbr:'MI',capital:'Lansing',        gov:{n:'Gretchen Whitmer',      p:'D'},sens:[{n:'Gary Peters',         p:'D'},{n:'Elissa Slotkin',      p:'D'}]},
+  'Minnesota':      {abbr:'MN',capital:'Saint Paul',     gov:{n:'Tim Walz',              p:'D'},sens:[{n:'Amy Klobuchar',       p:'D'},{n:'Tina Smith',          p:'D'}]},
+  'Mississippi':    {abbr:'MS',capital:'Jackson',        gov:{n:'Tate Reeves',           p:'R'},sens:[{n:'Roger Wicker',        p:'R'},{n:'Cindy Hyde-Smith',    p:'R'}]},
+  'Missouri':       {abbr:'MO',capital:'Jefferson City', gov:{n:'Mike Kehoe',            p:'R'},sens:[{n:'Josh Hawley',         p:'R'},{n:'Eric Schmitt',        p:'R'}]},
+  'Montana':        {abbr:'MT',capital:'Helena',         gov:{n:'Greg Gianforte',        p:'R'},sens:[{n:'Steve Daines',        p:'R'},{n:'Tim Sheehy',          p:'R'}]},
+  'Nebraska':       {abbr:'NE',capital:'Lincoln',        gov:{n:'Jim Pillen',            p:'R'},sens:[{n:'Deb Fischer',         p:'R'},{n:'Pete Ricketts',       p:'R'}]},
+  'Nevada':         {abbr:'NV',capital:'Carson City',    gov:{n:'Joe Lombardo',          p:'R'},sens:[{n:'Catherine Cortez Masto',p:'D'},{n:'Jacky Rosen',      p:'D'}]},
+  'New Hampshire':  {abbr:'NH',capital:'Concord',        gov:{n:'Kelly Ayotte',          p:'R'},sens:[{n:'Jeanne Shaheen',      p:'D'},{n:'Maggie Hassan',       p:'D'}]},
+  'New Jersey':     {abbr:'NJ',capital:'Trenton',        gov:{n:'Phil Murphy',           p:'D'},sens:[{n:'Cory Booker',         p:'D'},{n:'Andy Kim',            p:'D'}]},
+  'New Mexico':     {abbr:'NM',capital:'Santa Fe',       gov:{n:'Michelle Lujan Grisham',p:'D'},sens:[{n:'Martin Heinrich',     p:'D'},{n:'Ben Ray Luján',       p:'D'}]},
+  'New York':       {abbr:'NY',capital:'Albany',         gov:{n:'Kathy Hochul',          p:'D'},sens:[{n:'Chuck Schumer',       p:'D'},{n:'Kirsten Gillibrand',  p:'D'}]},
+  'North Carolina': {abbr:'NC',capital:'Raleigh',        gov:{n:'Josh Stein',            p:'D'},sens:[{n:'Thom Tillis',         p:'R'},{n:'Ted Budd',            p:'R'}]},
+  'North Dakota':   {abbr:'ND',capital:'Bismarck',       gov:{n:'Kelly Armstrong',       p:'R'},sens:[{n:'John Hoeven',         p:'R'},{n:'Kevin Cramer',        p:'R'}]},
+  'Ohio':           {abbr:'OH',capital:'Columbus',       gov:{n:'Mike DeWine',           p:'R'},sens:[{n:'Bernie Moreno',       p:'R'},{n:'Jon Husted',          p:'R'}]},
+  'Oklahoma':       {abbr:'OK',capital:'Oklahoma City',  gov:{n:'Kevin Stitt',           p:'R'},sens:[{n:'James Lankford',      p:'R'},{n:'Markwayne Mullin',    p:'R'}]},
+  'Oregon':         {abbr:'OR',capital:'Salem',          gov:{n:'Tina Kotek',            p:'D'},sens:[{n:'Ron Wyden',           p:'D'},{n:'Jeff Merkley',        p:'D'}]},
+  'Pennsylvania':   {abbr:'PA',capital:'Harrisburg',     gov:{n:'Josh Shapiro',          p:'D'},sens:[{n:'John Fetterman',      p:'D'},{n:'Dave McCormick',      p:'R'}]},
+  'Rhode Island':   {abbr:'RI',capital:'Providence',     gov:{n:'Dan McKee',             p:'D'},sens:[{n:'Jack Reed',           p:'D'},{n:'Sheldon Whitehouse',  p:'D'}]},
+  'South Carolina': {abbr:'SC',capital:'Columbia',       gov:{n:'Henry McMaster',        p:'R'},sens:[{n:'Lindsey Graham',      p:'R'},{n:'Tim Scott',           p:'R'}]},
+  'South Dakota':   {abbr:'SD',capital:'Pierre',         gov:{n:'Kristi Noem',           p:'R'},sens:[{n:'John Thune',          p:'R'},{n:'Mike Rounds',         p:'R'}]},
+  'Tennessee':      {abbr:'TN',capital:'Nashville',      gov:{n:'Bill Lee',              p:'R'},sens:[{n:'Marsha Blackburn',    p:'R'},{n:'Bill Hagerty',        p:'R'}]},
+  'Texas':          {abbr:'TX',capital:'Austin',         gov:{n:'Greg Abbott',           p:'R'},sens:[{n:'John Cornyn',         p:'R'},{n:'Ted Cruz',            p:'R'}]},
+  'Utah':           {abbr:'UT',capital:'Salt Lake City', gov:{n:'Spencer Cox',           p:'R'},sens:[{n:'Mike Lee',            p:'R'},{n:'John Curtis',         p:'R'}]},
+  'Vermont':        {abbr:'VT',capital:'Montpelier',     gov:{n:'Phil Scott',            p:'R'},sens:[{n:'Bernie Sanders',      p:'I'},{n:'Peter Welch',         p:'D'}]},
+  'Virginia':       {abbr:'VA',capital:'Richmond',       gov:{n:'Glenn Youngkin',        p:'R'},sens:[{n:'Mark Warner',         p:'D'},{n:'Tim Kaine',           p:'D'}]},
+  'Washington':     {abbr:'WA',capital:'Olympia',        gov:{n:'Bob Ferguson',          p:'D'},sens:[{n:'Patty Murray',        p:'D'},{n:'Maria Cantwell',      p:'D'}]},
+  'West Virginia':  {abbr:'WV',capital:'Charleston',     gov:{n:'Patrick Morrisey',      p:'R'},sens:[{n:'Shelley Moore Capito',p:'R'},{n:'Jim Justice',         p:'R'}]},
+  'Wisconsin':      {abbr:'WI',capital:'Madison',        gov:{n:'Tony Evers',            p:'D'},sens:[{n:'Tammy Baldwin',       p:'D'},{n:'Ron Johnson',         p:'R'}]},
+  'Wyoming':        {abbr:'WY',capital:'Cheyenne',       gov:{n:'Mark Gordon',           p:'R'},sens:[{n:'John Barrasso',       p:'R'},{n:'Cynthia Lummis',      p:'R'}]},
+};
+
 // ── STATE ─────────────────────────────────────────────
 let clState = {};
 let docState = {};
@@ -791,6 +877,121 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate, stepDates})); } catch(e) {}
+}
+
+// ── STATE SELECTION ───────────────────────────────────
+function getSelectedState() {
+  return localStorage.getItem('landed_state') || null;
+}
+
+function initState() {
+  const sel = document.getElementById('state-select-modal');
+  Object.keys(STATE_DB).sort().forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s;
+    sel.appendChild(o);
+  });
+  const current = getSelectedState();
+  if (current && STATE_DB[current]) sel.value = current;
+  renderStateIndicator();
+  if (!current) showStateModal();
+}
+
+function showStateModal() {
+  const current = getSelectedState();
+  const sel = document.getElementById('state-select-modal');
+  if (current && STATE_DB[current]) sel.value = current;
+  document.getElementById('state-modal').classList.add('on');
+}
+
+function dismissStateModal() {
+  document.getElementById('state-modal').classList.remove('on');
+}
+
+function saveStateFromModal() {
+  const val = document.getElementById('state-select-modal').value;
+  if (!val) { showToast('Please select your state'); return; }
+  localStorage.setItem('landed_state', val);
+  dismissStateModal();
+  renderStateIndicator();
+  showToast('📍 State set to ' + val);
+}
+
+function renderStateIndicator() {
+  const el = document.getElementById('state-indicator');
+  if (!el) return;
+  const state = getSelectedState();
+  const sd = state ? STATE_DB[state] : null;
+  if (sd) {
+    el.innerHTML = `
+      <div>
+        <span style="font-size:12px;font-weight:500;color:var(--forest);">📍 ${state}</span>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px;">Gov: ${sd.gov.n} · Sen: ${sd.sens[0].n}, ${sd.sens[1].n}</div>
+      </div>
+      <button onclick="showStateModal()" style="background:none;border:1px solid var(--cream2);border-radius:99px;color:var(--muted);font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit;white-space:nowrap;">Change</button>`;
+  } else {
+    el.innerHTML = `<span style="font-size:12px;color:var(--muted);flex:1;">Set your state to get accurate civics questions for your governor & senators</span>
+      <button onclick="showStateModal()" style="background:var(--forest);border:none;border-radius:99px;color:var(--cream2);font-size:11px;padding:5px 12px;cursor:pointer;font-family:inherit;white-space:nowrap;">Set state</button>`;
+  }
+}
+
+// ── DYNAMIC CIVICS QUESTIONS ──────────────────────────
+function _shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function _otherGovernors(excluding, n) {
+  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].gov.n);
+}
+
+function _otherSenators(excluding, n) {
+  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].sens[0].n);
+}
+
+function _otherCapitals(excluding, n) {
+  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].capital);
+}
+
+function buildCivicsQuestions() {
+  const stateName = getSelectedState();
+  const sd = stateName ? STATE_DB[stateName] : null;
+  const p = NATIONAL_OFFICIALS;
+
+  const extra = [
+    // Current national officeholders (missing from static list)
+    {q:'What is the name of the President of the United States now?',
+     a:p.president.name, options:_shuffle([p.president.name,'Joe Biden','Barack Obama','George W. Bush']).slice(0,4), cat:'System of Government'},
+    {q:'What is the name of the Vice President of the United States now?',
+     a:p.vicePresident.name, options:_shuffle([p.vicePresident.name,'Mike Pence','Kamala Harris','Tim Walz']).slice(0,4), cat:'System of Government'},
+    {q:'Who is the Chief Justice of the United States now?',
+     a:p.chiefJustice.name, options:_shuffle([p.chiefJustice.name,'Amy Coney Barrett','Clarence Thomas','Sonia Sotomayor']).slice(0,4), cat:'System of Government'},
+    {q:'Who is the Speaker of the House of Representatives now?',
+     a:p.speakerHouse.name, options:_shuffle([p.speakerHouse.name,'Nancy Pelosi','Hakeem Jeffries','Kevin McCarthy']).slice(0,4), cat:'System of Government'},
+  ];
+
+  if (sd) {
+    const s0 = sd.sens[0].n, s1 = sd.sens[1].n;
+    const senOpts = _shuffle([s0, s1, ..._otherSenators(stateName, 2)]).slice(0, 4);
+    // Ensure both real senators are always in the options (replace dupes if needed)
+    if (!senOpts.includes(s0)) senOpts[0] = s0;
+    if (!senOpts.includes(s1)) senOpts[1] = s1;
+    extra.push(
+      {q:"Who is one of your state's U.S. Senators now?",
+       a:s0, altAnswer:s1, options:_shuffle(senOpts), cat:'System of Government',
+       note:`Either ${s0} or ${s1} is correct`},
+      {q:`Who is the Governor of ${stateName} now?`,
+       a:sd.gov.n, options:_shuffle([sd.gov.n,..._otherGovernors(stateName,3)]).slice(0,4), cat:'System of Government'},
+      {q:`What is the capital of ${stateName}?`,
+       a:sd.capital, options:_shuffle([sd.capital,..._otherCapitals(stateName,3)]).slice(0,4), cat:'Geography'},
+      {q:'Name your U.S. Representative.', isRep:true, state:stateName, cat:'System of Government'},
+    );
+  } else {
+    extra.push(
+      {q:"Who is one of your state's U.S. Senators now?", isStatePrompt:true, cat:'System of Government'},
+      {q:'Who is the Governor of your state now?', isStatePrompt:true, cat:'System of Government'},
+      {q:'Name your U.S. Representative.', isRep:true, state:null, cat:'System of Government'},
+    );
+  }
+
+  return [...CIVICS_QUESTIONS, ...extra];
 }
 
 // ── RENDER TIMELINE ───────────────────────────────────
@@ -1795,7 +1996,9 @@ function startQuiz(type) {
   quizCorrect = 0;
   quizIndex = 0;
   quizAnswered = false;
-  const pool = type === 'civics' ? CIVICS_QUESTIONS : ENGLISH_QUESTIONS;
+  const fullPool = type === 'civics' ? buildCivicsQuestions() : ENGLISH_QUESTIONS;
+  // isStatePrompt questions are informational placeholders — exclude from scored pool
+  const pool = fullPool.filter(q => !q.isStatePrompt);
   quizQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
   document.getElementById('quiz-home').style.display = 'none';
   document.getElementById('quiz-results').style.display = 'none';
@@ -1808,10 +2011,31 @@ function renderQuizQuestion() {
   const total = quizQuestions.length;
   document.getElementById('quiz-label').textContent = `${quizType === 'civics' ? 'Civics' : 'English'} · Question ${quizIndex + 1} of ${total}`;
   document.getElementById('quiz-progress-bar').style.width = `${(quizIndex / total) * 100}%`;
-  document.getElementById('quiz-q').textContent = q.q;
   document.getElementById('quiz-feedback').style.display = 'none';
   document.getElementById('quiz-next-btn').style.display = 'none';
   quizAnswered = false;
+
+  // ── Representative special card ───────────────────────
+  if (q.isRep) {
+    document.getElementById('quiz-q').textContent = 'Name your U.S. Representative.';
+    document.getElementById('quiz-options').innerHTML = `
+      <div style="background:var(--approved-bg);border:1px solid var(--sage);border-radius:var(--r);padding:16px 18px;">
+        <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:8px;">📋 This question is district-specific</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px;">There are 435 congressional districts. USCIS officers know this is impractical — they typically accept <em>"I don't know my representative's name, but I know how to find out"</em> as a passing answer. You will not be penalized for it.</div>
+        ${q.state ? `<a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:var(--rs);padding:12px 14px;font-size:13px;font-weight:500;">
+          <span>Find my representative →</span>
+          <span style="font-size:11px;color:var(--sage);">house.gov</span>
+        </a>` : `<button onclick="showStateModal()" style="width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:var(--rs);padding:12px 14px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Set your state to get the link →</button>`}
+      </div>`;
+    quizCorrect++; // USCIS effectively passes on this question
+    quizAnswered = true;
+    const nb = document.getElementById('quiz-next-btn');
+    nb.style.display = 'block';
+    nb.textContent = quizIndex < total - 1 ? 'Next question →' : 'See results →';
+    return;
+  }
+
+  document.getElementById('quiz-q').textContent = q.q;
 
   // Prevent translation of English quiz content
   const wrap = document.getElementById('quiz-question-wrap');
@@ -1834,22 +2058,25 @@ function answerQuestion(btn) {
   quizAnswered = true;
   const selected = btn.getAttribute('data-answer');
   const q = quizQuestions[quizIndex];
-  const correct = selected === q.a;
+  const correct = selected === q.a || (q.altAnswer && selected === q.altAnswer);
   const feedback = document.getElementById('quiz-feedback');
   document.querySelectorAll('#quiz-options button').forEach(b => {
     b.disabled = true;
     const ans = b.getAttribute('data-answer');
-    if (ans === q.a) { b.style.background='var(--approved-bg)';b.style.borderColor='var(--grass)';b.style.color='var(--forest)'; }
+    const isCorrectAnswer = ans === q.a || (q.altAnswer && ans === q.altAnswer);
+    if (isCorrectAnswer) { b.style.background='var(--approved-bg)';b.style.borderColor='var(--grass)';b.style.color='var(--forest)'; }
     else if (ans === selected && !correct) { b.style.background='#fdf0f0';b.style.borderColor='#e74c3c';b.style.color='#c0392b'; }
   });
   if (correct) {
     quizCorrect++;
     feedback.style.cssText='display:block;background:var(--approved-bg);border:1px solid var(--grass);color:var(--forest);border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
-    feedback.innerHTML='✅ Correct!';
+    feedback.innerHTML = q.note ? `✅ Correct! <span style="font-size:12px;opacity:0.8;">(${q.note})</span>` : '✅ Correct!';
   } else {
-    quizWrong.push({q:q.q, correct:q.a, cat:q.cat||'General'});
+    quizWrong.push({q:q.q, correct:q.altAnswer ? `${q.a} or ${q.altAnswer}` : q.a, cat:q.cat||'General'});
     feedback.style.cssText='display:block;background:#fdf0f0;border:1px solid #e74c3c;color:#c0392b;border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
-    feedback.innerHTML=`❌ The correct answer is: <strong>${q.a}</strong>`;
+    feedback.innerHTML = q.altAnswer
+      ? `❌ Either <strong>${q.a}</strong> or <strong>${q.altAnswer}</strong> is correct`
+      : `❌ The correct answer is: <strong>${q.a}</strong>`;
   }
   const nextBtn = document.getElementById('quiz-next-btn');
   nextBtn.style.display = 'block';
@@ -2020,6 +2247,7 @@ renderGamification();
 startTicker();
 startAffirmations();
 loadLanguage();
+initState();
 </script>
 
 <!-- ── MIA ── -->
