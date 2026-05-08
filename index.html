@@ -10,6 +10,48 @@
 <meta name="apple-mobile-web-app-title" content="Landed"/>
 <link rel="manifest" href="manifest.json"/>
 <title>Landed — Your Path Home</title>
+
+<!-- ── SUPABASE AUTH GATE ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(async function() {
+  const SUPABASE_URL = 'https://nbfkmxgtlfzbanfleuss.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZmtteGd0bGZ6YmFuZmxldXNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTI3NDMsImV4cCI6MjA5MzgyODc0M30.PHPLYT82a4uLvtrSl8EtoWMfoppaBLEDnmNtVo0V4YA';
+
+  // Full path for GitHub Pages
+  const base = window.location.pathname.replace('index.html','').replace(/\/+$/,'/');
+  const LANDING = base + 'landing.html';
+
+  try {
+    window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const { data: { session } } = await window._sb.auth.getSession();
+
+    if (!session) {
+      window.location.replace(LANDING);
+      return;
+    }
+
+    const { data: profile } = await window._sb.from('profiles')
+      .select('paid')
+      .eq('id', session.user.id)
+      .single();
+
+    if (!profile?.paid) {
+      await window._sb.auth.signOut();
+      window.location.replace(LANDING);
+      return;
+    }
+
+    // ✅ Authenticated + paid
+    window._sbSession = session;
+
+  } catch(e) {
+    // If Supabase fails to load, don't block the app
+    console.warn('Auth check failed:', e);
+  }
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -2743,7 +2785,18 @@ async function sendMia(){
   addMiaMsg(text,'user');
   addMiaTyping();
   try{
-    const res=await fetch('https://landed-mia.ksjbrown.workers.dev',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:buildMiaSystemPrompt(),messages:[{role:'user',content:text}]})});
+    const session = window._sbSession || (await window._sb.auth.getSession()).data.session;
+    const res=await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/mia',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+      },
+      body:JSON.stringify({
+        system:buildMiaSystemPrompt(),
+        messages:[{role:'user',content:text}]
+      })
+    });
     const data=await res.json();
     removeMiaTyping();
     addMiaMsg(data.content?.[0]?.text||"I'm not sure about that one. An immigration attorney would be the right person to ask.",'mia');
