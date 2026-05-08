@@ -15,6 +15,30 @@
   --muted:#4a6650;--white:#fff;
 }
 html,body{height:100%;}
+
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;height:auto;min-height:unset;}
+  .hero-left{height:52vw;min-height:220px;max-height:340px;}
+  .hero-right{padding:28px 24px 40px;height:auto;}
+  .hero-right-top{padding-top:0;}
+  .hero-title{font-size:clamp(28px,7vw,42px);}
+  .hero-sub{font-size:15px;}
+  .price-num{font-size:38px;}
+  .cta-btn{font-size:15px;padding:15px 32px;width:100%;justify-content:center;}
+
+  nav{padding:0 20px;}
+
+  .features{padding:48px 24px;}
+  .features-grid{grid-template-columns:1fr;}
+
+  .proof{padding:48px 24px;grid-template-columns:1fr;gap:32px;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+
+  footer{padding:20px 24px;}
+
+  #mia-panel{width:calc(100vw - 32px);right:16px;bottom:80px;}
+  #mia-btn{bottom:20px;right:16px;}
+}
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);overflow-x:hidden;}
 
 /* ── NAV ── */
@@ -28,15 +52,15 @@ nav{background:var(--forest);padding:0 40px;display:flex;align-items:center;just
 .nav-cta:hover{background:rgba(255,255,255,0.18);}
 
 /* ── HERO ── */
-.hero{min-height:85vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;height:85vh;overflow:hidden;background:var(--cream);}
+.hero{min-height:calc(100vh - 300px);display:grid;grid-template-columns:1fr 1fr;align-items:end;height:calc(100vh - 300px);overflow:hidden;background:var(--cream);}
 
 /* LEFT — animation panel */
-.hero-left{background:var(--cream);display:flex;align-items:center;justify-content:center;padding:0;height:85vh;overflow:hidden;position:relative;}
-.hero-left svg{width:100%;height:100%;display:block;}
+.hero-left{background:var(--cream);display:flex;align-items:flex-end;justify-content:center;padding:0;height:calc(100vh - 300px);overflow:hidden;position:relative;}
+.hero-left svg{width:100%;display:block;}
 
 /* RIGHT — copy panel */
-.hero-right{padding:0 64px 0 48px;display:flex;flex-direction:column;justify-content:flex-start;gap:0;height:85vh;}
-.hero-right-top{display:flex;flex-direction:column;justify-content:flex-start;padding-top:calc(85vh * 0.02);}
+.hero-right{padding:0 72px 8px 32px;display:flex;flex-direction:column;justify-content:flex-end;gap:0;height:calc(100vh - 300px);}
+.hero-right-top{display:flex;flex-direction:column;}
 .hero-right-bottom{display:flex;flex-direction:column;margin-top:20px;}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:24px;}
 .eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--grass);}
@@ -46,11 +70,13 @@ nav{background:var(--forest);padding:0 40px;display:flex;align-items:center;just
 .hero-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:400px;margin-bottom:16px;}
 .price-row{display:flex;align-items:baseline;gap:10px;margin-bottom:18px;}
 .price-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:500;color:var(--forest);line-height:1;}
-.price-note{font-size:11px;color:var(--muted);}
-.cta-btn{display:inline-flex;align-items:center;gap:12px;background:var(--forest);color:var(--cream2);padding:18px 42px;border-radius:99px;font-size:17px;font-weight:500;border:none;cursor:pointer;font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 18px rgba(26,61,43,0.22);width:fit-content;text-decoration:none;}
+.price-note{font-size:13px;color:var(--muted);}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:var(--forest);color:var(--cream2);padding:14px 32px;border-radius:99px;font-size:15px;font-weight:500;border:none;cursor:pointer;font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 4px 18px rgba(26,61,43,0.22);width:fit-content;text-decoration:none;}
 .cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(26,61,43,0.32);}
 .cta-btn svg{flex-shrink:0;}
 .reassure{font-size:13px;color:var(--muted);margin-top:12px;}
+.gift-btn{display:inline-flex;align-items:center;gap:8px;background:#c8952a;color:#fff8e8;padding:14px 28px;border-radius:99px;font-size:15px;font-weight:500;border:none;cursor:pointer;font-family:inherit;transition:all 0.15s;white-space:nowrap;box-shadow:0 4px 18px rgba(200,149,42,0.28);}
+.gift-btn:hover{background:#b07d20;box-shadow:0 8px 28px rgba(200,149,42,0.38);transform:translateY(-2px);}
 
 /* ── FEATURES ── */
 .features{padding:80px 80px;background:var(--white);}
@@ -73,7 +99,7 @@ nav{background:var(--forest);padding:0 40px;display:flex;align-items:center;just
 
 /* ── FOOTER ── */
 footer{padding:20px 80px;background:var(--forest3);display:flex;align-items:flex-start;justify-content:flex-start;}
-footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:left;}
+footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:left;margin:0;}
 .footer-logo{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--cream2);}
 
 /* ── ANIMATION CSS ── */
@@ -135,51 +161,46 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
 
   <!-- LEFT: Animation -->
   <div class="hero-left">
-    <svg id="msv" viewBox="0 0 680 590" fill="none" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <svg id="msv" viewBox="0 0 680 510" fill="none" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
       <rect x="0" y="0" width="680" height="700" fill="#f0ebe0"/>
 
       <!-- Sun -->
       <g style="animation:sunFloat 8s ease-in-out infinite;">
-        <circle cx="580" cy="130" r="36" fill="#f5d080" opacity="0.35"/>
-        <circle cx="580" cy="130" r="26" fill="#f5c842" opacity="0.55"/>
-        <circle cx="580" cy="130" r="18" fill="#f0b429" opacity="0.7"/>
+        <circle cx="580" cy="75" r="36" fill="#f5d080" opacity="0.35"/>
+        <circle cx="580" cy="75" r="26" fill="#f5c842" opacity="0.55"/>
+        <circle cx="580" cy="75" r="18" fill="#f0b429" opacity="0.7"/>
       </g>
 
       <!-- Cloud 1 — large, drifts slowly left to right -->
       <g style="animation:cloudDrift1 28s ease-in-out infinite;">
-        <ellipse cx="120" cy="150" rx="55" ry="22" fill="white" opacity="0.7"/>
-        <ellipse cx="90"  cy="158" rx="34" ry="18" fill="white" opacity="0.7"/>
-        <ellipse cx="152" cy="158" rx="30" ry="16" fill="white" opacity="0.7"/>
+        <ellipse cx="120" cy="100" rx="55" ry="22" fill="white" opacity="0.7"/>
+        <ellipse cx="90"  cy="108" rx="34" ry="18" fill="white" opacity="0.7"/>
+        <ellipse cx="152" cy="108" rx="30" ry="16" fill="white" opacity="0.7"/>
       </g>
 
       <!-- Cloud 2 — small, drifts opposite direction -->
       <g style="animation:cloudDrift2 22s ease-in-out infinite;">
-        <ellipse cx="430" cy="108" rx="40" ry="16" fill="white" opacity="0.55"/>
-        <ellipse cx="408" cy="116" rx="24" ry="13" fill="white" opacity="0.55"/>
-        <ellipse cx="456" cy="116" rx="22" ry="12" fill="white" opacity="0.55"/>
+        <ellipse cx="430" cy="58" rx="40" ry="16" fill="white" opacity="0.55"/>
+        <ellipse cx="408" cy="66" rx="24" ry="13" fill="white" opacity="0.55"/>
+        <ellipse cx="456" cy="66" rx="22" ry="12" fill="white" opacity="0.55"/>
       </g>
 
       <!-- Cloud 3 — wispy, top right -->
       <g style="animation:cloudDrift3 34s ease-in-out infinite;">
-        <ellipse cx="260" cy="92" rx="32" ry="12" fill="white" opacity="0.45"/>
-        <ellipse cx="242" cy="98" rx="18" ry="10" fill="white" opacity="0.45"/>
-        <ellipse cx="280" cy="98" rx="16" ry="9"  fill="white" opacity="0.45"/>
+        <ellipse cx="260" cy="42" rx="32" ry="12" fill="white" opacity="0.45"/>
+        <ellipse cx="242" cy="48" rx="18" ry="10" fill="white" opacity="0.45"/>
+        <ellipse cx="280" cy="48" rx="16" ry="9"  fill="white" opacity="0.45"/>
       </g>
 
       <!-- Birds — two pairs gliding across -->
       <g style="animation:birdFly1 18s linear infinite;">
-        <!-- Bird 1 -->
-        <path d="M80 200 Q86 195 92 200" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
-        <!-- Bird 2 -->
-        <path d="M100 194 Q106 189 112 194" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <path d="M80 148 Q86 143 92 148" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <path d="M100 142 Q106 137 112 142" stroke="#2d6647" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.55"/>
       </g>
       <g style="animation:birdFly2 24s linear infinite;">
-        <!-- Bird 3 -->
-        <path d="M500 170 Q507 164 514 170" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
-        <!-- Bird 4 -->
-        <path d="M522 162 Q529 156 536 162" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
-        <!-- Bird 5 -->
-        <path d="M510 178 Q517 172 524 178" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <path d="M500 120 Q507 114 514 120" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <path d="M522 112 Q529 106 536 112" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <path d="M510 128 Q517 122 524 128" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
       </g>
 
       <!-- Stars (fade out as sun is present — subtle) -->
@@ -388,10 +409,15 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
         <span class="price-num">$2.99</span>
         <span class="price-note">one-time · yours forever</span>
       </div>
-      <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
-        Get Landed
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
+          Get Landed
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="gift-btn" onclick="openGift()">
+          Give as a gift
+        </button>
+      </div>
       <p class="reassure">Secure checkout · Instant access</p>
     </div>
   </div>
@@ -578,16 +604,94 @@ function switchAuthMode(mode){
   mode === 'signIn' ? setSignInMode() : setSignUpMode();
 }
 
-function handleAuth(){
+async function handleAuth(){
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value.trim();
+  const fname = document.getElementById('auth-fname').value.trim();
+  const lname = document.getElementById('auth-lname').value.trim();
   const err = document.getElementById('auth-error');
+  const btn = document.getElementById('auth-submit-btn');
+
   if(!email || !password){ err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
+  if(_authMode === 'signUp' && (!fname || !lname)){ err.textContent = 'Please enter your name.'; err.classList.add('show'); return; }
   err.classList.remove('show');
-  // Hook your Clerk + Stripe logic here
-  // On success: closeAuth(); if paid, unlockMia();
-  alert(`${_authMode === 'signUp' ? 'Sign up' : 'Sign in'} flow — wire up Clerk + Stripe here.\n\nEmail: ${email}`);
+
+  btn.textContent = _authMode === 'signUp' ? 'Creating account…' : 'Signing in…';
+  btn.disabled = true;
+
+  try {
+    if(_authMode === 'signUp') {
+      // ── SIGN UP ──
+      // 1. Create Clerk user
+      const signUpRes = await window.Clerk.client.signUp.create({
+        emailAddress: email,
+        password,
+        firstName: fname,
+        lastName: lname,
+      });
+      await signUpRes.prepareEmailAddressVerification({ strategy: 'email_code' });
+
+      // 2. Create Stripe Checkout session via your backend/worker
+      const checkoutRes = await fetch('https://landed-mia.ksjbrown.workers.dev/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, userId: signUpRes.createdUserId })
+      });
+      const { url } = await checkoutRes.json();
+      if(url) window.location.href = url; // Stripe Checkout redirect
+
+    } else {
+      // ── SIGN IN ──
+      const signInRes = await window.Clerk.client.signIn.create({
+        identifier: email,
+        password,
+      });
+      await window.Clerk.setActive({ session: signInRes.createdSessionId });
+
+      // Check if paid (look for metadata on Clerk user)
+      const user = await window.Clerk.user;
+      if(user?.publicMetadata?.paid) {
+        unlockMia();
+        closeAuth();
+        showAuthSuccess();
+      } else {
+        // Not paid yet — send to checkout
+        const checkoutRes = await fetch('https://landed-mia.ksjbrown.workers.dev/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, userId: user.id })
+        });
+        const { url } = await checkoutRes.json();
+        if(url) window.location.href = url;
+      }
+    }
+  } catch(e) {
+    err.textContent = e.errors?.[0]?.message || 'Something went wrong. Please try again.';
+    err.classList.add('show');
+    btn.textContent = _authMode === 'signUp' ? 'Create account & pay $2.99' : 'Sign in';
+    btn.disabled = false;
+  }
 }
+
+function showAuthSuccess() {
+  const sub = document.getElementById('auth-sub');
+  if(sub) sub.textContent = 'Welcome back! Mia is ready for you.';
+}
+
+// Called after Stripe payment success (redirect back with ?payment=success)
+function checkPaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('payment') === 'success') {
+    unlockMia();
+    openAuth('signIn');
+    document.getElementById('auth-title').textContent = 'Payment successful!';
+    document.getElementById('auth-sub').textContent = 'You\'re all set. Sign in to access your Landed kit.';
+    document.getElementById('auth-submit-btn').textContent = 'Sign in';
+    document.getElementById('name-field').style.display = 'none';
+  }
+}
+
+window.addEventListener('load', checkPaymentReturn);
 
 // Close on backdrop click
 document.getElementById('auth-modal').addEventListener('click', e => {
@@ -726,13 +830,32 @@ async function sendMia(){
   addMsg(text, 'user');
   addTyping();
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{
+    const res = await fetch('https://landed-mia.ksjbrown.workers.dev',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
-        max_tokens:400,
-        system:'You are Mia, a warm and knowledgeable document assistant for Landed, an app helping immigrants navigate U.S. naturalization. You help users understand USCIS forms, what documents they need, and general questions about the naturalization process. You are not a lawyer and never give legal advice. For anything involving specific legal strategy, eligibility edge cases, or representation, kindly direct them to an immigration attorney. Keep responses concise and friendly.',
+        max_tokens:600,
+        system:`You are Mia, a warm and knowledgeable guide for Landed, an app helping green card holders navigate U.S. naturalization. You are on the landing page speaking with a prospective user who has not yet purchased.
+
+YOUR PERSONALITY:
+- Warm, clear, encouraging — like a knowledgeable friend who has been through this process
+- Concise and direct — no lengthy essays
+- Honest about what you don't know
+
+WHAT YOU KNOW:
+1. THE NATURALIZATION TIMELINE: 8 steps — Confirm Eligibility, File N-400, Biometrics, Background Checks, Interview & Civics Test, Receive Decision, Oath of Allegiance, Receive Certificate. Total: 12–24 months average.
+2. THE N-400: 47-item pre-submit checklist covering personal info, eligibility, travel history, employment, family, taxes, moral character, documents, form review, and filing.
+3. CIVICS TEST: 100 official USCIS questions on American history, government, geography.
+4. ENGLISH TEST: Reading comprehension sentences.
+5. PROCESSING TIMES: Average 12–24 months. Fastest: 8–10 months. Slowest (NYC/LA/Chicago): 24–36 months. ~91% approval rate at interview.
+6. LANDED: $2.99 one-time, instant access, includes timeline tracker, N-400 guide, interview coach, document center, pro tips, legal help finder, and Mia (AI assistant).
+
+STRICT RULES:
+1. Only answer questions about naturalization and Landed.
+2. Never give legal strategy advice — direct to an immigration attorney.
+3. You CAN explain what N-400 questions mean and what documents are needed.
+4. Keep responses under 3 sentences where possible.`,
         messages:[{role:'user',content:text}]
       })
     });
@@ -774,34 +897,6 @@ function removeTyping(){
   if(t) t.remove();
 }
 
-// ── ALIGN GRAPHIC TO SECURE CHECKOUT ─────────────────
-function alignGraphic() {
-  const svg = document.getElementById('msv');
-  const reassure = document.querySelector('.reassure');
-  if (!svg || !reassure) return;
-
-  const colHeight = svg.parentElement.clientHeight;
-  const svgNaturalH = colHeight; // svg fills full height
-  const viewBoxH = 590;
-  const viewBoxGrassY = 580; // bottom of grass in viewBox
-
-  // Where does the grass bottom land in screen pixels when centered?
-  const scale = colHeight / viewBoxH;
-  const grassScreenY = viewBoxGrassY * scale;
-  const svgTop = (colHeight - svgNaturalH) / 2; // 0 since svg fills height
-  const grassAbsolute = svgTop + grassScreenY;
-
-  // Where is secure checkout?
-  const reassureY = reassure.getBoundingClientRect().bottom - svg.parentElement.getBoundingClientRect().top;
-
-  // Offset needed
-  const offset = reassureY - grassAbsolute;
-  svg.style.marginTop = `${offset}px`;
-}
-
-window.addEventListener('load', alignGraphic);
-window.addEventListener('resize', alignGraphic);
-
 const NAV_AFFIRMATIONS = [
   "You've got this.",
   "Keep breathing.",
@@ -840,6 +935,166 @@ function showNavAffirmation() {
 
 showNavAffirmation();
 setInterval(showNavAffirmation, 7000);
+</script>
+
+<!-- ══ GIFT MODAL ══ -->
+<style>
+  #gift-modal{display:none;position:fixed;inset:0;z-index:600;background:rgba(10,24,16,0.55);align-items:center;justify-content:center;backdrop-filter:blur(4px);padding:16px;}
+  #gift-modal.open{display:flex;}
+  #gift-box{background:var(--white);border-radius:20px;padding:36px 36px 32px;width:100%;max-width:460px;position:relative;}
+  .gift-close{position:absolute;top:16px;right:20px;background:none;border:none;font-size:24px;color:var(--cream3);cursor:pointer;line-height:1;}
+  .gift-close:hover{color:var(--muted);}
+  .gift-header{text-align:center;margin-bottom:28px;}
+  .gift-icon{font-size:36px;margin-bottom:12px;}
+  .gift-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:500;color:var(--forest);margin-bottom:6px;}
+  .gift-sub{font-size:14px;color:var(--muted);line-height:1.55;max-width:320px;margin:0 auto;}
+  .gift-form{display:flex;flex-direction:column;gap:12px;}
+  .gift-row{display:flex;gap:10px;}
+  .gift-input{width:100%;border:1.5px solid var(--cream3);border-radius:12px;padding:13px 15px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;transition:border-color 0.15s;}
+  .gift-input:focus{border-color:var(--grass);}
+  textarea.gift-input{resize:none;height:88px;line-height:1.55;}
+  .gift-submit{width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:15px;font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;transition:background 0.15s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .gift-submit:hover{background:var(--forest2);}
+  .gift-price-pill{display:inline-flex;align-items:center;gap:6px;background:#e8f5ee;border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--forest);margin-top:10px;}
+  .gift-error{font-size:12px;color:#c0392b;background:#fdf0f0;border-radius:8px;padding:8px 12px;display:none;}
+  .gift-error.show{display:block;}
+  .gift-success{text-align:center;padding:12px 0 4px;}
+  .gift-success-icon{font-size:48px;margin-bottom:16px;}
+  .gift-success-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);margin-bottom:8px;}
+  .gift-success-sub{font-size:14px;color:var(--muted);line-height:1.6;}
+</style>
+
+<div id="gift-modal">
+  <div id="gift-box">
+    <button class="gift-close" onclick="closeGift()">×</button>
+
+    <!-- Form state -->
+    <div id="gift-form-wrap">
+      <div class="gift-header">
+        <div class="gift-icon">🎁</div>
+        <div class="gift-title">Give the gift of citizenship</div>
+        <div class="gift-sub">Know someone on the path? Send them everything they need for $2.99 — no subscription, yours forever.</div>
+        <div class="gift-price-pill">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          $2.99 one-time · instant delivery
+        </div>
+      </div>
+      <div class="gift-form">
+        <div id="gift-error" class="gift-error"></div>
+        <div style="font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;">Their details</div>
+        <div class="gift-row">
+          <input class="gift-input" id="gift-recipient-fname" type="text" placeholder="Their first name"/>
+          <input class="gift-input" id="gift-recipient-lname" type="text" placeholder="Last name"/>
+        </div>
+        <input class="gift-input" id="gift-recipient-email" type="email" placeholder="Their email address"/>
+        <div style="font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-top:4px;">Your details</div>
+        <input class="gift-input" id="gift-sender-name" type="text" placeholder="Your name (shown in their email)"/>
+        <input class="gift-input" id="gift-sender-email" type="email" placeholder="Your email (for receipt)"/>
+        <textarea class="gift-input" id="gift-note" placeholder="Personal note (optional) — e.g. 'Rooting for you every step of the way.'"></textarea>
+        <button class="gift-submit" id="gift-submit-btn" onclick="submitGift()">
+          <span>Send the gift — $2.99</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px;">They'll receive a beautiful email with their activation link instantly.</p>
+      </div>
+    </div>
+
+    <!-- Success state (hidden until payment) -->
+    <div id="gift-success-wrap" style="display:none;">
+      <div class="gift-success">
+        <div class="gift-success-icon">🎉</div>
+        <div class="gift-success-title" id="gift-success-title">Your gift is on its way.</div>
+        <div class="gift-success-sub" id="gift-success-sub">We've sent an activation email to your recipient. They'll have everything they need to start their citizenship journey.</div>
+        <button onclick="closeGift()" style="margin-top:24px;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:12px 32px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openGift() {
+  document.getElementById('gift-modal').classList.add('open');
+  document.getElementById('gift-form-wrap').style.display = 'block';
+  document.getElementById('gift-success-wrap').style.display = 'none';
+  document.getElementById('gift-error').classList.remove('show');
+  setTimeout(() => document.getElementById('gift-recipient-fname').focus(), 200);
+}
+
+function closeGift() {
+  document.getElementById('gift-modal').classList.remove('open');
+}
+
+async function submitGift() {
+  const recipientFname = document.getElementById('gift-recipient-fname').value.trim();
+  const recipientLname = document.getElementById('gift-recipient-lname').value.trim();
+  const recipientEmail = document.getElementById('gift-recipient-email').value.trim();
+  const senderName    = document.getElementById('gift-sender-name').value.trim();
+  const senderEmail   = document.getElementById('gift-sender-email').value.trim();
+  const note          = document.getElementById('gift-note').value.trim();
+  const err           = document.getElementById('gift-error');
+  const btn           = document.getElementById('gift-submit-btn');
+
+  if (!recipientFname || !recipientEmail || !senderName || !senderEmail) {
+    err.textContent = 'Please fill in all required fields.';
+    err.classList.add('show');
+    return;
+  }
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRe.test(recipientEmail) || !emailRe.test(senderEmail)) {
+    err.textContent = 'Please enter valid email addresses.';
+    err.classList.add('show');
+    return;
+  }
+
+  err.classList.remove('show');
+  btn.innerHTML = '<span>Processing…</span>';
+  btn.disabled = true;
+
+  try {
+    // Send to Cloudflare Worker /gift endpoint
+    // Worker creates Stripe Checkout session tagged as gift,
+    // stores recipient details to email after payment success
+    const res = await fetch('https://landed-mia.ksjbrown.workers.dev/gift', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        recipient: { fname: recipientFname, lname: recipientLname, email: recipientEmail },
+        sender:    { name: senderName, email: senderEmail },
+        note,
+        successUrl: window.location.origin + window.location.pathname + '?gift=success',
+        cancelUrl:  window.location.href,
+      })
+    });
+    const data = await res.json();
+    if (data.url) {
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Something went wrong');
+    }
+  } catch(e) {
+    err.textContent = e.message || 'Something went wrong. Please try again.';
+    err.classList.add('show');
+    btn.innerHTML = '<span>Send the gift — $2.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    btn.disabled = false;
+  }
+}
+
+// Check for gift payment return
+function checkGiftReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('gift') === 'success') {
+    openGift();
+    document.getElementById('gift-form-wrap').style.display = 'none';
+    document.getElementById('gift-success-wrap').style.display = 'block';
+  }
+}
+window.addEventListener('load', checkGiftReturn);
+
+// Close on backdrop
+document.getElementById('gift-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('gift-modal')) closeGift();
+});
 </script>
 
 </body>
