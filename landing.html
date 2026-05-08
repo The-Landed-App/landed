@@ -602,6 +602,8 @@ window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 })();
 </script>
 
+let _authMode = 'signUp';
+
 function openAuth(mode){
   _authMode = mode || 'signUp';
   _authMode === 'signIn' ? setSignInMode() : setSignUpMode();
@@ -663,8 +665,8 @@ async function handleAuth(){
         headers: { 'Content-Type': 'application/json',
           'Authorization': `Bearer ${data.session?.access_token}` },
         body: JSON.stringify({ email, userId: data.user.id,
-          successUrl: window.location.origin + '/index.html',
-          cancelUrl: window.location.href })
+          successUrl: 'https://thelandedapp.com/index.html',
+          cancelUrl: 'https://thelandedapp.com/landing.html' })
       });
       const { url } = await res.json();
       if(url) window.location.href = url;
@@ -687,8 +689,8 @@ async function handleAuth(){
           headers: { 'Content-Type': 'application/json',
             'Authorization': `Bearer ${data.session.access_token}` },
           body: JSON.stringify({ email, userId: data.user.id,
-            successUrl: window.location.origin + '/index.html',
-            cancelUrl: window.location.href })
+            successUrl: 'https://thelandedapp.com/index.html',
+            cancelUrl: 'https://thelandedapp.com/landing.html' })
         });
         const { url } = await res.json();
         if(url) window.location.href = url;
@@ -1153,7 +1155,7 @@ async function submitGift() {
         sender: { name: senderName, email: senderEmail },
         note,
         successUrl: window.location.origin + window.location.pathname + '?gift=success',
-        cancelUrl: window.location.href,
+        cancelUrl: 'https://thelandedapp.com/landing.html',
       })
     });
     const data = await res.json();
