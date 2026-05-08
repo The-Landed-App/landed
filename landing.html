@@ -585,8 +585,22 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-let _authMode = 'signUp';
+const SUPABASE_URL = 'https://nbfkmxgtlfzbanfleuss.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZmtteGd0bGZ6YmFuZmxldXNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTI3NDMsImV4cCI6MjA5MzgyODc0M30.PHPLYT82a4uLvtrSl8EtoWMfoppaBLEDnmNtVo0V4YA';
+window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// If already logged in + paid, go straight to app
+(async function() {
+  const { data: { session } } = await window._sb.auth.getSession();
+  if (session) {
+    const { data: profile } = await window._sb.from('profiles')
+      .select('paid').eq('id', session.user.id).single();
+    if (profile?.paid) window.location.replace('index.html');
+  }
+})();
+</script>
 
 function openAuth(mode){
   _authMode = mode || 'signUp';
@@ -630,86 +644,70 @@ async function handleAuth(){
   const err = document.getElementById('auth-error');
   const btn = document.getElementById('auth-submit-btn');
 
-  if(!email || !password){ err.textContent = 'Please fill in all fields.'; err.classList.add('show'); return; }
-  if(_authMode === 'signUp' && (!fname || !lname)){ err.textContent = 'Please enter your name.'; err.classList.add('show'); return; }
+  if(!email || !password){ err.textContent='Please fill in all fields.'; err.classList.add('show'); return; }
+  if(_authMode==='signUp' && (!fname||!lname)){ err.textContent='Please enter your name.'; err.classList.add('show'); return; }
   err.classList.remove('show');
-
-  btn.textContent = _authMode === 'signUp' ? 'Creating account…' : 'Signing in…';
   btn.disabled = true;
+  btn.textContent = _authMode==='signUp' ? 'Creating account…' : 'Signing in…';
 
   try {
     if(_authMode === 'signUp') {
-      // ── SIGN UP ──
-      // 1. Create Clerk user
-      const signUpRes = await window.Clerk.client.signUp.create({
-        emailAddress: email,
-        password,
-        firstName: fname,
-        lastName: lname,
-      });
-      await signUpRes.prepareEmailAddressVerification({ strategy: 'email_code' });
+      // 1. Create Supabase user
+      const { data, error } = await window._sb.auth.signUp({ email, password,
+        options: { data: { first_name: fname, last_name: lname } } });
+      if(error) throw error;
 
-      // 2. Create Stripe Checkout session via your backend/worker
-      const checkoutRes = await fetch('https://landed-mia.ksjbrown.workers.dev/checkout', {
+      // 2. Create Stripe checkout session via Supabase Edge Function
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, userId: signUpRes.createdUserId })
+        headers: { 'Content-Type': 'application/json',
+          'Authorization': `Bearer ${data.session?.access_token}` },
+        body: JSON.stringify({ email, userId: data.user.id,
+          successUrl: window.location.origin + '/index.html',
+          cancelUrl: window.location.href })
       });
-      const { url } = await checkoutRes.json();
-      if(url) window.location.href = url; // Stripe Checkout redirect
+      const { url } = await res.json();
+      if(url) window.location.href = url;
 
     } else {
-      // ── SIGN IN ──
-      const signInRes = await window.Clerk.client.signIn.create({
-        identifier: email,
-        password,
-      });
-      await window.Clerk.setActive({ session: signInRes.createdSessionId });
+      // Sign in
+      const { data, error } = await window._sb.auth.signInWithPassword({ email, password });
+      if(error) throw error;
 
-      // Check if paid (look for metadata on Clerk user)
-      const user = await window.Clerk.user;
-      if(user?.publicMetadata?.paid) {
-        unlockMia();
-        closeAuth();
-        showAuthSuccess();
+      // Check paid
+      const { data: profile } = await window._sb.from('profiles')
+        .select('paid').eq('id', data.user.id).single();
+
+      if(profile?.paid) {
+        window.location.replace('index.html');
       } else {
-        // Not paid yet — send to checkout
-        const checkoutRes = await fetch('https://landed-mia.ksjbrown.workers.dev/checkout', {
+        // Not paid — send to checkout
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, userId: user.id })
+          headers: { 'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data.session.access_token}` },
+          body: JSON.stringify({ email, userId: data.user.id,
+            successUrl: window.location.origin + '/index.html',
+            cancelUrl: window.location.href })
         });
-        const { url } = await checkoutRes.json();
+        const { url } = await res.json();
         if(url) window.location.href = url;
       }
     }
   } catch(e) {
-    err.textContent = e.errors?.[0]?.message || 'Something went wrong. Please try again.';
+    err.textContent = e.message || 'Something went wrong. Please try again.';
     err.classList.add('show');
-    btn.textContent = _authMode === 'signUp' ? 'Create account & pay $2.99' : 'Sign in';
+    btn.textContent = _authMode==='signUp' ? 'Create account & pay $2.99' : 'Sign in';
     btn.disabled = false;
   }
 }
 
-function showAuthSuccess() {
-  const sub = document.getElementById('auth-sub');
-  if(sub) sub.textContent = 'Welcome back! Mia is ready for you.';
-}
-
-// Called after Stripe payment success (redirect back with ?payment=success)
-function checkPaymentReturn() {
-  const params = new URLSearchParams(window.location.search);
-  if(params.get('payment') === 'success') {
-    unlockMia();
-    openAuth('signIn');
-    document.getElementById('auth-title').textContent = 'Payment successful!';
-    document.getElementById('auth-sub').textContent = 'You\'re all set. Sign in to access your Landed kit.';
-    document.getElementById('auth-submit-btn').textContent = 'Sign in';
-    document.getElementById('name-field').style.display = 'none';
-  }
-}
-
 window.addEventListener('load', checkPaymentReturn);
+
+function checkPaymentReturn() {
+  // Supabase handles the session automatically on return from Stripe
+  // index.html will verify paid status on load
+}
 
 // Close on backdrop click
 document.getElementById('auth-modal').addEventListener('click', e => {
@@ -1144,18 +1142,18 @@ async function submitGift() {
   btn.disabled = true;
 
   try {
-    // Send to Cloudflare Worker /gift endpoint
-    // Worker creates Stripe Checkout session tagged as gift,
-    // stores recipient details to email after payment success
-    const res = await fetch('https://landed-mia.ksjbrown.workers.dev/gift', {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        recipient: { fname: recipientFname, lname: recipientLname, email: recipientEmail },
-        sender:    { name: senderName, email: senderEmail },
+        email: senderEmail,
+        userId: 'gift',
+        type: 'gift',
+        recipient: { email: recipientEmail, fname: recipientFname, lname: recipientLname },
+        sender: { name: senderName, email: senderEmail },
         note,
         successUrl: window.location.origin + window.location.pathname + '?gift=success',
-        cancelUrl:  window.location.href,
+        cancelUrl: window.location.href,
       })
     });
     const data = await res.json();
