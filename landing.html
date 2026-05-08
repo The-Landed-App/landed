@@ -597,7 +597,7 @@ window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   if (session) {
     const { data: profile } = await window._sb.from('profiles')
       .select('paid').eq('id', session.user.id).single();
-    if (profile?.paid) window.location.replace('index.html');
+    if (profile?.paid) window.location.replace('https://thelandedapp.com/index.html');
   }
 })();
 </script>
@@ -681,13 +681,12 @@ async function handleAuth(){
       });
 
       // If already registered, sign them in instead
-      if(error && error.message.includes('already registered')) {
+      if(error && (error.message.includes('already registered') || error.message.includes('User already registered'))) {
         const { data: signInData, error: signInError } = await window._sb.auth.signInWithPassword({ email, password });
         if(signInError) throw signInError;
         const { data: profile } = await window._sb.from('profiles')
           .select('paid').eq('id', signInData.user.id).single();
-        if(profile?.paid) { window.location.replace('index.html'); return; }
-        // Not paid — send to checkout
+        if(profile?.paid) { window.location.replace('https://thelandedapp.com/index.html'); return; }
         await sendToCheckout(email, signInData.user.id);
         return;
       }
@@ -706,7 +705,7 @@ async function handleAuth(){
         .select('paid').eq('id', data.user.id).single();
 
       if(profile?.paid) {
-        window.location.replace('index.html');
+        window.location.replace('https://thelandedapp.com/index.html');
       } else {
         await sendToCheckout(email, data.user.id);
       }
