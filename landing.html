@@ -17,19 +17,23 @@
 html,body{height:100%;}
 
 @media(max-width:768px){
-  /* Hero */
-  .hero{grid-template-columns:1fr;height:auto;min-height:unset;}
-  .hero-left{height:56vw;min-height:220px;max-height:320px;}
-  .hero-right{padding:24px 24px 40px;height:auto;justify-content:flex-start;}
+  /* Hero — animation on top, copy below */
+  .hero{display:flex;flex-direction:column;height:auto;min-height:unset;}
+  .hero-left{order:1;height:260px;width:100%;overflow:hidden;}
+  .hero-left svg{width:100%;height:100%;display:block;}
+  .hero-right{order:2;padding:24px 24px 48px;height:auto;justify-content:flex-start;}
   .hero-right-top{padding-top:0;}
-  .hero-title{font-size:clamp(28px,7vw,42px);}
-  .hero-sub{font-size:14px;margin-bottom:12px;}
-  .price-num{font-size:36px;}
-  .price-row{margin-bottom:14px;}
+  .hero-right-bottom{margin-top:16px;}
+  .hero-title{font-size:32px;margin-bottom:14px;}
+  .hero-sub{font-size:14px;margin-bottom:12px;max-width:100%;}
+  .price-num{font-size:34px;}
+  .price-row{margin-bottom:14px;gap:8px;}
+  .price-note{font-size:12px;}
   .cta-btn{font-size:14px;padding:13px 24px;width:100%;justify-content:center;}
   .gift-btn{font-size:14px;padding:13px 24px;width:100%;justify-content:center;}
-  .hero-right-bottom > div{flex-direction:column;gap:10px;}
   .reassure{font-size:12px;}
+  .eyebrow{margin-bottom:16px;}
+  .cta-row{flex-direction:column;}
 
   /* Nav */
   nav{padding:0 16px;}
@@ -37,13 +41,14 @@ html,body{height:100%;}
 
   /* Features */
   .features{padding:40px 20px;}
-  .features > div:first-child{grid-template-columns:1fr;gap:24px;}
+  .features-header{grid-template-columns:1fr !important;gap:24px;}
   .features-grid{grid-template-columns:1fr;}
   #quote-block{min-height:unset;padding:24px 20px;}
 
   /* Proof */
   .proof{padding:40px 20px;grid-template-columns:1fr;gap:28px;}
   .stats-grid{grid-template-columns:1fr 1fr;}
+  .proof-title{font-size:24px;}
 
   /* Footer */
   footer{padding:20px 20px;}
@@ -51,14 +56,16 @@ html,body{height:100%;}
   /* Auth modal */
   #auth-box{padding:28px 20px 24px;margin:12px;}
   .auth-title{font-size:22px;}
+  #name-field{flex-direction:column;}
 
   /* Gift modal */
   #gift-box{padding:24px 20px 20px;margin:12px;}
   .gift-row{flex-direction:column;}
 
   /* Mia */
-  #mia-panel{width:calc(100vw - 24px);right:12px;bottom:76px;}
+  #mia-panel{width:calc(100vw - 24px);right:12px;bottom:80px;}
   #mia-btn{bottom:16px;right:12px;padding:9px 14px 9px 10px;}
+  .mia-btn-sub{display:none;}
 }
 body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);overflow-x:hidden;}
 
@@ -430,7 +437,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
         <span class="price-num">$2.99</span>
         <span class="price-note">one-time · yours forever</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <div class="cta-row" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
           Get Landed
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -447,7 +454,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
 
 <!-- FEATURES -->
 <section class="features">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;">
+  <div class="features-header" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;">
     <div>
       <p class="features-label">What's inside</p>
       <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,38px);font-weight:500;color:var(--forest);line-height:1.25;margin:0;">Everything you need, nothing you don't — and Mia is always there if you get stuck.</h2>
