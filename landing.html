@@ -30,6 +30,7 @@ html,body{height:100%;}
 
   .features{padding:48px 24px;}
   .features-grid{grid-template-columns:1fr;}
+  #quote-block{min-height:unset;}
 
   .proof{padding:48px 24px;grid-template-columns:1fr;gap:32px;}
   .stats-grid{grid-template-columns:1fr 1fr;}
@@ -426,8 +427,25 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
 
 <!-- FEATURES -->
 <section class="features">
-  <p class="features-label">What's inside</p>
-  <h2 class="features-title">Everything you need, nothing you don't — and Mia is always there if you get stuck.</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;">
+    <div>
+      <p class="features-label">What's inside</p>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,38px);font-weight:500;color:var(--forest);line-height:1.25;margin:0;">Everything you need, nothing you don't — and Mia is always there if you get stuck.</h2>
+    </div>
+    <!-- Cycling quote -->
+    <div id="quote-block" style="position:relative;padding:32px 36px;background:var(--forest);border-radius:18px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;">
+      <svg width="32" height="22" viewBox="0 0 32 22" fill="none" style="opacity:0.3;margin-bottom:16px;flex-shrink:0;"><path d="M0 22V13.5C0 9.5 1.17 6.33 3.5 4C5.83 1.67 9 0.33 13 0L14 3C11.33 3.67 9.33 4.83 8 6.5C6.67 8.17 6 10 6 12H13V22H0ZM18 22V13.5C18 9.5 19.17 6.33 21.5 4C23.83 1.67 27 0.33 31 0L32 3C29.33 3.67 27.33 4.83 26 6.5C24.67 8.17 24 10 24 12H31V22H18Z" fill="#e8dfc8"/></svg>
+      <div id="quote-text" style="font-family:'Playfair Display',serif;font-size:18px;font-weight:400;font-style:italic;color:var(--cream2);line-height:1.6;flex:1;transition:opacity 0.4s;"></div>
+      <div id="quote-attr" style="display:flex;align-items:center;gap:10px;margin-top:20px;transition:opacity 0.4s;">
+        <div id="quote-avatar" style="width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;"></div>
+        <div>
+          <div id="quote-name" style="font-size:12px;font-weight:500;color:var(--cream2);"></div>
+          <div id="quote-origin" style="font-size:11px;color:var(--sage);margin-top:1px;"></div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:5px;" id="quote-dots"></div>
+      </div>
+    </div>
+  </div>
   <div class="features-grid">
     <div class="feat-card">
       <div class="feat-icon">
@@ -896,6 +914,81 @@ function removeTyping(){
   const t = document.getElementById('mia-typing');
   if(t) t.remove();
 }
+
+const QUOTES = [
+  {text:"I wanted to become a citizen so I could come back to the U.S. without fear.", name:"María G.", origin:"Colombian-American · Miami, FL", color:"#2d6647", initials:"MG"},
+  {text:"You spend years counting the days until you finally qualify to belong.", name:"Amir K.", origin:"Iranian-American · Houston, TX", color:"#1a3d2b", initials:"AK"},
+  {text:"I didn't need someone to do it for me. I needed confidence that I was doing it right.", name:"Priya R.", origin:"Indian-American · San Jose, CA", color:"#3a6b4a", initials:"PR"},
+  {text:"The hardest part wasn't the forms. It was the fear of making a mistake.", name:"Jean-Pierre M.", origin:"Haitian-American · Boston, MA", color:"#2d6647", initials:"JP"},
+  {text:"Immigration makes you live carefully — citizenship felt like finally being able to breathe.", name:"Fatima A.", origin:"Moroccan-American · Chicago, IL", color:"#1a3d2b", initials:"FA"},
+  {text:"Every letter, every appointment, every notification felt like it could change my future.", name:"Yuki T.", origin:"Japanese-American · Seattle, WA", color:"#3a6b4a", initials:"YT"},
+  {text:"I wasn't looking for a lawyer. I was looking for reassurance.", name:"Carlos V.", origin:"Mexican-American · Los Angeles, CA", color:"#2d6647", initials:"CV"},
+  {text:"Citizenship isn't just paperwork. It's the moment fear stops deciding where you belong.", name:"HY B.", origin:"Taiwanese-American · Boston, MA", color:"#1a3d2b", initials:"HB"},
+];
+
+let _quoteIdx = 0;
+let _quoteTimer = null;
+
+function renderQuote(idx, animate) {
+  const q = QUOTES[idx];
+  const textEl = document.getElementById('quote-text');
+  const attrEl = document.getElementById('quote-attr');
+  const nameEl = document.getElementById('quote-name');
+  const originEl = document.getElementById('quote-origin');
+  const avatarEl = document.getElementById('quote-avatar');
+  const dotsEl = document.getElementById('quote-dots');
+  if (!textEl) return;
+
+  if (animate) {
+    textEl.style.opacity = '0';
+    attrEl.style.opacity = '0';
+    setTimeout(() => {
+      textEl.textContent = q.text;
+      nameEl.textContent = q.name;
+      originEl.textContent = q.origin;
+      avatarEl.textContent = q.initials;
+      avatarEl.style.background = q.color;
+      avatarEl.style.color = '#e8dfc8';
+      textEl.style.opacity = '1';
+      attrEl.style.opacity = '1';
+    }, 350);
+  } else {
+    textEl.textContent = q.text;
+    nameEl.textContent = q.name;
+    originEl.textContent = q.origin;
+    avatarEl.textContent = q.initials;
+    avatarEl.style.background = q.color;
+    avatarEl.style.color = '#e8dfc8';
+  }
+
+  // Dots
+  if (dotsEl) {
+    dotsEl.innerHTML = QUOTES.map((_, i) =>
+      `<div onclick="goToQuote(${i})" style="width:${i===idx?'18px':'6px'};height:6px;border-radius:99px;background:${i===idx?'var(--grass2)':'rgba(232,223,200,0.25)'};cursor:pointer;transition:all 0.3s;"></div>`
+    ).join('');
+  }
+}
+
+function goToQuote(idx) {
+  _quoteIdx = idx;
+  renderQuote(idx, true);
+  resetQuoteTimer();
+}
+
+function nextQuote() {
+  _quoteIdx = (_quoteIdx + 1) % QUOTES.length;
+  renderQuote(_quoteIdx, true);
+}
+
+function resetQuoteTimer() {
+  clearInterval(_quoteTimer);
+  _quoteTimer = setInterval(nextQuote, 5000);
+}
+
+window.addEventListener('load', () => {
+  renderQuote(0, false);
+  resetQuoteTimer();
+});
 
 const NAV_AFFIRMATIONS = [
   "You've got this.",
