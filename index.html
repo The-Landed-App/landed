@@ -60,6 +60,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+@media(max-width:390px){
+  .page{padding:16px 16px 80px;}
+  .snap-grid{grid-template-columns:repeat(2,1fr);}
+  .header-inner{padding:10px 14px;}
+  .search-inner{max-width:100%;}
+  .affirmation-text{font-size:13px;}
+  #lang-select{display:none;}
+  .nav-lbl{font-size:8px;}
+}
 :root{
   --forest:#1a3d2b;--forest2:#2d6647;--forest3:#0f2419;
   --grass:#4a9e6b;--grass2:#5db87e;
