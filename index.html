@@ -2169,16 +2169,32 @@ function updateSnapMail(tracking, status) {
 
 // ── REFER A FRIEND ────────────────────────────────────
 function referFriend() {
+  document.getElementById('share-sheet').classList.add('on');
+}
+
+function closeShareSheet() {
+  document.getElementById('share-sheet').classList.remove('on');
+}
+
+function shareVia(method) {
   const url = 'https://the-landed-app.github.io/landed/landing.html';
-  const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $2.99: ${url}`;
-  if (navigator.share) {
-    navigator.share({ title: 'Landed — Your Path Home', text: msg, url }).catch(() => {
-      navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied!'));
-    });
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied to clipboard'));
-  } else {
-    window.open(`mailto:?subject=Check out Landed&body=${encodeURIComponent(msg)}`);
+  const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $2.99.`;
+
+  if (method === 'copy') {
+    navigator.clipboard.writeText(url).then(() => { showToast('🔗 Link copied!'); closeShareSheet(); });
+  } else if (method === 'whatsapp') {
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg + ' ' + url)}`, '_blank');
+    closeShareSheet();
+  } else if (method === 'sms') {
+    window.open(`sms:?body=${encodeURIComponent(msg + ' ' + url)}`, '_blank');
+    closeShareSheet();
+  } else if (method === 'email') {
+    window.open(`mailto:?subject=Check out Landed&body=${encodeURIComponent(msg + '\n\n' + url)}`, '_blank');
+    closeShareSheet();
+  } else if (method === 'native') {
+    navigator.share({ title: 'Landed — Your Path Home', text: msg, url })
+      .then(() => closeShareSheet())
+      .catch(() => {});
   }
 }
 
@@ -2748,5 +2764,61 @@ function addMiaTyping(){
 }
 function removeMiaTyping(){const t=document.getElementById('mia-typing');if(t)t.remove();}
 </script>
+<!-- ══ SHARE SHEET ══ -->
+<style>
+#share-sheet{display:none;position:fixed;inset:0;z-index:500;background:rgba(10,24,16,0.55);align-items:center;justify-content:center;padding:16px;}
+#share-sheet.on{display:flex;}
+.share-box{background:var(--white);border-radius:20px;width:100%;max-width:400px;padding:32px 28px 28px;position:relative;text-align:center;}
+.share-close-btn{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--cream3);cursor:pointer;line-height:1;}
+.share-close-btn:hover{color:var(--muted);}
+.share-emoji{font-size:34px;margin-bottom:12px;}
+.share-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);margin-bottom:6px;}
+.share-sub{font-size:13px;color:var(--muted);line-height:1.6;max-width:280px;margin:0 auto;}
+.share-pill{display:inline-flex;align-items:center;gap:6px;background:var(--approved-bg);border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--forest);margin-top:12px;}
+.share-options{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.share-option-btn{width:100%;display:flex;align-items:center;gap:12px;background:var(--cream);border:1px solid var(--cream2);border-radius:12px;padding:13px 16px;font-size:14px;font-weight:500;color:var(--forest);font-family:inherit;cursor:pointer;transition:all 0.15s;text-align:left;}
+.share-option-btn:hover{background:var(--cream2);}
+.share-option-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+</style>
+
+<div id="share-sheet" onclick="if(event.target===this)closeShareSheet()">
+  <div class="share-box">
+    <button class="share-close-btn" onclick="closeShareSheet()">×</button>
+    <div class="share-emoji">🤝</div>
+    <div class="share-title">Know someone on this path?</div>
+    <div class="share-sub">Share Landed with a friend or family member going through the citizenship process.</div>
+    <div class="share-pill">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      $2.99 one-time · yours forever
+    </div>
+    <div class="share-options">
+      <button class="share-option-btn" onclick="shareVia('copy')">
+        <div class="share-option-icon" style="background:var(--cream2);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        Copy link
+      </button>
+      <button class="share-option-btn" onclick="shareVia('whatsapp')">
+        <div class="share-option-icon" style="background:#e8f5e2;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#25d366"/><path d="M17 14.5c-.3-.1-1.7-.85-2-.95s-.46-.15-.65.15-.75.95-.92 1.14-.34.22-.63.07a7.9 7.9 0 0 1-2.33-1.44 8.7 8.7 0 0 1-1.61-2c-.17-.29-.02-.45.13-.59.13-.13.29-.34.43-.51.15-.17.2-.29.29-.48.1-.19.05-.36-.02-.51s-.65-1.56-.89-2.14c-.23-.56-.47-.48-.65-.49H8.3c-.19 0-.5.07-.76.36s-1 1-1 2.43 1.02 2.82 1.16 3.01c.15.2 2 3.06 4.85 4.3.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.11-.26-.18-.55-.29z" fill="white"/></svg>
+        </div>
+        WhatsApp
+      </button>
+      <button class="share-option-btn" onclick="shareVia('sms')">
+        <div class="share-option-icon" style="background:#e8f0fe;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#1a73e8" stroke-width="1.5" fill="#1a73e8" fill-opacity="0.15"/></svg>
+        </div>
+        Text message
+      </button>
+      <button class="share-option-btn" onclick="shareVia('email')">
+        <div class="share-option-icon" style="background:#fef3e2;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#ea4335" stroke-width="1.5" fill="#ea4335" fill-opacity="0.1"/><path d="M2 7l10 7 10-7" stroke="#ea4335" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        Email
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
