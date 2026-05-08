@@ -639,6 +639,25 @@ function switchAuthMode(mode){
   mode === 'signIn' ? setSignInMode() : setSignUpMode();
 }
 
+async function sendToCheckout(email, userId) {
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+    body: JSON.stringify({
+      email,
+      userId,
+      successUrl: 'https://thelandedapp.com/index.html',
+      cancelUrl: 'https://thelandedapp.com/landing.html'
+    })
+  });
+  const { url, error } = await res.json();
+  if(error) throw new Error(error);
+  if(url) window.location.href = url;
+}
+
 async function handleAuth(){
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value.trim();
@@ -655,28 +674,27 @@ async function handleAuth(){
 
   try {
     if(_authMode === 'signUp') {
-      // 1. Create Supabase user
-      const { data, error } = await window._sb.auth.signUp({ email, password,
-        options: { data: { first_name: fname, last_name: lname } } });
+      // 1. Try to create Supabase user
+      const { data, error } = await window._sb.auth.signUp({
+        email, password,
+        options: { data: { first_name: fname, last_name: lname } }
+      });
+
+      // If already registered, sign them in instead
+      if(error && error.message.includes('already registered')) {
+        const { data: signInData, error: signInError } = await window._sb.auth.signInWithPassword({ email, password });
+        if(signInError) throw signInError;
+        const { data: profile } = await window._sb.from('profiles')
+          .select('paid').eq('id', signInData.user.id).single();
+        if(profile?.paid) { window.location.replace('index.html'); return; }
+        // Not paid — send to checkout
+        await sendToCheckout(email, signInData.user.id);
+        return;
+      }
       if(error) throw error;
 
       // 2. Create Stripe checkout session
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'x-user-id': data.user.id,
-        },
-        body: JSON.stringify({
-          email,
-          userId: data.user.id,
-          successUrl: 'https://thelandedapp.com/index.html',
-          cancelUrl: 'https://thelandedapp.com/landing.html'
-        })
-      });
-      const { url } = await res.json();
-      if(url) window.location.href = url;
+      await sendToCheckout(email, data.user.id);
 
     } else {
       // Sign in
@@ -690,17 +708,7 @@ async function handleAuth(){
       if(profile?.paid) {
         window.location.replace('index.html');
       } else {
-        // Not paid — send to checkout
-        const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json',
-            'Authorization': `Bearer ${data.session.access_token}` },
-          body: JSON.stringify({ email, userId: data.user.id,
-            successUrl: 'https://thelandedapp.com/index.html',
-            cancelUrl: 'https://thelandedapp.com/landing.html' })
-        });
-        const { url } = await res.json();
-        if(url) window.location.href = url;
+        await sendToCheckout(email, data.user.id);
       }
     }
   } catch(e) {
