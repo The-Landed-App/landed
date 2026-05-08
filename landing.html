@@ -660,14 +660,20 @@ async function handleAuth(){
         options: { data: { first_name: fname, last_name: lname } } });
       if(error) throw error;
 
-      // 2. Create Stripe checkout session via Supabase Edge Function
+      // 2. Create Stripe checkout session
       const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-          'Authorization': `Bearer ${data.session?.access_token}` },
-        body: JSON.stringify({ email, userId: data.user.id,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'x-user-id': data.user.id,
+        },
+        body: JSON.stringify({
+          email,
+          userId: data.user.id,
           successUrl: 'https://thelandedapp.com/index.html',
-          cancelUrl: 'https://thelandedapp.com/landing.html' })
+          cancelUrl: 'https://thelandedapp.com/landing.html'
+        })
       });
       const { url } = await res.json();
       if(url) window.location.href = url;
