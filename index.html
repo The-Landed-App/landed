@@ -49,7 +49,7 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .tagline{font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:18px;line-height:1.5;max-width:300px;font-style:normal;letter-spacing:0.2px;}
 
 /* ── PAGES ── */
-.page{display:none;padding:24px 32px 100px;}
+.page{display:none;padding:24px 32px 110px;}
 .page.active{display:block;}
 
 /* ── SNAPSHOT CARDS ── */
@@ -201,14 +201,21 @@ header{background:var(--forest);padding:env(safe-area-inset-top) 0 0;}
 .ib-btn{background:var(--grass);color:var(--white);border:none;padding:8px 16px;border-radius:99px;font-size:12px;font-weight:500;white-space:nowrap;}
 .ib-x{background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;line-height:1;padding:0 2px;}
 
+/* ── PAGE TITLE BAR ── */
+.page-title-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--cream2);}
+.page-title-icon{font-size:22px;line-height:1;}
+.page-title-text{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:var(--forest);line-height:1.2;}
+.page-title-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+
 /* ── BOTTOM NAV ── */
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom));z-index:100;}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;cursor:pointer;border:none;background:none;color:var(--sage);}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--cream2);display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:100;gap:4px;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px 6px;cursor:pointer;border:none;background:none;color:var(--cream3);border-radius:10px;transition:all 0.15s;}
 .nav-ico{line-height:1;color:inherit;}
 .nav-ico svg{display:block;color:inherit;}
-.nav-lbl{font-size:9px;color:inherit;letter-spacing:0.02em;}
-.nav-item.active{color:var(--forest);}
-.nav-item.active .nav-lbl{font-weight:500;}
+.nav-lbl{font-size:9px;color:inherit;letter-spacing:0.02em;font-weight:400;}
+.nav-item.active{color:var(--forest);background:var(--approved-bg);}
+.nav-item.active .nav-lbl{font-weight:600;color:var(--forest);}
+.nav-item:hover:not(.active){background:var(--cream);color:var(--muted);}
 
 /* ── GOOGLE TRANSLATE ── */
 .goog-te-banner-frame,.goog-te-ftab-float{display:none!important;}
@@ -218,15 +225,15 @@ body{top:0!important;position:static!important;}
 .affirmation-wrap{max-width:260px;display:flex;align-items:center;justify-content:flex-end;}
 .affirmation-text{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.2px;text-align:left;}
 .affirmation-text:hover{color:rgba(255,255,255,0.95);}
-.card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;}
-.mt8{margin-top:8px;}
-.mt16{margin-top:16px;}
 /* ── STATE PICKER MODAL ── */
 #state-modal{display:none;position:fixed;inset:0;background:rgba(10,24,16,0.78);z-index:600;align-items:center;justify-content:center;padding:16px;}
 #state-modal.on{display:flex;}
 .state-modal-box{background:var(--cream);border-radius:20px;width:100%;max-width:360px;padding:28px 24px;}
 .state-select-el{width:100%;border:1.5px solid var(--cream2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--white);outline:none;margin-bottom:16px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a6650' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
 .state-indicator-bar{background:var(--white);border:1px solid var(--cream2);border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.card{background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;}
+.mt8{margin-top:8px;}
+.mt16{margin-top:16px;}
 </style>
 <script>
 function googleTranslateElementInit(){
@@ -294,52 +301,59 @@ function googleTranslateElementInit(){
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px;margin-bottom:16px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-top:16px;margin-bottom:16px;">
 
-    <!-- Current step on timeline -->
-    <div style="background:var(--forest);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;" onclick="switchPage('timeline')">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage);font-weight:500;margin-bottom:8px;">Current step</div>
-      <div id="home-current-step" style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--cream2);line-height:1.3;">—</div>
-      <div id="home-step-status" style="font-size:11px;color:var(--grass2);margin-top:6px;">Tap to view timeline →</div>
+    <!-- Current step -->
+    <div style="background:var(--forest);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;" onclick="switchPage('timeline')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--sage);font-weight:500;margin-bottom:6px;">Step</div>
+      <div id="home-current-step" style="font-family:'Playfair Display',serif;font-size:12px;font-weight:500;color:var(--cream2);line-height:1.3;">—</div>
+      <div id="home-step-status" style="font-size:9px;color:var(--grass2);margin-top:4px;">View →</div>
     </div>
 
     <!-- Documents obtained -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:18px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;" onclick="switchPage('documents')">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">Documents</div>
-      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;line-height:1;" id="snap-docs">0/5</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">obtained</div>
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;" onclick="switchPage('documents')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Docs</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;" id="snap-docs">0/5</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:3px;">obtained</div>
     </div>
 
     <!-- Days since filing -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:18px;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">Days filed</div>
-      <div style="font-family:'Playfair Display',serif;font-size:28px;color:var(--forest);font-weight:500;line-height:1;" id="snap-days">—</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;">since N-400</div>
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Days filed</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;" id="snap-days">—</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:3px;">since N-400</div>
+    </div>
+
+    <!-- Mail tracker -->
+    <div id="snap-mail" style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;" onclick="switchPage('n400')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">N-400 Mail</div>
+      <div id="snap-mail-status" style="font-size:13px;margin-bottom:3px;">📬</div>
+      <div id="snap-mail-label" style="font-size:9px;color:var(--muted);">Not mailed yet</div>
     </div>
 
   </div>
 
   <!-- Second row: interview score + tip ticker -->
-  <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:20px;">
+  <div style="display:grid;grid-template-columns:1fr 3fr;gap:10px;margin-bottom:20px;">
 
-    <!-- Last practice scores -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:0;display:flex;flex-direction:column;cursor:pointer;overflow:hidden;" onclick="switchPage('interview')">
-      <div style="padding:10px 14px 8px;">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:2px;">Civics</div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--forest);font-weight:500;line-height:1;" id="home-score">—</div>
+    <!-- Last practice scores — compact, side by side -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;gap:8px;" onclick="switchPage('interview')">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Civics</div>
+        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);font-weight:500;line-height:1;" id="home-score">—</div>
       </div>
       <div style="height:1px;background:var(--cream2);"></div>
-      <div style="padding:8px 14px 10px;">
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:2px;">English</div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--forest);font-weight:500;line-height:1;" id="home-english-score">—</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">English</div>
+        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);font-weight:500;line-height:1;" id="home-english-score">—</div>
       </div>
     </div>
 
     <!-- Tip ticker -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('tips')">
-      <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:6px;">💡 Pro tip <span style="font-size:9px;color:var(--sage);margin-left:4px;">See all →</span></div>
-      <div class="tip-ticker-text" id="tip-ticker-text" style="color:var(--forest);font-size:13px;line-height:1.55;">Loading tip…</div>
-      <div class="tip-ticker-tag" id="tip-ticker-tag" style="color:var(--grass);font-size:10px;margin-top:6px;font-weight:500;"></div>
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px 14px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('tips')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:5px;">💡 Pro tip <span style="font-size:9px;color:var(--sage);margin-left:4px;">See all →</span></div>
+      <div class="tip-ticker-text" id="tip-ticker-text" style="color:var(--forest);font-size:12px;line-height:1.55;">Loading tip…</div>
+      <div class="tip-ticker-tag" id="tip-ticker-tag" style="color:var(--grass);font-size:9px;margin-top:5px;font-weight:500;"></div>
     </div>
 
   </div>
@@ -366,9 +380,6 @@ function googleTranslateElementInit(){
     <div class="mod-card" onclick="switchPage('legal')"><div class="mod-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.08"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="#1a3d2b" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="#1a3d2b"/></svg></div><div class="mod-title">Legal Resources</div><div class="mod-sub">Find legal help</div></div>
   </div>
 
-  <div style="text-align:center;padding:8px 0 12px;font-size:11px;color:var(--cream3);">Built by immigrants, for immigrants.</div>
-
-  <!-- Streak + Badges -->
   <div class="slabel">Your achievements</div>
   <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--cream2);">
@@ -381,14 +392,8 @@ function googleTranslateElementInit(){
     <div id="badges-grid" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
   </div>
 
-  <!-- Refer a friend -->
-  <div style="background:var(--forest);border-radius:var(--r);padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-    <div>
-      <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Know someone on the same path?</div>
-      <div style="font-size:12px;color:var(--sage);line-height:1.5;">Share Landed with a friend — $2.99 gets them everything.</div>
-    </div>
-    <button onclick="referFriend()" style="background:var(--grass);color:var(--white);border:none;border-radius:99px;padding:10px 18px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;white-space:nowrap;flex-shrink:0;">Share →</button>
-  </div>
+  <!-- Footer -->
+  <div style="text-align:center;padding:8px 0 4px;font-size:11px;color:var(--cream3);">Built by immigrants, for immigrants.</div>
 </div>
 
 <!-- ══ SHARE DASHBOARD MODAL ══ -->
@@ -451,29 +456,23 @@ function googleTranslateElementInit(){
   </div>
 </div>
 
-<!-- ══ STATE PICKER MODAL ══ -->
-<div id="state-modal">
-  <div class="state-modal-box">
-    <div style="font-size:22px;margin-bottom:10px;">📍</div>
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);margin-bottom:6px;">Where do you live?</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Your state determines three civics questions — your governor, your senators, and your representative. We'll show you the right answers.</div>
-    <select id="state-select-modal" class="state-select-el">
-      <option value="">Select your state…</option>
-    </select>
-    <button onclick="saveStateFromModal()" style="width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Continue</button>
-    <button onclick="dismissStateModal()" style="display:block;width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:inherit;cursor:pointer;margin-top:10px;padding:6px;text-align:center;">Skip for now</button>
-  </div>
-</div>
-
 <!-- ══ TIMELINE ══ -->
 <div class="page" id="page-timeline">
-  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
+  <div class="page-title-bar">
+    <div class="page-title-icon">📍</div>
+    <div><div class="page-title-text">My Timeline</div><div class="page-title-sub">Track every step of your journey</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
   <div class="slabel">Your progress</div>
   <div class="tl-card" id="tl-card"></div>
 </div>
 
 <!-- ══ DOCUMENTS ══ -->
 <div class="page" id="page-documents">
+  <div class="page-title-bar">
+    <div class="page-title-icon">📁</div>
+    <div><div class="page-title-text">Document Center</div><div class="page-title-sub">Track your citizenship pathway documents</div></div>
+  </div>
   <div class="doc-progress">
     <div class="doc-progress-top"><span class="doc-progress-label">Documents obtained</span><span class="doc-progress-count" id="doc-count">0 / 5</span></div>
     <div class="prog-bar-bg"><div class="prog-bar-fill" id="doc-prog-fill" style="width:0%"></div></div>
@@ -484,14 +483,48 @@ function googleTranslateElementInit(){
 
 <!-- ══ N-400 ══ -->
 <div class="page" id="page-n400">
+  <div class="page-title-bar">
+    <div class="page-title-icon">📋</div>
+    <div><div class="page-title-text">N-400 Guide</div><div class="page-title-sub">Pre-submit checklist · 47 items</div></div>
+  </div>
   <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank">
     <div><div class="n400-link-text">Download Form N-400 + Instructions</div><div class="n400-link-sub">Official USCIS form and filing guide</div></div>
     <div class="n400-link-arrow">↗</div>
   </a>
 
+  <!-- Certified mail tracking -->
+  <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">📬 Certified Mail Tracking</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">After mailing your N-400, enter your USPS tracking number here. It will show on your home dashboard.</div>
+    <div id="n400-mail-no-tracking">
+      <div style="display:flex;gap:8px;">
+        <input id="mail-tracking-input" type="text" placeholder="e.g. 9400111899223397614928" style="flex:1;border:1.5px solid var(--cream2);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;" onkeydown="if(event.key==='Enter')saveTrackingNumber()"/>
+        <button onclick="saveTrackingNumber()" style="background:var(--forest);color:var(--cream2);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Save</button>
+      </div>
+    </div>
+    <div id="n400-mail-has-tracking" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-family:monospace;font-size:13px;color:var(--forest);font-weight:500;" id="n400-tracking-display"></div>
+          <div id="n400-tracking-status" style="font-size:11px;color:var(--muted);margin-top:3px;"></div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <a id="n400-usps-link" href="#" target="_blank" rel="noopener" style="font-size:11px;padding:4px 10px;border-radius:99px;border:1px solid var(--grass);background:var(--approved-bg);color:var(--forest);text-decoration:none;white-space:nowrap;">Track on USPS →</a>
+          <button onclick="clearMailTracker()" style="font-size:13px;background:none;border:none;color:var(--muted);cursor:pointer;padding:4px;">×</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="slabel">Pre-submit checklist</div>
   <div class="cl-prog-wrap">
-    <div class="doc-progress-top"><span style="font-size:13px;font-weight:500;">Checklist progress</span><span class="doc-progress-count" id="cl-count">0 / 47</span></div>
+    <div class="doc-progress-top">
+      <span style="font-size:13px;font-weight:500;">Checklist progress</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="checkAllSections()" style="font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">Check all</button>
+        <span class="doc-progress-count" id="cl-count">0 / 47</span>
+      </div>
+    </div>
     <div class="prog-bar-bg"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%"></div></div>
   </div>
   <div id="cl-list"></div>
@@ -502,11 +535,24 @@ function googleTranslateElementInit(){
 
   <!-- Home screen: choose quiz type -->
   <div id="quiz-home">
+    <div class="page-title-bar">
+      <div class="page-title-icon">🏛️</div>
+      <div><div class="page-title-text">Interview Coach</div><div class="page-title-sub">Civics & English practice</div></div>
+    </div>
     <p class="coach-intro">Practice the 100 USCIS civics questions and English reading test. Your results are tracked and turned into a personal study plan.</p>
 
     <div id="state-indicator" class="state-indicator-bar"></div>
 
-    <!-- Score history -->
+    <!-- Know your representative -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">🏛️ Know your U.S. Representative</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">This question appears on the civics test but is district-specific — there are 435 congressional districts. USCIS officers know this. Saying <em style="color:var(--forest);">"I don't know their name, but I know how to find out"</em> is an accepted answer. Still, knowing yours is best.</div>
+          <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:99px;padding:8px 16px;font-size:12px;font-weight:500;">Find my representative ↗</a>
+        </div>
+      </div>
+    </div>
     <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <span style="font-size:13px;font-weight:500;color:var(--forest);">Score history</span>
@@ -585,7 +631,10 @@ function googleTranslateElementInit(){
 
 <!-- ══ PRO TIPS ══ -->
 <div class="page" id="page-tips">
-  <p class="tips-by">By immigrants. For immigrants. Together.</p>
+  <div class="page-title-bar">
+    <div class="page-title-icon">⭐</div>
+    <div><div class="page-title-text">Pro Tips</div><div class="page-title-sub">By immigrants, for immigrants</div></div>
+  </div>
   <!-- Filter chips -->
   <div id="tip-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;"></div>
   <div class="tip-feed" id="tips-list"></div>
@@ -593,7 +642,10 @@ function googleTranslateElementInit(){
 
 <!-- ══ LEGAL ══ -->
 <div class="page" id="page-legal">
-  <p class="legal-intro">A searchable library of immigration legal resources to help you find the right support.</p>
+  <div class="page-title-bar">
+    <div class="page-title-icon">⚖️</div>
+    <div><div class="page-title-text">Legal Resources</div><div class="page-title-sub">Find attorneys and immigration help</div></div>
+  </div>
   <div class="widget-frame-wrap">
     <div class="widget-frame-label">Find legal help</div>
     <iframe class="widget-frame" src="https://microotter.github.io/uscis-widgets/find-legal-help-search.html" height="600" loading="lazy" title="Find legal help"></iframe>
@@ -602,9 +654,26 @@ function googleTranslateElementInit(){
 
 <!-- ══ FAQ ══ -->
 <div class="page" id="page-faq">
-  <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:4px 0 20px;">Real questions from people who've been exactly where you are — asked by immigrants, answered for immigrants.</p>
+  <div class="page-title-bar">
+    <div class="page-title-icon">💬</div>
+    <div><div class="page-title-text">FAQ</div><div class="page-title-sub">Questions asked by immigrants, answered for immigrants</div></div>
+  </div>
   <div id="faq-list-standalone"></div>
 </div>
+<!-- ══ STATE PICKER MODAL ══ -->
+<div id="state-modal">
+  <div class="state-modal-box">
+    <div style="font-size:22px;margin-bottom:10px;">📍</div>
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);margin-bottom:6px;">Where do you live?</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Your state determines three civics questions — your governor, your senators, and your representative. We'll show you the right answers.</div>
+    <select id="state-select-modal" class="state-select-el">
+      <option value="">Select your state…</option>
+    </select>
+    <button onclick="saveStateFromModal()" style="width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:13px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Continue</button>
+    <button onclick="dismissStateModal()" style="display:block;width:100%;background:none;border:none;color:var(--muted);font-size:12px;font-family:inherit;cursor:pointer;margin-top:10px;padding:6px;text-align:center;">Skip for now</button>
+  </div>
+</div>
+
 <div id="install-banner">
   <div class="ib-text"><strong>Add to home screen</strong><span>Install for offline access</span></div>
   <button class="ib-btn" id="ib-install">Install</button>
@@ -775,6 +844,13 @@ const TIPS = [
   {section:'Interview', items:[
     {text:"The civics questions feel intimidating but they're straightforward once you drill them.", warn:false},
     {text:"The officer will ask you to confirm everything on your N-400 out loud. If anything changed since you filed (new job, new address, travel), tell them upfront before they ask. Surprises make officers uncomfortable. Honesty doesn't.", warn:false},
+    {text:"95% of the interview may be about your application, not the civics questions. Know your N-400 cold — your travel history, your addresses, your employers, your family. Study your own story as much as you study the 100 questions.", warn:false},
+    {text:"Dress professionally. Treat it like the most important interview of your life — because it is. People treat you the way you look, and this is one moment where first impressions genuinely matter.", warn:false},
+    {text:"Ask the officer to repeat a question if you didn't fully understand it. Never answer something for the sake of answering. It's completely acceptable to say 'Could you repeat that?' — officers expect it.", warn:false},
+    {text:"Be prepared for questions about your specific application: how many times you traveled outside the U.S. in the past 5 years, where you went, how many days, why, whether you traveled alone. Review your travel history before the interview.", warn:false},
+    {text:"If you didn't apply the moment you became eligible, the officer may ask why. Have a simple, honest answer ready. There's no penalty for waiting — but being caught off guard looks unprepared.", warn:false},
+    {text:"Be confident. If you've done everything right, there's nothing to fear. Confidence and professionalism communicate that you take this seriously.", warn:false},
+    {text:"If you have a complex case — name changes, multiple marriages, a long travel history, any arrests — know your story better than anyone. The officer will go through every detail. The people who sail through are the ones who know their own application to the letter.", warn:false},
   ]},
   {section:'Receiving your decision', items:[
     {text:"Most people get approved same day at the interview. If you don't, don't panic — it usually means a background check is still pending, not that something is wrong.", warn:false},
@@ -802,7 +878,6 @@ const NATIONAL_OFFICIALS = {
 };
 
 // ── STATE DATABASE ────────────────────────────────────
-// governor, senators, capital accurate as of May 2025
 const STATE_DB = {
   'Alabama':        {abbr:'AL',capital:'Montgomery',    gov:{n:'Kay Ivey',             p:'R'},sens:[{n:'Tommy Tuberville',p:'R'},{n:'Katie Britt',         p:'R'}]},
   'Alaska':         {abbr:'AK',capital:'Juneau',         gov:{n:'Mike Dunleavy',         p:'R'},sens:[{n:'Lisa Murkowski',    p:'R'},{n:'Dan Sullivan',         p:'R'}]},
@@ -886,6 +961,7 @@ function getSelectedState() {
 
 function initState() {
   const sel = document.getElementById('state-select-modal');
+  if (!sel) return;
   Object.keys(STATE_DB).sort().forEach(s => {
     const o = document.createElement('option');
     o.value = s; o.textContent = s;
@@ -900,7 +976,7 @@ function initState() {
 function showStateModal() {
   const current = getSelectedState();
   const sel = document.getElementById('state-select-modal');
-  if (current && STATE_DB[current]) sel.value = current;
+  if (sel && current && STATE_DB[current]) sel.value = current;
   document.getElementById('state-modal').classList.add('on');
 }
 
@@ -937,60 +1013,36 @@ function renderStateIndicator() {
 
 // ── DYNAMIC CIVICS QUESTIONS ──────────────────────────
 function _shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-
-function _otherGovernors(excluding, n) {
-  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].gov.n);
-}
-
-function _otherSenators(excluding, n) {
-  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].sens[0].n);
-}
-
-function _otherCapitals(excluding, n) {
-  return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0, n).map(s => STATE_DB[s].capital);
-}
+function _otherGovernors(excluding, n) { return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0,n).map(s => STATE_DB[s].gov.n); }
+function _otherSenators(excluding, n) { return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0,n).map(s => STATE_DB[s].sens[0].n); }
+function _otherCapitals(excluding, n) { return _shuffle(Object.keys(STATE_DB).filter(s => s !== excluding)).slice(0,n).map(s => STATE_DB[s].capital); }
 
 function buildCivicsQuestions() {
   const stateName = getSelectedState();
   const sd = stateName ? STATE_DB[stateName] : null;
   const p = NATIONAL_OFFICIALS;
-
   const extra = [
-    // Current national officeholders (missing from static list)
-    {q:'What is the name of the President of the United States now?',
-     a:p.president.name, options:_shuffle([p.president.name,'Joe Biden','Barack Obama','George W. Bush']).slice(0,4), cat:'System of Government'},
-    {q:'What is the name of the Vice President of the United States now?',
-     a:p.vicePresident.name, options:_shuffle([p.vicePresident.name,'Mike Pence','Kamala Harris','Tim Walz']).slice(0,4), cat:'System of Government'},
-    {q:'Who is the Chief Justice of the United States now?',
-     a:p.chiefJustice.name, options:_shuffle([p.chiefJustice.name,'Amy Coney Barrett','Clarence Thomas','Sonia Sotomayor']).slice(0,4), cat:'System of Government'},
-    {q:'Who is the Speaker of the House of Representatives now?',
-     a:p.speakerHouse.name, options:_shuffle([p.speakerHouse.name,'Nancy Pelosi','Hakeem Jeffries','Kevin McCarthy']).slice(0,4), cat:'System of Government'},
+    {q:'What is the name of the President of the United States now?', a:p.president.name, options:_shuffle([p.president.name,'Joe Biden','Barack Obama','George W. Bush']).slice(0,4), cat:'System of Government'},
+    {q:'What is the name of the Vice President of the United States now?', a:p.vicePresident.name, options:_shuffle([p.vicePresident.name,'Mike Pence','Kamala Harris','Tim Walz']).slice(0,4), cat:'System of Government'},
+    {q:'Who is the Chief Justice of the United States now?', a:p.chiefJustice.name, options:_shuffle([p.chiefJustice.name,'Amy Coney Barrett','Clarence Thomas','Sonia Sotomayor']).slice(0,4), cat:'System of Government'},
+    {q:'Who is the Speaker of the House of Representatives now?', a:p.speakerHouse.name, options:_shuffle([p.speakerHouse.name,'Nancy Pelosi','Hakeem Jeffries','Kevin McCarthy']).slice(0,4), cat:'System of Government'},
   ];
-
   if (sd) {
     const s0 = sd.sens[0].n, s1 = sd.sens[1].n;
-    const senOpts = _shuffle([s0, s1, ..._otherSenators(stateName, 2)]).slice(0, 4);
-    // Ensure both real senators are always in the options (replace dupes if needed)
+    const senOpts = _shuffle([s0, s1, ..._otherSenators(stateName, 2)]).slice(0,4);
     if (!senOpts.includes(s0)) senOpts[0] = s0;
     if (!senOpts.includes(s1)) senOpts[1] = s1;
     extra.push(
-      {q:"Who is one of your state's U.S. Senators now?",
-       a:s0, altAnswer:s1, options:_shuffle(senOpts), cat:'System of Government',
-       note:`Either ${s0} or ${s1} is correct`},
-      {q:`Who is the Governor of ${stateName} now?`,
-       a:sd.gov.n, options:_shuffle([sd.gov.n,..._otherGovernors(stateName,3)]).slice(0,4), cat:'System of Government'},
-      {q:`What is the capital of ${stateName}?`,
-       a:sd.capital, options:_shuffle([sd.capital,..._otherCapitals(stateName,3)]).slice(0,4), cat:'Geography'},
-      {q:'Name your U.S. Representative.', isRep:true, state:stateName, cat:'System of Government'},
+      {q:"Who is one of your state's U.S. Senators now?", a:s0, altAnswer:s1, options:_shuffle(senOpts), cat:'System of Government', note:`Either ${s0} or ${s1} is correct`},
+      {q:`Who is the Governor of ${stateName} now?`, a:sd.gov.n, options:_shuffle([sd.gov.n,..._otherGovernors(stateName,3)]).slice(0,4), cat:'System of Government'},
+      {q:`What is the capital of ${stateName}?`, a:sd.capital, options:_shuffle([sd.capital,..._otherCapitals(stateName,3)]).slice(0,4), cat:'Geography'},
     );
   } else {
     extra.push(
       {q:"Who is one of your state's U.S. Senators now?", isStatePrompt:true, cat:'System of Government'},
       {q:'Who is the Governor of your state now?', isStatePrompt:true, cat:'System of Government'},
-      {q:'Name your U.S. Representative.', isRep:true, state:null, cat:'System of Government'},
     );
   }
-
   return [...CIVICS_QUESTIONS, ...extra];
 }
 
@@ -1147,13 +1199,17 @@ function renderChecklist() {
   const el = document.getElementById('cl-list');
   el.innerHTML = CHECKLIST.map((s,si) => {
     const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
-    const badgeClass = done===s.items.length?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty';
-    const badgeText = done===s.items.length?'Complete':`${done}/${s.items.length}`;
+    const allDone = done === s.items.length;
+    const badgeClass = allDone?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty';
+    const badgeText = allDone?'Complete':`${done}/${s.items.length}`;
     return `
       <div class="checklist-section">
         <div class="cl-section-header" onclick="toggleCLSection(${si})">
           <span class="cl-section-title">${s.section}</span>
-          <span class="cl-badge ${badgeClass}" id="clbadge-${si}">${badgeText}</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button onclick="event.stopPropagation();checkAllSection(${si})" style="font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--cream3);background:${allDone?'var(--approved-bg)':'var(--white)'};color:${allDone?'var(--forest)':'var(--muted)'};cursor:pointer;font-family:inherit;white-space:nowrap;">${allDone?'✓ Done':'Check all'}</button>
+            <span class="cl-badge ${badgeClass}" id="clbadge-${si}">${badgeText}</span>
+          </div>
         </div>
         <div class="cl-body ${si===0?'open':''}" id="clbody-${si}">
           ${s.items.map((item,ii) => `
@@ -1187,6 +1243,34 @@ function toggleCLSection(si) {
   b.classList.toggle('open');
 }
 
+function checkAllSection(si) {
+  const s = CHECKLIST[si];
+  const allDone = s.items.every((_,ii) => clState[`${si}-${ii}`]);
+  // If all done, uncheck all; otherwise check all
+  s.items.forEach((_,ii) => {
+    clState[`${si}-${ii}`] = !allDone;
+    const el = document.getElementById(`clitem-${si}-${ii}`);
+    if (el) el.classList.toggle('checked', !allDone);
+  });
+  saveState();
+  updateCLBadge(si);
+  updateCLProgress();
+  renderChecklist(); // re-render to update button state
+  if (!allDone) showToast(`✅ ${s.section} marked complete`);
+}
+
+function checkAllSections() {
+  const allDone = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]));
+  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clState[`${si}-${ii}`] = !allDone; }));
+  saveState();
+  renderChecklist();
+  updateHomeProgress();
+  if (!allDone) {
+    showToast('🎉 N-400 checklist complete!');
+    setTimeout(() => showToast('📬 Your application is ready to mail.'), 3000);
+  }
+}
+
 function toggleCL(si,ii) {
   const key = `${si}-${ii}`;
   clState[key] = !clState[key];
@@ -1195,6 +1279,19 @@ function toggleCL(si,ii) {
   el.classList.toggle('checked', clState[key]);
   updateCLBadge(si);
   updateCLProgress();
+
+  // Last item = "Sending via certified mail" — check everything off
+  const lastSi = CHECKLIST.length - 1;
+  const lastIi = CHECKLIST[lastSi].items.length - 1;
+  if (si === lastSi && ii === lastIi && clState[key]) {
+    // Check everything
+    CHECKLIST.forEach((s,ssi) => s.items.forEach((_,iii) => { clState[`${ssi}-${iii}`] = true; }));
+    saveState();
+    renderChecklist();
+    updateHomeProgress();
+    setTimeout(() => showToast('📬 N-400 is in the mail — you did it!'), 400);
+    setTimeout(() => showToast('🎉 Your application is filed. Now we wait.'), 3200);
+  }
 }
 
 function updateCLBadge(si) {
@@ -1885,6 +1982,95 @@ function shareProgress() {
     navigator.clipboard.writeText(msg).then(() => showToast('📋 Progress copied to clipboard'));
   }
 }
+// ── CERTIFIED MAIL TRACKER ────────────────────────────
+const MAIL_STATUSES = [
+  {id:'mailed',    label:'Mailed',   icon:'📬'},
+  {id:'transit',   label:'Transit',  icon:'🚚'},
+  {id:'arrived',   label:'Arrived',  icon:'📦'},
+  {id:'delivered', label:'Delivered',icon:'✅'},
+];
+
+function loadMailTracker() {
+  const data = JSON.parse(localStorage.getItem('landed_mail') || '{}');
+  if (data.tracking) renderMailTracker(data.tracking, data.status || 'mailed');
+}
+
+function saveTrackingNumber() {
+  const input = document.getElementById('mail-tracking-input');
+  const val = input ? input.value.trim().replace(/\s/g,'') : '';
+  if (!val) { showToast('Please enter a tracking number'); return; }
+  const data = { tracking: val, status: 'mailed' };
+  localStorage.setItem('landed_mail', JSON.stringify(data));
+  renderMailTracker(val, 'mailed');
+  showToast('📬 Tracking number saved');
+}
+
+function setMailStatus(status) {
+  const data = JSON.parse(localStorage.getItem('landed_mail') || '{}');
+  data.status = status;
+  localStorage.setItem('landed_mail', JSON.stringify(data));
+  renderMailTracker(data.tracking, status);
+  const label = MAIL_STATUSES.find(s => s.id === status)?.label;
+  showToast(`📬 Status: ${label}`);
+  if (status === 'delivered') setTimeout(() => showToast('🎉 USCIS has your application!'), 2500);
+}
+
+function clearMailTracker() {
+  localStorage.removeItem('landed_mail');
+  // Reset N-400 page
+  const noT = document.getElementById('n400-mail-no-tracking');
+  const hasT = document.getElementById('n400-mail-has-tracking');
+  const input = document.getElementById('mail-tracking-input');
+  if (noT) noT.style.display = 'block';
+  if (hasT) hasT.style.display = 'none';
+  if (input) input.value = '';
+  // Reset snap card
+  updateSnapMail(null, null);
+}
+
+function renderMailTracker(tracking, status) {
+  const current = MAIL_STATUSES.find(s => s.id === status);
+  const uspsUrl = `https://tools.usps.com/go/TrackConfirmAction?tLabels=${tracking}`;
+
+  // Update N-400 page
+  const noT = document.getElementById('n400-mail-no-tracking');
+  const hasT = document.getElementById('n400-mail-has-tracking');
+  if (noT) noT.style.display = 'none';
+  if (hasT) {
+    hasT.style.display = 'block';
+    const disp = document.getElementById('n400-tracking-display');
+    const stat = document.getElementById('n400-tracking-status');
+    const link = document.getElementById('n400-usps-link');
+    if (disp) disp.textContent = tracking;
+    if (stat) stat.textContent = `${current?.icon} ${current?.label}`;
+    if (link) link.href = uspsUrl;
+  }
+
+  // Update snap card
+  updateSnapMail(tracking, status);
+}
+
+function updateSnapMail(tracking, status) {
+  const icon = document.getElementById('snap-mail-status');
+  const label = document.getElementById('snap-mail-label');
+  const card = document.getElementById('snap-mail');
+  if (!icon || !label) return;
+  if (!tracking) {
+    icon.textContent = '📬';
+    label.textContent = 'Not mailed yet';
+    if (card) { card.style.borderColor = 'var(--cream2)'; card.onclick = () => switchPage('n400'); }
+  } else {
+    const current = MAIL_STATUSES.find(s => s.id === status);
+    icon.textContent = current?.icon || '📬';
+    label.textContent = current?.label || 'Mailed';
+    if (card) {
+      card.style.borderColor = status === 'delivered' ? 'var(--grass)' : 'var(--cream2)';
+      card.onclick = () => window.open(`https://tools.usps.com/go/TrackConfirmAction?tLabels=${tracking}`, '_blank');
+    }
+  }
+}
+
+// ── REFER A FRIEND ────────────────────────────────────
 function referFriend() {
   const url = 'https://the-landed-app.github.io/landed/landing.html';
   const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $2.99: ${url}`;
@@ -1997,7 +2183,6 @@ function startQuiz(type) {
   quizIndex = 0;
   quizAnswered = false;
   const fullPool = type === 'civics' ? buildCivicsQuestions() : ENGLISH_QUESTIONS;
-  // isStatePrompt questions are informational placeholders — exclude from scored pool
   const pool = fullPool.filter(q => !q.isStatePrompt);
   quizQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
   document.getElementById('quiz-home').style.display = 'none';
@@ -2011,31 +2196,10 @@ function renderQuizQuestion() {
   const total = quizQuestions.length;
   document.getElementById('quiz-label').textContent = `${quizType === 'civics' ? 'Civics' : 'English'} · Question ${quizIndex + 1} of ${total}`;
   document.getElementById('quiz-progress-bar').style.width = `${(quizIndex / total) * 100}%`;
+  document.getElementById('quiz-q').textContent = q.q;
   document.getElementById('quiz-feedback').style.display = 'none';
   document.getElementById('quiz-next-btn').style.display = 'none';
   quizAnswered = false;
-
-  // ── Representative special card ───────────────────────
-  if (q.isRep) {
-    document.getElementById('quiz-q').textContent = 'Name your U.S. Representative.';
-    document.getElementById('quiz-options').innerHTML = `
-      <div style="background:var(--approved-bg);border:1px solid var(--sage);border-radius:var(--r);padding:16px 18px;">
-        <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:8px;">📋 This question is district-specific</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px;">There are 435 congressional districts. USCIS officers know this is impractical — they typically accept <em>"I don't know my representative's name, but I know how to find out"</em> as a passing answer. You will not be penalized for it.</div>
-        ${q.state ? `<a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:var(--rs);padding:12px 14px;font-size:13px;font-weight:500;">
-          <span>Find my representative →</span>
-          <span style="font-size:11px;color:var(--sage);">house.gov</span>
-        </a>` : `<button onclick="showStateModal()" style="width:100%;background:var(--forest);color:var(--cream2);border:none;border-radius:var(--rs);padding:12px 14px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Set your state to get the link →</button>`}
-      </div>`;
-    quizCorrect++; // USCIS effectively passes on this question
-    quizAnswered = true;
-    const nb = document.getElementById('quiz-next-btn');
-    nb.style.display = 'block';
-    nb.textContent = quizIndex < total - 1 ? 'Next question →' : 'See results →';
-    return;
-  }
-
-  document.getElementById('quiz-q').textContent = q.q;
 
   // Prevent translation of English quiz content
   const wrap = document.getElementById('quiz-question-wrap');
@@ -2063,8 +2227,8 @@ function answerQuestion(btn) {
   document.querySelectorAll('#quiz-options button').forEach(b => {
     b.disabled = true;
     const ans = b.getAttribute('data-answer');
-    const isCorrectAnswer = ans === q.a || (q.altAnswer && ans === q.altAnswer);
-    if (isCorrectAnswer) { b.style.background='var(--approved-bg)';b.style.borderColor='var(--grass)';b.style.color='var(--forest)'; }
+    const isCorrect = ans === q.a || (q.altAnswer && ans === q.altAnswer);
+    if (isCorrect) { b.style.background='var(--approved-bg)';b.style.borderColor='var(--grass)';b.style.color='var(--forest)'; }
     else if (ans === selected && !correct) { b.style.background='#fdf0f0';b.style.borderColor='#e74c3c';b.style.color='#c0392b'; }
   });
   if (correct) {
@@ -2074,9 +2238,7 @@ function answerQuestion(btn) {
   } else {
     quizWrong.push({q:q.q, correct:q.altAnswer ? `${q.a} or ${q.altAnswer}` : q.a, cat:q.cat||'General'});
     feedback.style.cssText='display:block;background:#fdf0f0;border:1px solid #e74c3c;color:#c0392b;border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
-    feedback.innerHTML = q.altAnswer
-      ? `❌ Either <strong>${q.a}</strong> or <strong>${q.altAnswer}</strong> is correct`
-      : `❌ The correct answer is: <strong>${q.a}</strong>`;
+    feedback.innerHTML = q.altAnswer ? `❌ Either <strong>${q.a}</strong> or <strong>${q.altAnswer}</strong> is correct` : `❌ The correct answer is: <strong>${q.a}</strong>`;
   }
   const nextBtn = document.getElementById('quiz-next-btn');
   nextBtn.style.display = 'block';
@@ -2232,6 +2394,7 @@ function addToCalendar(i) {
 loadState();
 loadScores();
 loadGamification();
+loadMailTracker();
 renderTimeline();
 renderFAQStandalone();
 renderDocs();
@@ -2284,6 +2447,12 @@ initState();
   .mia-input:focus{border-color:var(--grass);}
   .mia-send{width:30px;height:30px;border-radius:50%;background:var(--forest);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 </style>
+
+<!-- ── FLOATING SHARE ── -->
+<button id="share-btn" onclick="referFriend()" style="position:fixed;bottom:72px;left:16px;z-index:300;background:var(--cream);border:1px solid var(--cream2);border-radius:99px;padding:10px 16px 10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 16px rgba(26,61,43,0.12);font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;">
+  <span style="font-size:16px;line-height:1;">🤝</span>
+  <span style="font-size:12px;font-weight:500;color:var(--forest);">Share</span>
+</button>
 
 <button id="mia-btn" onclick="toggleMia()">
   <div class="mia-btn-avatar">
@@ -2398,6 +2567,33 @@ ${allTips}
 5. THE ENGLISH TEST: 10 reading comprehension sentences. This test is always in English regardless of language setting.
 
 6. FAQ ANSWERS: Processing times average 12–24 months. Fastest: 8–10 months. Slowest (NYC/LA/Chicago): 24–36 months. ~91% approval rate at interview. Most denials are for failure to meet continuous residence. After 120 days post-interview with no decision, the user has the legal right to sue USCIS.
+
+7. REAL-WORLD INTERVIEW INSIGHTS (from immigrants who've been through it):
+- The interview is often 95% about your N-400 application, not civics. Officers ask about your travel history, addresses, employers, family, and reasons for waiting to apply.
+- Complex cases (name changes, multiple marriages, long travel histories, any prior arrests) get extra scrutiny. Know your own application better than anyone.
+- Officers ask: how many times did you travel outside the U.S.? Where? How many days? Why? Did you travel alone?
+- If you didn't apply right when eligible, be ready to explain why.
+- Confidence and professionalism matter. Dress formally.
+- It's acceptable to ask the officer to repeat a question. Never guess.
+- Cases vary by field office: Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
+
+7. REAL-WORLD INTERVIEW INSIGHTS (from immigrants who've been through it):
+- The interview is often 95% about your N-400 application, not civics. Officers ask about your travel history, addresses, employers, family, and reasons for waiting to apply — not just the 100 civics questions.
+- Complex cases (name changes, multiple marriages, long travel histories, any prior arrests) get extra scrutiny. The key is knowing your own application better than anyone.
+- Officers ask follow-up questions like: how many times did you travel outside the U.S.? Where did you go? How many days? Why? Did you travel alone?
+- If you didn't apply right when you became eligible, be ready to explain why. There's no penalty — but being caught off guard looks bad.
+- Confidence and professionalism matter. Dress formally. This is the most important interview of your life.
+- It's acceptable — even smart — to ask the officer to repeat a question. Never guess at an answer.
+- Cases can vary dramatically by field office. Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
+
+7. REAL-WORLD INTERVIEW INSIGHTS (from immigrants who've been through it):
+- The interview is often 95% about your N-400 application, not civics. Officers ask about your travel history, addresses, employers, family, and reasons for waiting to apply — not just the 100 civics questions.
+- Complex cases (name changes, multiple marriages, long travel histories, any prior arrests) get extra scrutiny. The key is knowing your own application better than anyone.
+- Officers ask follow-up questions like: how many times did you travel outside the U.S.? Where did you go? How many days? Why? Did you travel alone?
+- If you didn't apply right when you became eligible, be ready to explain why. There's no penalty — but being caught off guard looks bad.
+- Confidence and professionalism matter. Dress formally. This is the most important interview of your life.
+- It's acceptable — even smart — to ask the officer to repeat a question. Never guess at an answer.
+- Cases can vary dramatically by field office. Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
 
 THIS USER'S CURRENT STATUS:
 - Current step: ${activeStep ? activeStep.name : 'Not started'}
