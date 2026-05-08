@@ -12,15 +12,14 @@
 <title>Landed — Your Path Home</title>
 
 <!-- ── SUPABASE AUTH GATE ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (async function() {
   const SUPABASE_URL = 'https://nbfkmxgtlfzbanfleuss.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZmtteGd0bGZ6YmFuZmxldXNzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgyNTI3NDMsImV4cCI6MjA5MzgyODc0M30.PHPLYT82a4uLvtrSl8EtoWMfoppaBLEDnmNtVo0V4YA';
 
   // Full path for GitHub Pages
-  const base = window.location.pathname.replace('index.html','').replace(/\/+$/,'/');
-  const LANDING = base + 'landing.html';
+  const LANDING = 'https://thelandedapp.com/landing.html';
 
   try {
     window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
