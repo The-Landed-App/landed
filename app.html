@@ -558,17 +558,23 @@ function googleTranslateElementInit(){
   </div>
 
   <div class="slabel">Pre-submit checklist</div>
-  <div class="cl-prog-wrap">
-    <div class="doc-progress-top">
-      <span style="font-size:13px;font-weight:500;">Checklist progress</span>
+
+  <!-- Rings overview -->
+  <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:14px 16px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <span style="font-size:13px;font-weight:500;color:var(--forest);">Sections</span>
       <div style="display:flex;align-items:center;gap:10px;">
         <button onclick="checkAllSections()" style="font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">Check all</button>
-        <span class="doc-progress-count" id="cl-count">0 / 47</span>
+        <span style="font-size:12px;color:var(--muted);" id="cl-count">0 / 47</span>
       </div>
     </div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%"></div></div>
+    <div style="background:rgba(0,0,0,0.08);border-radius:99px;height:3px;margin-bottom:14px;"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#4a9e6b;"></div></div>
+    <div id="cl-rings" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;"></div>
   </div>
-  <div id="cl-list"></div>
+
+  <!-- Expanded section items -->
+  <div id="cl-expanded"></div>
+
 </div>
 
 <!-- ══ INTERVIEW ══ -->
@@ -1249,66 +1255,100 @@ function updateSnapDocs() {
 function renderChecklist() {
   let total = 0;
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { if(!clState[`${si}-${ii}`]) clState[`${si}-${ii}`]=false; total++; }));
-  const el = document.getElementById('cl-list');
-  el.innerHTML = CHECKLIST.map((s,si) => {
-    const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
-    const allDone = done === s.items.length;
-    const badgeClass = allDone?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty';
-    const badgeText = allDone?'Complete':`${done}/${s.items.length}`;
-    return `
-      <div class="checklist-section">
-        <div class="cl-section-header" onclick="toggleCLSection(${si})">
-          <span class="cl-section-title">${s.section}</span>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <button onclick="event.stopPropagation();checkAllSection(${si})" style="font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--cream3);background:${allDone?'var(--approved-bg)':'var(--white)'};color:${allDone?'var(--forest)':'var(--muted)'};cursor:pointer;font-family:inherit;white-space:nowrap;">${allDone?'✓ Done':'Check all'}</button>
-            <span class="cl-badge ${badgeClass}" id="clbadge-${si}">${badgeText}</span>
-          </div>
-        </div>
-        <div class="cl-body ${si===0?'open':''}" id="clbody-${si}">
-          ${s.items.map((item,ii) => `
-            <div class="cl-item ${clState[`${si}-${ii}`]?'checked':''}" id="clitem-${si}-${ii}">
-              <div class="cl-cb" onclick="toggleCL(${si},${ii})"><div class="cl-check"></div></div>
-              <div style="flex:1;min-width:0;">
-                <div style="display:flex;align-items:flex-start;gap:6px;">
-                  <div class="cl-text" onclick="toggleCL(${si},${ii})" style="flex:1;">${item.t}</div>
-                  ${item.e ? `<button onclick="toggleCLExplain('${si}-${ii}')" style="background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;margin-top:1px;font-size:14px;color:#c8952a;line-height:1;" title="Why this matters">ℹ</button>` : ''}
-                </div>
-                ${item.n ? `<div class="cl-note">${item.n}</div>` : ''}
-                ${item.e ? `<div id="clexp-${si}-${ii}" style="display:none;margin-top:8px;padding:10px 12px;background:#fff8e8;border-left:3px solid #c8952a;border-radius:0 8px 8px 0;font-size:12px;color:#5a4010;line-height:1.6;">${item.e}</div>` : ''}
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    `;
-  }).join('');
+  renderRings();
   updateCLProgress();
 }
 
-function toggleCLExplain(key) {
-  const el = document.getElementById(`clexp-${key}`);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+function renderRings() {
+  const ringsEl = document.getElementById('cl-rings');
+  if (!ringsEl) return;
+  const SECTION_SHORT = ['Personal','Eligibility','Travel','Employment','Family','Tax','Character','Documents','Form','Filing'];
+  ringsEl.innerHTML = CHECKLIST.map((s,si) => {
+    const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
+    const total = s.items.length;
+    const pct = Math.round(done/total*100);
+    const r = 18;
+    const circ = 2 * Math.PI * r;
+    const offset = circ - (pct/100)*circ;
+    const isActive = window._activeSection === si;
+    const allDone = done === total;
+    const strokeColor = allDone ? '#4a9e6b' : pct > 0 ? '#c8952a' : '#d4c9b0';
+    const textColor = allDone ? '#1a3d2b' : pct > 0 ? '#8a6820' : '#a0b0a0';
+    return `<div onclick="toggleRingSection(${si})" style="display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
+      <svg width="44" height="44" viewBox="0 0 44 44" style="${isActive ? 'filter:drop-shadow(0 0 4px rgba(74,158,107,0.3));' : ''}">
+        <circle cx="22" cy="22" r="${r}" fill="${isActive ? 'rgba(74,158,107,0.08)' : 'none'}" stroke="rgba(0,0,0,0.07)" stroke-width="4"/>
+        ${pct > 0 ? `<circle cx="22" cy="22" r="${r}" fill="none" stroke="${strokeColor}" stroke-width="4" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 22 22)"/>` : ''}
+        <text x="22" y="26" text-anchor="middle" font-size="10" font-weight="500" fill="${textColor}" font-family="DM Sans,sans-serif">${allDone ? '✓' : pct+'%'}</text>
+      </svg>
+      <div style="font-size:8px;color:${isActive ? '#1a3d2b' : '#8a9e90'};font-weight:${isActive ? '600' : '400'};text-align:center;line-height:1.3;letter-spacing:0.02em;">${SECTION_SHORT[si]||s.section}</div>
+    </div>`;
+  }).join('');
+  renderExpandedSection();
 }
 
-function toggleCLSection(si) {
-  const b = document.getElementById(`clbody-${si}`);
-  b.classList.toggle('open');
+function toggleRingSection(si) {
+  window._activeSection = (window._activeSection === si) ? null : si;
+  renderRings();
+}
+
+function renderExpandedSection() {
+  const el = document.getElementById('cl-expanded');
+  if (!el) return;
+  const si = window._activeSection;
+  if (si === null || si === undefined) { el.innerHTML = ''; return; }
+  const s = CHECKLIST[si];
+  const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
+  const allDone = done === s.items.length;
+  el.innerHTML = `<div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,0.05);background:#f9f7f3;">
+      <span style="font-size:13px;font-weight:500;color:var(--forest);">${s.section}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button onclick="checkAllSection(${si})" style="font-size:10px;padding:2px 9px;border-radius:99px;border:1px solid var(--cream2);background:${allDone?'var(--approved-bg)':'#fff'};color:${allDone?'var(--forest)':'var(--muted)'};cursor:pointer;font-family:inherit;">${allDone?'✓ Done':'Check all'}</button>
+        <span style="font-size:11px;background:${allDone?'var(--approved-bg)':'var(--cream2)'};color:${allDone?'var(--forest)':'var(--muted)'};padding:2px 9px;border-radius:99px;font-weight:500;">${done}/${s.items.length}</span>
+      </div>
+    </div>
+    ${s.items.map((item,ii) => `
+      <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,0.04);cursor:pointer;transition:background 0.1s;" id="clitem-${si}-${ii}" class="${clState[`${si}-${ii}`]?'checked':''}" onmouseover="this.style.background='#f9f7f3'" onmouseout="this.style.background='#fff'">
+        <div onclick="toggleCL(${si},${ii})" style="width:18px;height:18px;min-width:18px;border-radius:5px;border:1.5px solid ${clState[`${si}-${ii}`]?'#4a9e6b':'#d4c9b0'};background:${clState[`${si}-${ii}`]?'#4a9e6b':'#fff'};display:flex;align-items:center;justify-content:center;margin-top:2px;">
+          ${clState[`${si}-${ii}`]?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div onclick="toggleCL(${si},${ii})" style="font-size:13px;color:${clState[`${si}-${ii}`]?'#a0b0a0':'var(--text)'};${clState[`${si}-${ii}`]?'text-decoration:line-through;':''} line-height:1.45;">${item.t}</div>
+          ${item.n?`<div style="font-size:11px;color:var(--muted);margin-top:2px;">${item.n}</div>`:''}
+          ${item.e?`<div id="clexp-${si}-${ii}" style="display:none;margin-top:8px;padding:10px 12px;background:#fff8e8;border-left:2px solid #c8952a;border-radius:0 8px 8px 0;font-size:12px;color:#5a4010;line-height:1.6;">${item.e}</div>`:''}
+        </div>
+        ${item.e?`<button onclick="toggleCLExplain('${si}-${ii}')" style="background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;margin-top:2px;font-size:15px;color:#d4c9b0;line-height:1;">ℹ</button>`:''}
+      </div>`).join('')}
+  </div>`;
+}
+
+function updateCLBadge(si) { renderRings(); }
+
+function toggleCL(si,ii) {
+  const key = `${si}-${ii}`;
+  clState[key] = !clState[key];
+  saveState();
+  updateCLProgress();
+  renderRings();
+  const lastSi = CHECKLIST.length - 1;
+  const lastIi = CHECKLIST[lastSi].items.length - 1;
+  if (si === lastSi && ii === lastIi && clState[key]) {
+    CHECKLIST.forEach((s,ssi) => s.items.forEach((_,iii) => { clState[`${ssi}-${iii}`] = true; }));
+    saveState();
+    renderRings();
+    updateHomeProgress();
+    setTimeout(() => showToast('📬 N-400 is in the mail — you did it!'), 400);
+    setTimeout(() => showToast('🎉 Your application is filed. Now we wait.'), 3200);
+  }
 }
 
 function checkAllSection(si) {
   const s = CHECKLIST[si];
   const allDone = s.items.every((_,ii) => clState[`${si}-${ii}`]);
-  // If all done, uncheck all; otherwise check all
-  s.items.forEach((_,ii) => {
-    clState[`${si}-${ii}`] = !allDone;
-    const el = document.getElementById(`clitem-${si}-${ii}`);
-    if (el) el.classList.toggle('checked', !allDone);
-  });
+  s.items.forEach((_,ii) => { clState[`${si}-${ii}`] = !allDone; });
   saveState();
-  updateCLBadge(si);
   updateCLProgress();
-  renderChecklist(); // re-render to update button state
+  renderRings();
   if (!allDone) showToast(`✅ ${s.section} marked complete`);
 }
 
@@ -1316,43 +1356,12 @@ function checkAllSections() {
   const allDone = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]));
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clState[`${si}-${ii}`] = !allDone; }));
   saveState();
-  renderChecklist();
+  renderRings();
   updateHomeProgress();
   if (!allDone) {
     showToast('🎉 N-400 checklist complete!');
     setTimeout(() => showToast('📬 Your application is ready to mail.'), 3000);
   }
-}
-
-function toggleCL(si,ii) {
-  const key = `${si}-${ii}`;
-  clState[key] = !clState[key];
-  saveState();
-  const el = document.getElementById(`clitem-${si}-${ii}`);
-  el.classList.toggle('checked', clState[key]);
-  updateCLBadge(si);
-  updateCLProgress();
-
-  // Last item = "Sending via certified mail" — check everything off
-  const lastSi = CHECKLIST.length - 1;
-  const lastIi = CHECKLIST[lastSi].items.length - 1;
-  if (si === lastSi && ii === lastIi && clState[key]) {
-    // Check everything
-    CHECKLIST.forEach((s,ssi) => s.items.forEach((_,iii) => { clState[`${ssi}-${iii}`] = true; }));
-    saveState();
-    renderChecklist();
-    updateHomeProgress();
-    setTimeout(() => showToast('📬 N-400 is in the mail — you did it!'), 400);
-    setTimeout(() => showToast('🎉 Your application is filed. Now we wait.'), 3200);
-  }
-}
-
-function updateCLBadge(si) {
-  const s = CHECKLIST[si];
-  const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
-  const badge = document.getElementById(`clbadge-${si}`);
-  badge.textContent = done===s.items.length?'Complete':`${done}/${s.items.length}`;
-  badge.className = `cl-badge ${done===s.items.length?'cl-badge-done':done>0?'cl-badge-partial':'cl-badge-empty'}`;
 }
 
 function updateCLProgress() {
@@ -2562,6 +2571,8 @@ function addToCalendar(i) {
   URL.revokeObjectURL(url);
   showToast('📅 Opening calendar…');
 }
+window._activeSection = null;
+window._activeSection = null;
 loadState();
 loadScores();
 loadGamification();
@@ -2569,7 +2580,7 @@ loadMailTracker();
 renderTimeline();
 renderFAQStandalone();
 renderDocs();
-renderChecklist();
+renderRings();
 renderTips();
 updateSnapDocs();
 updateSnapDays();
