@@ -648,7 +648,7 @@ window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   if (session) {
     const { data: profile } = await window._sb.from('profiles')
       .select('paid').eq('id', session.user.id).single();
-    if (profile?.paid) window.location.replace('https://thelandedapp.com/index.html');
+    if (profile?.paid) window.location.replace('https://thelandedapp.com/app.html')
   }
 })();
 </script>
@@ -700,7 +700,7 @@ async function sendToCheckout(email, userId) {
     body: JSON.stringify({
       email,
       userId,
-      successUrl: 'https://thelandedapp.com/index.html',
+      successUrl: 'https://thelandedapp.com/app'
       cancelUrl: 'https://thelandedapp.com/'
     })
   });
