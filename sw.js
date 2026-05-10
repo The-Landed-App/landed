@@ -10,7 +10,9 @@ const PRECACHE = [
 // ── Install: precache core assets
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE).then(cache => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(cache => cache.addAll(PRECACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -18,48 +20,61 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
+      Promise.all(
+        keys.filter(key => key !== CACHE).map(key => caches.delete(key))
+      )
     ).then(() => self.clients.claim())
   );
 });
 
-// ── Fetch strategy
+// ── Fetch handler
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
+  const request = event.request;
+  const url = new URL(request.url);
 
   // Only handle GET requests
-  if (event.request.method !== 'GET') {
-    event.respondWith(fetch(event.request));
+  if (request.method !== 'GET') {
+    event.respondWith(fetch(request));
     return;
   }
 
-  // Never cache external or API requests
+  // Never cache external APIs or third-party resources
   if (
     url.hostname === 'api.anthropic.com' ||
     url.hostname === 'microotter.github.io' ||
-    url.hostname === 'fonts.gstatic.com' ||
     url.hostname === 'fonts.googleapis.com' ||
+    url.hostname === 'fonts.gstatic.com' ||
     url.hostname.includes('supabase.co')
   ) {
-    event.respondWith(fetch(event.request));
+    event.respondWith(fetch(request));
     return;
   }
 
-  // Cache-first for static assets
+  // Network-first for navigation (prevents broken routes on refresh)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match('/'))
+    );
+    return;
+  }
+
+  // Cache-first for everything else
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.match(request).then(cached => {
       if (cached) return cached;
 
-      return fetch(event.request).then(response => {
-        if (!response || response.status !== 200) return response;
-
-        const clone = response.clone();
-        caches.open(CACHE).then(cache => cache.put(event.request, clone));
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('/');
+      return fetch(request).then(response => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
         }
+
+        const responseToCache = response.clone();
+
+        caches.open(CACHE).then(cache => {
+          cache.put(request, responseToCache);
+        });
+
+        return response;
       });
     })
   );
