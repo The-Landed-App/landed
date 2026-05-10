@@ -768,9 +768,9 @@ const STEPS = [
   {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', canSchedule:true},
   {emoji:'🔎', name:'Background Checks', time:'3–6 months', canSchedule:false},
   {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', canSchedule:true},
-  {emoji:'📨', name:'Receive a Decision', time:'Same day*', canSchedule:false},
+  {emoji:'📨', name:'Receive a Decision', time:'Same day or weeks later', canSchedule:false},
   {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', canSchedule:true},
-  {emoji:'🎫', name:'Receive Certificate', time:'Same day', canSchedule:false},
+  {emoji:'🎫', name:'Receive Certificate', time:'Same day or mailed within weeks', canSchedule:false},
 ];
 
 function getStepStatus(i) {
@@ -2568,7 +2568,7 @@ function setStepDate(i) {
     <div style="background:var(--white);border-radius:16px;padding:24px;width:100%;max-width:320px;">
       <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--forest);margin-bottom:6px;">${step.emoji} ${step.name}</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Set your appointment date</div>
-      <input type="date" id="date-input-modal" value="${stepDates[i]||''}" style="width:100%;border:1.5px solid var(--cream2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;margin-bottom:16px;">
+      <input type="date" id="date-input-modal" value="${stepDates[i]||''}" max="2035-12-31" style="width:100%;border:1.5px solid var(--cream2);border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;margin-bottom:16px;">
       <div style="display:flex;gap:8px;">
         <button onclick="confirmStepDate(${i})" style="flex:1;background:var(--forest);color:var(--cream2);border:none;border-radius:99px;padding:11px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Save date</button>
         <button onclick="document.getElementById('date-modal').remove()" style="flex:1;background:var(--cream);color:var(--muted);border:1px solid var(--cream2);border-radius:99px;padding:11px;font-size:13px;font-family:inherit;cursor:pointer;">Cancel</button>
