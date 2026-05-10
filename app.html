@@ -539,7 +539,7 @@ function googleTranslateElementInit(){
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">After mailing your N-400, enter your USPS tracking number here. It will show on your home dashboard.</div>
     <div id="n400-mail-no-tracking">
       <div style="display:flex;gap:8px;">
-        <input id="mail-tracking-input" type="text" placeholder="e.g. 9400111899223397614928" style="flex:1;border:1.5px solid var(--cream2);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--forest);background:var(--cream);outline:none;" onkeydown="if(event.key==='Enter')saveTrackingNumber()"/>
+        <input id="mail-tracking-input" type="text" placeholder="e.g. 9400111899223397614928" style="flex:1;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--forest);background:#fff;outline:none;" onkeydown="if(event.key==='Enter')saveTrackingNumber()"/>
         <button onclick="saveTrackingNumber()" style="background:var(--forest);color:var(--cream2);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Save</button>
       </div>
     </div>
@@ -559,17 +559,18 @@ function googleTranslateElementInit(){
 
   <div class="slabel">Pre-submit checklist</div>
 
-  <!-- Rings overview -->
-  <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:14px 16px;margin-bottom:12px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <span style="font-size:13px;font-weight:500;color:var(--forest);">Sections</span>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <button onclick="checkAllSections()" style="font-size:11px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">Check all</button>
-        <span style="font-size:12px;color:var(--muted);" id="cl-count">0 / 47</span>
+  <!-- Rings dashboard -->
+  <div style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:18px 18px 16px;margin-bottom:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+      <div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:4px;">Pre-submit checklist</div>
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:#5db87e;line-height:1;" id="cl-count">0 / 47</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">items complete</div>
       </div>
+      <button onclick="checkAllSections()" style="font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;white-space:nowrap;">Check all</button>
     </div>
-    <div style="background:rgba(0,0,0,0.08);border-radius:99px;height:3px;margin-bottom:14px;"><div class="prog-bar-fill" id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#4a9e6b;"></div></div>
-    <div id="cl-rings" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;"></div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:99px;height:3px;margin-bottom:16px;"><div id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#5db87e;transition:width 0.4s;"></div></div>
+    <div id="cl-rings" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;"></div>
   </div>
 
   <!-- Expanded section items -->
@@ -1275,12 +1276,12 @@ function renderRings() {
     const strokeColor = allDone ? '#4a9e6b' : pct > 0 ? '#c8952a' : '#d4c9b0';
     const textColor = allDone ? '#1a3d2b' : pct > 0 ? '#8a6820' : '#a0b0a0';
     return `<div onclick="toggleRingSection(${si})" style="display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
-      <svg width="44" height="44" viewBox="0 0 44 44" style="${isActive ? 'filter:drop-shadow(0 0 4px rgba(74,158,107,0.3));' : ''}">
-        <circle cx="22" cy="22" r="${r}" fill="${isActive ? 'rgba(74,158,107,0.08)' : 'none'}" stroke="rgba(0,0,0,0.07)" stroke-width="4"/>
+      <svg width="44" height="44" viewBox="0 0 44 44" style="${isActive ? 'filter:drop-shadow(0 0 6px rgba(93,184,126,0.4));' : ''}">
+        <circle cx="22" cy="22" r="${r}" fill="${isActive ? 'rgba(93,184,126,0.12)' : 'rgba(255,255,255,0.04)'}" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
         ${pct > 0 ? `<circle cx="22" cy="22" r="${r}" fill="none" stroke="${strokeColor}" stroke-width="4" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 22 22)"/>` : ''}
-        <text x="22" y="26" text-anchor="middle" font-size="10" font-weight="500" fill="${textColor}" font-family="DM Sans,sans-serif">${allDone ? '✓' : pct+'%'}</text>
+        <text x="22" y="26" text-anchor="middle" font-size="10" font-weight="500" fill="${allDone ? '#5db87e' : pct > 0 ? '#c8952a' : 'rgba(255,255,255,0.2)'}" font-family="DM Sans,sans-serif">${allDone ? '✓' : pct+'%'}</text>
       </svg>
-      <div style="font-size:8px;color:${isActive ? '#1a3d2b' : '#8a9e90'};font-weight:${isActive ? '600' : '400'};text-align:center;line-height:1.3;letter-spacing:0.02em;">${SECTION_SHORT[si]||s.section}</div>
+      <div style="font-size:8px;color:${isActive ? '#5db87e' : 'rgba(255,255,255,0.35)'};font-weight:${isActive ? '600' : '400'};text-align:center;line-height:1.3;letter-spacing:0.02em;">${SECTION_SHORT[si]||s.section}</div>
     </div>`;
   }).join('');
   renderExpandedSection();
