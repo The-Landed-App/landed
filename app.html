@@ -1254,10 +1254,9 @@ function updateSnapDocs() {
 
 // ── RENDER CHECKLIST ─────────────────────────────────
 function renderChecklist() {
-  let total = 0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { if(!clState[`${si}-${ii}`]) clState[`${si}-${ii}`]=false; total++; }));
-  renderRings();
+  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { if(clState[`${si}-${ii}`]===undefined) clState[`${si}-${ii}`]=false; }));
   updateCLProgress();
+  renderRings();
 }
 
 function renderRings() {
@@ -1354,9 +1353,10 @@ function checkAllSection(si) {
 }
 
 function checkAllSections() {
-  const allDone = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]));
+  const allDone = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]===true));
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clState[`${si}-${ii}`] = !allDone; }));
   saveState();
+  updateCLProgress();
   renderRings();
   updateHomeProgress();
   if (!allDone) {
@@ -1367,10 +1367,12 @@ function checkAllSections() {
 
 function updateCLProgress() {
   let done=0, total=0;
-  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { total++; if(clState[`${si}-${ii}`]) done++; }));
-  document.getElementById('cl-count').textContent = `${done} / ${total}`;
-  document.getElementById('cl-prog-fill').style.width = `${Math.round(done/total*100)}%`;
-  const allDone = done === total;
+  CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { total++; if(clState[`${si}-${ii}`]===true) done++; }));
+  const countEl = document.getElementById('cl-count');
+  if (countEl) countEl.textContent = `${done} / ${total}`;
+  const fillEl = document.getElementById('cl-prog-fill');
+  if (fillEl) fillEl.style.width = `${Math.round(done/total*100)}%`;
+  const allDone = done === total && total > 0;
   const btn = document.getElementById('cl-check-all-btn');
   if (btn) btn.textContent = allDone ? 'Uncheck all' : 'Check all';
   updateHomeProgress();
