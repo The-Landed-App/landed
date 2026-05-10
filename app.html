@@ -567,7 +567,7 @@ function googleTranslateElementInit(){
         <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:#5db87e;line-height:1;" id="cl-count">0 / 47</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">items complete</div>
       </div>
-      <button onclick="checkAllSections()" style="font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;white-space:nowrap;">Check all</button>
+      <button id="cl-check-all-btn" onclick="checkAllSections()" style="font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;white-space:nowrap;">Check all</button>
     </div>
     <div style="background:rgba(255,255,255,0.08);border-radius:99px;height:3px;margin-bottom:16px;"><div id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#5db87e;transition:width 0.4s;"></div></div>
     <div id="cl-rings" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;"></div>
@@ -1370,6 +1370,9 @@ function updateCLProgress() {
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { total++; if(clState[`${si}-${ii}`]) done++; }));
   document.getElementById('cl-count').textContent = `${done} / ${total}`;
   document.getElementById('cl-prog-fill').style.width = `${Math.round(done/total*100)}%`;
+  const allDone = done === total;
+  const btn = document.getElementById('cl-check-all-btn');
+  if (btn) btn.textContent = allDone ? 'Uncheck all' : 'Check all';
   updateHomeProgress();
 }
 
