@@ -648,7 +648,7 @@ window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   if (session) {
     const { data: profile } = await window._sb.from('profiles')
       .select('paid').eq('id', session.user.id).single();
-    if (profile?.paid) window.location.replace('https://thelandedapp.com/app.html')
+    if (profile?.paid) window.location.replace('https://thelandedapp.com/app');
   }
 })();
 </script>
@@ -700,7 +700,7 @@ async function sendToCheckout(email, userId) {
     body: JSON.stringify({
       email,
       userId,
-      successUrl: 'https://thelandedapp.com/app'
+      successUrl: 'https://thelandedapp.com/app',
       cancelUrl: 'https://thelandedapp.com/'
     })
   });
@@ -737,7 +737,7 @@ async function handleAuth(){
         if(signInError) throw signInError;
         const { data: profile } = await window._sb.from('profiles')
           .select('paid').eq('id', signInData.user.id).single();
-        if(profile?.paid) { window.location.replace('https://thelandedapp.com/index.html'); return; }
+        if(profile?.paid) { window.location.replace('https://thelandedapp.com/app'); return; }
         await sendToCheckout(email, signInData.user.id);
         return;
       }
@@ -756,7 +756,7 @@ async function handleAuth(){
         .select('paid').eq('id', data.user.id).single();
 
       if(profile?.paid) {
-        window.location.replace('https://thelandedapp.com/index.html');
+        window.location.replace('https://thelandedapp.com/app');
       } else {
         await sendToCheckout(email, data.user.id);
       }
@@ -1220,7 +1220,7 @@ async function submitGift() {
         sender: { name: senderName, email: senderEmail },
         note,
         successUrl: window.location.origin + window.location.pathname + '?gift=success',
-        cancelUrl: 'https://thelandedapp.com/'
+        cancelUrl: 'https://thelandedapp.com/',
       })
     });
     const data = await res.json();
