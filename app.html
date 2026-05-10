@@ -763,15 +763,19 @@ function googleTranslateElementInit(){
 <script>
 // ── DATA ──────────────────────────────────────────────
 const STEPS = [
-  {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', status:'done', canSchedule:false},
-  {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', status:'done', canSchedule:false},
-  {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', status:'active', canSchedule:true},
-  {emoji:'🔎', name:'Background Checks', time:'3–6 months', status:'pending', canSchedule:false},
-  {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', status:'pending', canSchedule:true},
-  {emoji:'📨', name:'Receive a Decision', time:'Same day*', status:'pending', canSchedule:false},
-  {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', status:'pending', canSchedule:true},
-  {emoji:'🎫', name:'Receive Certificate', time:'Same day', status:'pending', canSchedule:false},
+  {emoji:'☑️', name:'Confirm Eligibility', time:'1–2 days', canSchedule:false},
+  {emoji:'📄', name:'File Form N-400', time:'2–3 weeks', canSchedule:false},
+  {emoji:'🧬', name:'Biometrics Appointment', time:'4–8 weeks', canSchedule:true},
+  {emoji:'🔎', name:'Background Checks', time:'3–6 months', canSchedule:false},
+  {emoji:'🤝', name:'Interview & Civics Test', time:'2–6 months', canSchedule:true},
+  {emoji:'📨', name:'Receive a Decision', time:'Same day*', canSchedule:false},
+  {emoji:'🇺🇸', name:'Oath of Allegiance Ceremony', time:'2–8 weeks', canSchedule:true},
+  {emoji:'🎫', name:'Receive Certificate', time:'Same day', canSchedule:false},
 ];
+
+function getStepStatus(i) {
+  return stepState[i] || 'pending';
+}
 
 const FAQS = [
   {q:'How long will this whole process take me?', a:'Average total time from filing to certificate: 12–24 months.'},
@@ -995,7 +999,8 @@ const STATE_DB = {
 let clState = {};
 let docState = {};
 let filingDate = null;
-let stepDates = {}; // key: step index, value: YYYY-MM-DD
+let stepDates = {};
+let stepState = {}; // key: step index, value: 'done'|'active'|'pending'
 
 function loadState() {
   try {
@@ -1006,12 +1011,17 @@ function loadState() {
       docState = p.doc || {};
       filingDate = p.filingDate || null;
       stepDates = p.stepDates || {};
+      stepState = p.stepState || {0:'pending',1:'pending',2:'pending',3:'pending',4:'pending',5:'pending',6:'pending',7:'pending'};
+    } else {
+      stepState = {0:'pending',1:'pending',2:'pending',3:'pending',4:'pending',5:'pending',6:'pending',7:'pending'};
     }
-  } catch(e) {}
+  } catch(e) {
+    stepState = {0:'pending',1:'pending',2:'pending',3:'pending',4:'pending',5:'pending',6:'pending',7:'pending'};
+  }
 }
 
 function saveState() {
-  try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate, stepDates})); } catch(e) {}
+  try { localStorage.setItem('cp_state', JSON.stringify({cl:clState, doc:docState, filingDate, stepDates, stepState})); } catch(e) {}
 }
 
 // ── STATE SELECTION ───────────────────────────────────
@@ -1107,39 +1117,55 @@ function buildCivicsQuestions() {
 }
 
 // ── RENDER TIMELINE ───────────────────────────────────
+function cycleStepStatus(i) {
+  // Step 1 (File N-400) is controlled by checklist — don't allow manual override
+  if (i === 1) { showToast('Complete the N-400 checklist to mark this step done'); return; }
+  const current = getStepStatus(i);
+  const next = current === 'pending' ? 'active' : current === 'active' ? 'done' : 'pending';
+  stepState[i] = next;
+  saveState();
+  renderTimeline();
+  updateCurrentStep();
+  renderJourneyMap();
+  updateLifeGraphic();
+}
+
 function renderTimeline() {
   const card = document.getElementById('tl-card');
   card.innerHTML = `
     <div class="tl-card-header">
       <span class="tl-card-title">Naturalization process</span>
-      <span class="tl-card-sub">Est. 12–24 months total</span>
+      <span class="tl-card-sub">Tap a step to update its status</span>
     </div>
     ${STEPS.map((s,i) => {
+      const status = getStepStatus(i);
       const date = stepDates[i];
       const dateDisplay = date ? new Date(date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : null;
       const countdown = date ? Math.ceil((new Date(date+'T12:00:00') - Date.now()) / 86400000) : null;
+      const isN400 = i === 1;
       return `
-      <div class="tl-row">
+      <div class="tl-row" onclick="cycleStepStatus(${i})" style="cursor:pointer;">
         <div class="tl-left">
-          <div class="tl-dot ${s.status}"></div>
+          <div class="tl-dot ${status}"></div>
           ${i < STEPS.length-1 ? '<div class="tl-line"></div>' : ''}
         </div>
         <div style="width:28px;text-align:center;font-size:17px;padding-top:1px;">${s.emoji}</div>
         <div class="tl-body">
-          <div class="tl-name ${s.status}">${s.name}</div>
+          <div class="tl-name ${status}">${s.name}</div>
           <div class="tl-meta">
             <span class="tl-time">${s.time}</span>
-            <span class="status-pill ${s.status==='done'?'pill-done':s.status==='active'?'pill-active':'pill-pending'}">${s.status==='done'?'Complete':s.status==='active'?'In progress':'Upcoming'}</span>
+            <span class="status-pill ${status==='done'?'pill-done':status==='active'?'pill-active':'pill-pending'}">${status==='done'?'Complete':status==='active'?'In progress':'Upcoming'}</span>
+            ${isN400 ? '<span style="font-size:10px;color:var(--muted);margin-left:4px;">· linked to checklist</span>' : ''}
           </div>
           ${dateDisplay ? `
-            <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px;" onclick="event.stopPropagation()">
               <span style="font-size:11px;color:var(--forest);font-weight:500;">📅 ${dateDisplay}</span>
               ${countdown !== null ? `<span style="font-size:10px;color:${countdown < 0 ? 'var(--muted)' : countdown <= 7 ? '#c8952a' : 'var(--muted)'};">${countdown < 0 ? 'Passed' : countdown === 0 ? 'Today!' : `${countdown} days away`}</span>` : ''}
               <button onclick="addToCalendar(${i})" style="font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--grass);background:var(--approved-bg);color:var(--forest);cursor:pointer;font-family:inherit;">Add to calendar</button>
               <button onclick="clearStepDate(${i})" style="font-size:10px;padding:2px 6px;border-radius:99px;border:1px solid var(--cream2);background:none;color:var(--muted);cursor:pointer;font-family:inherit;">×</button>
             </div>
           ` : s.canSchedule ? `
-            <button onclick="setStepDate(${i})" style="margin-top:6px;font-size:10px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">+ Set date</button>
+            <button onclick="event.stopPropagation();setStepDate(${i})" style="margin-top:6px;font-size:10px;padding:3px 10px;border-radius:99px;border:1px solid var(--cream2);background:var(--cream);color:var(--muted);cursor:pointer;font-family:inherit;">+ Set date</button>
           ` : ''}
         </div>
       </div>`;
@@ -1330,15 +1356,19 @@ function toggleCL(si,ii) {
   saveState();
   updateCLProgress();
   renderRings();
+  // Sync N-400 step (step 1) with checklist completion
+  const allChecked = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]===true));
+  stepState[1] = allChecked ? 'done' : 'pending';
+  saveState();
+  renderTimeline();
+  updateCurrentStep();
+  renderJourneyMap();
+
   const lastSi = CHECKLIST.length - 1;
   const lastIi = CHECKLIST[lastSi].items.length - 1;
   if (si === lastSi && ii === lastIi && clState[key]) {
-    CHECKLIST.forEach((s,ssi) => s.items.forEach((_,iii) => { clState[`${ssi}-${iii}`] = true; }));
-    saveState();
-    renderRings();
-    updateHomeProgress();
-    setTimeout(() => showToast('📬 N-400 is in the mail — you did it!'), 400);
-    setTimeout(() => showToast('🎉 Your application is filed. Now we wait.'), 3200);
+    setTimeout(() => showToast('📬 N-400 is ready to mail — you did it!'), 400);
+    setTimeout(() => showToast('🎉 Now send it via certified mail.'), 3200);
   }
 }
 
@@ -1355,9 +1385,13 @@ function checkAllSection(si) {
 function checkAllSections() {
   const allDone = CHECKLIST.every((s,si) => s.items.every((_,ii) => clState[`${si}-${ii}`]===true));
   CHECKLIST.forEach((s,si) => s.items.forEach((_,ii) => { clState[`${si}-${ii}`] = !allDone; }));
+  stepState[1] = !allDone ? 'done' : 'pending';
   saveState();
   updateCLProgress();
   renderRings();
+  renderTimeline();
+  updateCurrentStep();
+  renderJourneyMap();
   updateHomeProgress();
   if (!allDone) {
     showToast('🎉 N-400 checklist complete!');
@@ -1382,8 +1416,8 @@ function renderJourneyMap() {
   const el = document.getElementById('journey-map');
   if (!el) return;
 
-  const activeIdx = STEPS.findIndex(s => s.status === 'active');
-  const doneCount = STEPS.filter(s => s.status === 'done').length;
+  const activeIdx = STEPS.findIndex((s,i) => getStepStatus(i) === 'active');
+  const doneCount = STEPS.filter((s,i) => getStepStatus(i) === 'done').length;
   const currentIdx = activeIdx >= 0 ? activeIdx : doneCount;
   const n = STEPS.length;
 
@@ -1418,7 +1452,8 @@ function renderJourneyMap() {
   // Dots (no interactive tooltip in SVG — we'll use HTML overlay)
   STEPS.forEach((step, i) => {
     const x = pad + i * spacing;
-    const isDone = step.status === 'done';
+    const isDone = getStepStatus(i) === 'done';
+    const isCurrent2 = getStepStatus(i) === 'active';
     const isCurrent = i === currentIdx;
 
     if (isCurrent) {
@@ -1614,7 +1649,7 @@ function startTicker() {
 
 // ── CURRENT STEP ──────────────────────────────────────
 function updateCurrentStep() {
-  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const active = STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'active') || STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'pending');
   const el = document.getElementById('home-current-step');
   const sub = document.getElementById('home-step-status');
   if (el && active) {
@@ -1793,8 +1828,8 @@ const GRAPHIC_LAYERS = [
 ];
 
 function updateLifeGraphic() {
-  const doneCount = STEPS.filter(s => s.status === 'done').length;
-  const activeIdx = STEPS.findIndex(s => s.status === 'active');
+  const doneCount = STEPS.filter((s,i) => getStepStatus(i) === 'done').length;
+  const activeIdx = STEPS.findIndex((s,i) => getStepStatus(i) === 'active');
   const currentStep = activeIdx >= 0 ? activeIdx : doneCount;
 
   GRAPHIC_LAYERS.forEach(layer => {
@@ -2102,7 +2137,7 @@ function renderGamification() {
 // ── SHARE DASHBOARD ───────────────────────────────────
 function openShareDashboard() {
   // Populate dashboard data
-  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const active = STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'active') || STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'pending');
   document.getElementById('dash-step').textContent = active ? active.name : '—';
 
   const pctEl = document.getElementById('progress-pct');
@@ -2128,7 +2163,7 @@ function closeShareDashboard() {
 }
 
 function shareProgress() {
-  const active = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const active = STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'active') || STEPS.map((s,i) => ({...s,status:getStepStatus(i)})).find(s => s.status === 'pending');
   const civics = scores.filter(s => s.type === 'civics');
   const english = scores.filter(s => s.type === 'english');
   const pctEl = document.getElementById('progress-pct');
@@ -2707,7 +2742,7 @@ function unlockMia(){
 function buildMiaSystemPrompt() {
   // ── User's live app state ──────────────────────────
   const activeStep = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
-  const doneSteps = STEPS.filter(s => s.status === 'done').map(s => s.name).join(', ') || 'None yet';
+  const doneSteps = STEPS.filter((s,i) => getStepStatus(i) === 'done').map(s => s.name).join(', ') || 'None yet';
   const civicsScores = scores.filter(s => s.type === 'civics');
   const englishScores = scores.filter(s => s.type === 'english');
   const latestCivics = civicsScores.length ? `${Math.round(civicsScores[civicsScores.length-1].val/civicsScores[civicsScores.length-1].total*100)}% (${civicsScores[civicsScores.length-1].val}/${civicsScores[civicsScores.length-1].total})` : 'Not taken yet';
