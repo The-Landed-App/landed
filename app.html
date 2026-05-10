@@ -195,7 +195,7 @@ header{background:#0d1f14;padding:env(safe-area-inset-top) 0 0;}
 .search-results-drop{display:none;position:absolute;top:calc(100% + 4px);left:0;width:320px;background:var(--white);border:1px solid var(--cream2);border-radius:12px;box-shadow:0 8px 24px rgba(26,61,43,0.18);z-index:200;overflow:hidden;max-height:320px;overflow-y:auto;}
 
 /* ── TIP TICKER (home) ── */
-.tip-ticker{background:var(--forest);border-radius:var(--r);padding:14px 16px;overflow:hidden;}
+.tip-ticker{background:#0d1f14;border-radius:var(--r);padding:14px 16px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
 .tip-ticker-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--sage);margin-bottom:6px;font-weight:500;}
 .tip-ticker-text{font-size:12px;color:var(--cream2);line-height:1.55;transition:opacity 0.4s;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 .tip-ticker-tag{font-size:10px;color:var(--grass2);margin-top:6px;font-weight:500;}
@@ -205,7 +205,7 @@ header{background:#0d1f14;padding:env(safe-area-inset-top) 0 0;}
 .doc-progress-top{display:flex;justify-content:space-between;margin-bottom:8px;}
 .doc-progress-label{font-size:13px;font-weight:500;}
 .doc-progress-count{font-size:13px;color:var(--muted);}
-.prog-bar-bg{background:var(--cream2);border-radius:99px;height:6px;}
+.prog-bar-bg{background:rgba(0,0,0,0.1);border-radius:99px;height:5px;}
 .prog-bar-fill{height:6px;border-radius:99px;background:var(--grass);transition:width 0.4s;}
 .doc-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#fff;border-radius:var(--r);border:1px solid var(--cream2);margin-bottom:8px;}
 .doc-emoji{font-size:20px;flex-shrink:0;}
@@ -216,22 +216,22 @@ header{background:#0d1f14;padding:env(safe-area-inset-top) 0 0;}
 .doc-btn.uploaded{background:var(--approved-bg);border-color:var(--grass);color:var(--forest);}
 
 /* ── N-400 GUIDE ── */
-.n400-link{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#0d1f14;border-radius:var(--r);color:var(--white);text-decoration:none;margin-bottom:16px;}
+.n400-link{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-radius:var(--r);color:var(--forest);text-decoration:none;margin-bottom:16px;border:1px solid rgba(0,0,0,0.07);}
 .n400-link-text{font-size:13px;font-weight:500;}
-.n400-link-sub{font-size:11px;color:var(--sage);margin-top:2px;}
-.n400-link-arrow{font-size:18px;margin-left:auto;}
-.checklist-section{margin-bottom:16px;border:1px solid var(--cream2);border-radius:var(--r);overflow:hidden;}
-.cl-section-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#ede7dc;cursor:pointer;}
-.cl-section-header:hover{background:#ede8df;}
+.n400-link-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.n400-link-arrow{font-size:18px;margin-left:auto;color:var(--muted);}
+.checklist-section{margin-bottom:10px;border:1px solid rgba(0,0,0,0.07);border-radius:var(--r);overflow:hidden;background:#fff;}
+.cl-section-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#fff;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.06);}
+.cl-section-header:hover{background:#f7f3ed;}
 .cl-section-title{font-size:13px;font-weight:500;}
 .cl-badge{font-size:10px;padding:2px 8px;border-radius:99px;}
 .cl-badge-done{background:var(--approved-bg);color:var(--forest);}
 .cl-badge-partial{background:var(--pending-bg);color:var(--pending-text);}
 .cl-badge-empty{background:var(--cream2);color:var(--muted);}
-.cl-body{display:none;}
+.cl-body{display:none;background:#fff;}
 .cl-body.open{display:block;}
-.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;cursor:pointer;border-top:1px solid var(--cream2);}
-.cl-item:hover{background:#ede7dc;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:9px 14px;cursor:pointer;border-top:1px solid rgba(0,0,0,0.05);}
+.cl-item:hover{background:#f9f7f3;}
 .cl-item.checked .cl-text{color:var(--muted);text-decoration:line-through;}
 .cl-cb{width:16px;height:16px;min-width:16px;border-radius:4px;border:1px solid var(--cream3);background:var(--white);display:flex;align-items:center;justify-content:center;margin-top:2px;}
 .cl-item.checked .cl-cb{background:var(--grass);border-color:var(--grass);}
@@ -239,7 +239,7 @@ header{background:#0d1f14;padding:env(safe-area-inset-top) 0 0;}
 .cl-item.checked .cl-check{display:block;}
 .cl-text{font-size:13px;line-height:1.5;}
 .cl-note{font-size:11px;color:var(--muted);margin-top:2px;}
-.cl-prog-wrap{margin-bottom:16px;}
+.cl-prog-wrap{margin-bottom:16px;background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:14px 16px;}
 
 /* ── INTERVIEW COACH ── */
 .coach-intro{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
@@ -279,8 +279,8 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#0d1f14;border-top:1px sol
 .goog-te-menu-frame{box-shadow:0 4px 20px rgba(0,0,0,0.15)!important;}
 body{top:0!important;position:static!important;}
 #gt-el{display:none;}
-.affirmation-wrap{max-width:260px;display:flex;align-items:center;justify-content:flex-end;}
-.affirmation-text{font-family:'Playfair Display',serif;font-size:15px;color:rgba(255,255,255,0.75);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.2px;text-align:left;}
+.affirmation-wrap{max-width:140px;display:flex;align-items:center;justify-content:flex-end;flex-shrink:0;}
+.affirmation-text{font-family:'Playfair Display',serif;font-size:12px;color:rgba(255,255,255,0.55);line-height:1.4;font-style:italic;cursor:pointer;transition:opacity 0.5s;display:block;letter-spacing:-0.1px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .affirmation-text:hover{color:rgba(255,255,255,0.95);}
 /* ── STATE PICKER MODAL ── */
 #state-modal{display:none;position:fixed;inset:0;background:rgba(10,24,16,0.78);z-index:600;align-items:center;justify-content:center;padding:16px;}
@@ -434,7 +434,7 @@ function googleTranslateElementInit(){
   </div>
 
   <!-- Footer -->
-  <div style="text-align:center;padding:4px 0 8px;font-size:11px;color:#b0bdb5;">Built by immigrants, for immigrants.</div>
+  <div style="text-align:center;padding:4px 0 24px;font-size:11px;color:#b0bdb5;">Built by immigrants, for immigrants.</div>
 </div>
 
 <!-- ══ SHARE DASHBOARD MODAL ══ -->
@@ -619,7 +619,7 @@ function googleTranslateElementInit(){
         <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Civics</div>
         <div style="font-size:11px;color:var(--sage);">100 USCIS questions · 10 at a time</div>
       </div>
-      <div onclick="startQuiz('english')" style="background:var(--forest2);border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+      <div onclick="startQuiz('english')" style="background:#0d1f14;border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
         <div style="font-size:22px;margin-bottom:8px;">📖</div>
         <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">English</div>
         <div style="font-size:11px;color:var(--sage);">Reading · 10 sentences</div>
