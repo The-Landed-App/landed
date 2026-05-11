@@ -678,14 +678,25 @@ function googleTranslateElementInit(){
 </div>
 
 <!-- ══ PRO TIPS ══ -->
-<div class="page" id="page-tips">
-  <div class="page-title-bar">
-    <div class="page-title-icon">⭐</div>
-    <div><div class="page-title-text">Pro Tips</div><div class="page-title-sub">By immigrants, for immigrants</div></div>
+<div class="page" id="page-guide" style="background:#0d1f14;padding:0;min-height:100vh;">
+  <!-- Dark header -->
+  <div style="background:#081510;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Guide</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Tips, FAQs, and insider knowledge</div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.25);" id="guide-count"></div>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="guide-search" type="text" placeholder="Search tips &amp; FAQs…" oninput="renderGuide()" style="background:none;border:none;outline:none;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;width:100%;" />
+    </div>
   </div>
-  <!-- Filter chips -->
-  <div id="tip-filters" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;"></div>
-  <div class="tip-feed" id="tips-list"></div>
+  <!-- Stage filter chips -->
+  <div id="guide-chips" style="display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;"></div>
+  <!-- Content -->
+  <div id="guide-list" style="padding:14px 20px 80px;"></div>
 </div>
 
 <!-- ══ LEGAL ══ -->
@@ -700,13 +711,43 @@ function googleTranslateElementInit(){
   </div>
 </div>
 
-<!-- ══ FAQ ══ -->
-<div class="page" id="page-faq">
-  <div class="page-title-bar">
-    <div class="page-title-icon">💬</div>
-    <div><div class="page-title-text">FAQ</div><div class="page-title-sub">Questions asked by immigrants, answered for immigrants</div></div>
+<!-- ══ JOURNEYS ══ -->
+<div class="page" id="page-journeys" style="background:#0d1f14;padding:0;min-height:100vh;">
+  <div style="background:#081510;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Stories</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Real journeys from real people</div>
+      </div>
+      <button onclick="showShareStory()" style="font-size:11px;padding:6px 14px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
+    </div>
   </div>
-  <div id="faq-list-standalone"></div>
+  <!-- Filter chips -->
+  <div style="display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;">
+    <span onclick="filterStories('all')" id="story-chip-all" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;">All</span>
+    <span onclick="filterStories('fast')" id="story-chip-fast" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Fast (&lt;1yr)</span>
+    <span onclick="filterStories('typical')" id="story-chip-typical" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Typical</span>
+    <span onclick="filterStories('long')" id="story-chip-long" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Long wait</span>
+  </div>
+  <div id="stories-list" style="padding:14px 20px 80px;"></div>
+
+  <!-- Share story modal -->
+  <div id="share-story-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:500;padding:40px 20px;">
+    <div style="background:#1a3020;border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:15px;font-weight:500;color:#fff;">Share your journey</div>
+        <button onclick="hideShareStory()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;">×</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <input id="story-name" placeholder="Your first name" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <input id="story-origin" placeholder="Country of origin → State (e.g. Nigeria → Texas)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <input id="story-months" placeholder="How many months did it take?" type="number" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <textarea id="story-text" placeholder="Share your experience — what surprised you, what you wish you'd known, what helped most…" rows="5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;resize:none;line-height:1.6;"></textarea>
+        <button onclick="submitStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:12px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Submit story</button>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:center;line-height:1.5;">Stories are reviewed before publishing. Your privacy is respected — we only show your first name.</div>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- ══ STATE PICKER MODAL ══ -->
 <div id="state-modal">
@@ -750,13 +791,13 @@ function googleTranslateElementInit(){
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
     <div class="nav-lbl">Coach</div>
   </button>
-  <button class="nav-item" data-page="faq">
-    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><path d="M10 9.5C10 8.4 10.9 7.5 12 7.5C13.1 7.5 14 8.4 14 9.5C14 11 12 12 12 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg></div>
-    <div class="nav-lbl">FAQ</div>
+  <button class="nav-item" data-page="guide">
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/><line x1="8" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/><line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/></svg></div>
+    <div class="nav-lbl">Guide</div>
   </button>
-  <button class="nav-item" data-page="tips">
-    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2.5L14.2 8.5H20.5L15.4 12.3L17.2 18.5L12 14.8L6.8 18.5L8.6 12.3L3.5 8.5H9.8L12 2.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="currentColor" fill-opacity="0.15"/><circle cx="12" cy="11.5" r="2" fill="currentColor"/></svg></div>
-    <div class="nav-lbl">Tips</div>
+  <button class="nav-item" data-page="journeys">
+    <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14C12.31 14 15 16.69 15 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="9" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.15"/><path d="M15.5 19.5C15.5 17.57 16.57 16 18 16C19.43 16 20.5 17.57 20.5 19.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+    <div class="nav-lbl">Stories</div>
   </button>
 </nav>
 
@@ -799,6 +840,48 @@ const DOCS = [
   {emoji:'💊', name:'Medical Exam (I-693)', key:'medical'},
   {emoji:'🧾', name:'Birth Certificate', key:'birth'},
 ];
+
+
+const GUIDE = [
+  {stage:'Filing', type:'tip', warn:false, pin:false, title:'Gather your information weeks before you sit down to fill out the form', body:"The N-400 asks about every address for the past 5 years, every job, every trip outside the country. Start collecting that information early — don't try to remember it all in one sitting."},
+  {stage:'Filing', type:'tip', warn:false, pin:false, title:"Verify the USCIS lockbox mailing address the day you send your packet", body:"Addresses change without notice. Using the wrong one can delay or reject your application with no refund. Always check uscis.gov on the day you mail."},
+  {stage:'Filing', type:'tip', warn:true,  pin:false, title:"USCIS can see every form you've ever filed — inconsistencies are a major red flag", body:"Officers cross-check your entire history. If you said something different on a previous application, be prepared to explain it. Your story must be consistent across every form."},
+  {stage:'Filing', type:'tip', warn:true,  pin:false, title:"Speeding tickets can count as offenses on your application", body:"The form asks about all citations and charges. When in doubt, disclose. Omission is always worse than the underlying incident."},
+  {stage:'Filing', type:'faq', warn:false, pin:false, title:"How long will this whole process take?", body:"Average total time from filing to certificate: 12–24 months. Fastest possible with a clean background at a small field office: 8–10 months. Slowest common scenario (NYC, LA, Chicago): 24–36 months."},
+  {stage:'Filing', type:'faq', warn:false, pin:false, title:"When is the right time to file?", body:"File exactly on your eligibility date — not before, not years after. Every month you wait is a month you're not a citizen. There's no benefit to waiting."},
+  {stage:'Filing', type:'faq', warn:false, pin:false, title:"How long does the background check usually take?", body:"90% of background checks clear within 6 months. Name matches to criminal databases are the most common cause of delays."},
+  {stage:'Biometrics', type:'tip', warn:false, pin:false, title:"Moisturize your hands the night before — not the morning of", body:"Dry fingertips actually scan better than moisturized ones. Skip the lotion the morning of your appointment. Bring your Green Card and appointment notice."},
+  {stage:'Biometrics', type:'tip', warn:false, pin:false, title:"Rescheduling adds weeks — don't miss your biometrics appointment", body:"If you absolutely must reschedule, do it immediately through your USCIS online account. A missed appointment with no rescheduling can stall your case significantly."},
+  {stage:'Biometrics', type:'faq', warn:false, pin:false, title:"What do I need to bring to my biometrics appointment?", body:"Bring your appointment notice and your Permanent Resident Card (green card). Arrive a few minutes early. The appointment itself usually takes 20–30 minutes."},
+  {stage:'Waiting', type:'tip', warn:false, pin:false, title:"Check your USCIS account every few weeks and keep your address current", body:"Cases get delayed because mail goes to an old address. Update your address immediately any time you move — even before you've fully settled in."},
+  {stage:'Waiting', type:'tip', warn:true,  pin:false, title:"Don't call USCIS repeatedly — it can sometimes flag your case for extra review", body:"Calling doesn't speed anything up and can occasionally draw attention to your case in unhelpful ways. Use the USCIS online portal to check status instead."},
+  {stage:'Waiting', type:'tip', warn:false, pin:false, title:"Processing times vary wildly between cases that look identical on paper", body:"A lot comes down to which officer gets assigned your file and how loaded their queue is. Don't read too much into other people's timelines — they mean almost nothing for yours."},
+  {stage:'Waiting', type:'faq', warn:false, pin:false, title:"What slows a background check down?", body:"Name matches to criminal databases are the most common cause. Country of birth is also a major factor — some countries take significantly longer. There's nothing you can do to speed it up."},
+  {stage:'Waiting', type:'faq', warn:false, pin:false, title:"Does where I was born affect my wait time?", body:"Yes. Country of birth is the biggest predictor of background check length. Some countries take significantly longer due to the complexity of verifying records."},
+  {stage:'Waiting', type:'tip', warn:false, pin:false, title:"If you're stuck post-interview, contact your U.S. Senators AND your House representative", body:"File inquiries with all three offices. It doesn't jump the line but it gets a real human looking at your case and can shake loose a decision. Real people have gotten approved within weeks of doing this."},
+  {stage:'Interview', type:'tip', warn:false, pin:true,  title:"95% of the interview is about your N-400 — not the civics questions", body:"Officers go line by line through your application. Know your travel history, addresses, and employers cold. Study your own story as much as you study the 100 civics questions."},
+  {stage:'Interview', type:'tip', warn:false, pin:false, title:"Tell the officer upfront about anything that changed since you filed", body:"New job, new address, travel since filing — disclose it before they ask. Surprises make officers uncomfortable. Honesty doesn't."},
+  {stage:'Interview', type:'tip', warn:false, pin:false, title:"Dress professionally — treat this like the most important interview of your life", body:"Because it is. First impressions matter here more than almost anywhere. People treat you the way you present yourself."},
+  {stage:'Interview', type:'tip', warn:false, pin:false, title:"Ask the officer to repeat a question if you didn't fully understand it", body:"Never answer something just for the sake of answering. It's completely acceptable to say 'Could you repeat that?' — officers expect it and appreciate it over a rushed wrong answer."},
+  {stage:'Interview', type:'faq', warn:false, pin:false, title:"What are my chances of being approved?", body:"About 91% of applicants are approved at or shortly after the interview. Most denials come from failing to meet the continuous residence requirement or misrepresentation on the application."},
+  {stage:'Interview', type:'faq', warn:false, pin:false, title:"What happens if I fail the civics test?", body:"You get a second chance at a rescheduled interview. Failing twice results in denial, but you can reapply. Most people who study consistently pass on the first attempt."},
+  {stage:'Interview', type:'faq', warn:false, pin:false, title:"What if they don't decide on the spot?", body:"The most common reason for continuation is missing or inconsistent documents. You have the legal right to sue USCIS after 120 days with no decision post-interview — and this actually works."},
+  {stage:'Ceremony', type:'tip', warn:false, pin:false, title:"Bring your Green Card — you will surrender it on this day", body:"You'll hand over your Permanent Resident Card at the ceremony. This is expected. Bring it, and bring your appointment notice."},
+  {stage:'Ceremony', type:'tip', warn:false, pin:false, title:"Bring your family and friends and take every photo you can", body:"Some ceremonies are small and quiet, others are in ballparks with hundreds of people from dozens of countries. Either way, it hits differently than you expect. Bring tissues."},
+  {stage:'Ceremony', type:'tip', warn:true,  pin:false, title:"Inspect your certificate before you leave the building", body:"Check your name, date of birth, and every detail are correct. Fixing errors after the fact requires Form N-565 and months of additional waiting."},
+  {stage:'Ceremony', type:'tip', warn:true,  pin:false, title:"You must be home to sign for the certificate if it's mailed — USPS will not leave it", body:"If you miss the delivery, pick it up at your post office as soon as possible. If USPS loses it, get written confirmation from a supervisor — that documentation is your best shot at getting the N-565 replacement fee waived."},
+  {stage:'Ceremony', type:'tip', warn:false, pin:false, title:"The first thing you do after the ceremony: start your U.S. passport application", body:"Go straight from the ceremony to get your passport photos if you can. Make several certified copies of your certificate immediately — you'll need them for your passport, Social Security update, and employer records."},
+];
+
+const STORIES = [
+  {initials:'AM', color:'rgba(93,184,126,0.2)', textColor:'#5db87e', name:'Amara M.', origin:'Nigeria', state:'Texas', months:14, speed:'typical', tags:['Interview', 'Texas'], story:"The interview officer was kind and made me feel at ease. She asked about one of my trips to Lagos and I'm so glad I had my passport ready. My biggest tip: bring every document you ever filed. You won't regret it."},
+  {initials:'JL', color:'rgba(200,149,42,0.2)', textColor:'#c8952a', name:'Jorge L.', origin:'Mexico', state:'California', months:11, speed:'fast', tags:['Filing', 'California'], story:"I was nervous about my taxes from 2019 but the officer didn't even ask. Focus on the N-400 itself. Know every answer you wrote down — that's what matters. I studied my own application more than the civics questions."},
+  {initials:'PK', color:'rgba(93,126,184,0.2)', textColor:'#7ba4e8', name:'Priya K.', origin:'India', state:'New York', months:22, speed:'long', tags:['Long wait', 'Ceremony'], story:"The wait was the hardest part. 18 months of total silence. I questioned everything. But the ceremony was worth every single day of it. Cry your eyes out — everyone does, and nobody judges you for it."},
+  {initials:'SC', color:'rgba(184,93,150,0.2)', textColor:'#e87bc8', name:'Sofia C.', origin:'Brazil', state:'Florida', months:9, speed:'fast', tags:['Filing', 'Interview'], story:"I filed exactly on my 5-year date and had my interview 9 months later. The thing nobody tells you: organize every document by date before you walk in. The officer was impressed and it made everything go smoothly."},
+  {initials:'DT', color:'rgba(93,150,184,0.2)', textColor:'#7bb4e8', name:'David T.', origin:'Philippines', state:'Illinois', months:18, speed:'typical', tags:['Waiting', 'Interview'], story:"Six months of silence after biometrics. I was convinced something was wrong. Then out of nowhere, an interview date. The wait is psychological warfare — but it ends. Stay busy, keep studying, trust the process."},
+];
+
+window._storyFilter = 'all';
 
 const CHECKLIST = [
   {section:'Personal information', items:[
@@ -2517,22 +2600,167 @@ function exitQuiz() {
 }
 
 // ── FAQ STANDALONE ────────────────────────────────────
-function renderFAQStandalone() {
-  const el = document.getElementById('faq-list-standalone');
+function renderFAQStandalone() {}
+function toggleFAQS(i) {}
+
+// ── GUIDE (unified tips + FAQs) ───────────────────────
+window._guideFilter = 'All';
+
+function initGuideChips() {
+  const stages = ['All','Filing','Biometrics','Waiting','Interview','Ceremony'];
+  const el = document.getElementById('guide-chips');
   if (!el) return;
-  el.innerHTML = FAQS.map((f,i) => `
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFAQS(${i})">
-        <span class="faq-q-text">${f.q}</span>
-        <span class="faq-chev" id="fchev-s-${i}">▼</span>
-      </div>
-      <div class="faq-a" id="fans-s-${i}">${f.a}</div>
-    </div>`).join('');
+  el.innerHTML = stages.map(s => `
+    <span onclick="setGuideFilter('${s}')" id="gchip-${s}" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all 0.15s;${s==='All'?'background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);'}">${s}</span>
+  `).join('');
 }
 
-function toggleFAQS(i) {
-  document.getElementById(`fans-s-${i}`).classList.toggle('open');
-  document.getElementById(`fchev-s-${i}`).classList.toggle('open');
+function setGuideFilter(stage) {
+  window._guideFilter = stage;
+  const stages = ['All','Filing','Biometrics','Waiting','Interview','Ceremony'];
+  stages.forEach(s => {
+    const c = document.getElementById('gchip-'+s);
+    if (!c) return;
+    if (s === stage) {
+      c.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;';
+    } else {
+      c.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);';
+    }
+  });
+  renderGuide();
+}
+
+function renderGuide() {
+  const el = document.getElementById('guide-list');
+  const countEl = document.getElementById('guide-count');
+  if (!el) return;
+  const query = (document.getElementById('guide-search')?.value || '').toLowerCase();
+  const filter = window._guideFilter || 'All';
+
+  let items = GUIDE.filter(g => {
+    const matchStage = filter === 'All' || g.stage === filter;
+    const matchSearch = !query || g.title.toLowerCase().includes(query) || g.body.toLowerCase().includes(query);
+    return matchStage && matchSearch;
+  });
+
+  if (countEl) countEl.textContent = items.length + ' articles';
+
+  if (!items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">No results found</div>';
+    return;
+  }
+
+  // Pinned first
+  const pinned = items.filter(g => g.pin);
+  const rest = items.filter(g => !g.pin);
+  const warn = rest.filter(g => g.warn);
+  const normal = rest.filter(g => !g.warn);
+
+  let html = '';
+
+  if (pinned.length && !query) {
+    html += '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin-bottom:10px;">Pinned</div>';
+    html += pinned.map((g,i) => guideCard(g, 'pinned')).join('');
+  }
+
+  if (warn.length && !query) {
+    html += '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin:14px 0 10px;">Watch out for</div>';
+    html += warn.map(g => guideCard(g, 'warn')).join('');
+  }
+
+  const regularLabel = query ? '' : '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin:14px 0 10px;">Tips &amp; FAQs</div>';
+  html += regularLabel + normal.map(g => guideCard(g, 'normal')).join('');
+
+  el.innerHTML = html;
+}
+
+function guideCard(g, variant) {
+  const stageColors = {Filing:'rgba(93,184,126,0.15)',Biometrics:'rgba(93,126,184,0.15)',Waiting:'rgba(200,149,42,0.15)',Interview:'rgba(184,93,150,0.15)',Ceremony:'rgba(93,150,184,0.15)'};
+  const stageTextColors = {Filing:'#5db87e',Biometrics:'#7ba4e8',Waiting:'#c8952a',Interview:'#e87bc8',Ceremony:'#7bb4e8'};
+  const stageTag = `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:${stageColors[g.stage]||'rgba(255,255,255,0.08)'};color:${stageTextColors[g.stage]||'rgba(255,255,255,0.4)'};font-weight:500;">${g.stage}</span>`;
+  const typeTag = `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);">${g.type==='faq'?'FAQ':'Tip'}</span>`;
+
+  if (variant === 'pinned') {
+    return `<div style="background:rgba(93,184,126,0.1);border:1px solid rgba(93,184,126,0.2);border-radius:12px;padding:13px 15px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}${typeTag}</div>
+      <div style="font-size:13px;font-weight:500;color:#fff;line-height:1.45;margin-bottom:5px;">${g.title}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.6;">${g.body}</div>
+    </div>`;
+  }
+  if (variant === 'warn') {
+    return `<div style="background:rgba(226,75,74,0.07);border:1px solid rgba(226,75,74,0.15);border-left:2px solid rgba(226,75,74,0.45);border-radius:0 12px 12px 0;padding:13px 15px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(226,75,74,0.15);color:#f09595;font-weight:500;">Critical</span></div>
+      <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.88);line-height:1.45;margin-bottom:5px;">${g.title}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">${g.body}</div>
+    </div>`;
+  }
+  return `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:13px 15px;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}${typeTag}</div>
+    <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.88);line-height:1.45;margin-bottom:5px;">${g.title}</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">${g.body}</div>
+  </div>`;
+}
+
+// ── JOURNEYS / STORIES ────────────────────────────────
+function renderStories() {
+  const el = document.getElementById('stories-list');
+  if (!el) return;
+  const filter = window._storyFilter || 'all';
+  const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
+
+  if (!items.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">No stories yet for this filter</div>';
+    return;
+  }
+
+  el.innerHTML = items.map(s => `
+    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
+        <div>
+          <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);">${s.name}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);">${s.origin} → ${s.state} · ${s.months} months</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.65;font-style:italic;">"${s.story}"</div>
+      <div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function filterStories(f) {
+  window._storyFilter = f;
+  const chips = ['all','fast','typical','long'];
+  chips.forEach(c => {
+    const el = document.getElementById('story-chip-'+c);
+    if (!el) return;
+    if (c === f) {
+      el.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;';
+    } else {
+      el.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);';
+    }
+  });
+  renderStories();
+}
+
+function showShareStory() {
+  document.getElementById('share-story-modal').style.display = 'block';
+}
+function hideShareStory() {
+  document.getElementById('share-story-modal').style.display = 'none';
+}
+function submitStory() {
+  const name = document.getElementById('story-name').value.trim();
+  const origin = document.getElementById('story-origin').value.trim();
+  const months = document.getElementById('story-months').value;
+  const text = document.getElementById('story-text').value.trim();
+  if (!name || !text) { showToast('Please fill in your name and story'); return; }
+  hideShareStory();
+  showToast('Thank you! Your story has been submitted for review.');
+  document.getElementById('story-name').value = '';
+  document.getElementById('story-origin').value = '';
+  document.getElementById('story-months').value = '';
+  document.getElementById('story-text').value = '';
 }
 
 // ── LANGUAGE ─────────────────────────────────────────
