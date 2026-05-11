@@ -714,7 +714,7 @@ function googleTranslateElementInit(){
         <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Stories</div>
         <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">Real journeys · real people</div>
       </div>
-      <button onclick="showShareStory()" style="font-size:10px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
+      <button onclick="showShareStory()" class="stories-share-btn" style="font-size:10px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
     </div>
   </div>
   <!-- Filter chips -->
@@ -2750,9 +2750,11 @@ async function renderStories() {
       story: s.story_text,
       likes: 0,
     }));
-    // Show/hide filter chips
+    // Show/hide filter chips — only show if there are community stories AND user has no story
     const chipsEl = document.getElementById('stories-filter-chips');
-    if (chipsEl) chipsEl.style.display = STORIES.length ? 'flex' : 'none';
+    if (chipsEl) chipsEl.style.display = 'none'; // always hidden for now
+    // Hide/show share button based on whether user already has a story
+    const shareBtn = document.querySelector('#page-journeys button[onclick="showShareStory()"]');
     const filter = window._storyFilter || 'all';
     const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
@@ -2817,23 +2819,31 @@ async function renderStories() {
       window._myStoryMonths = myStory.months;
       window._myStoryName = myStory.name;
 
-      html += `<div style="margin:14px 16px 0;border-radius:12px;background:rgba(93,184,126,0.08);border:1px solid rgba(93,184,126,0.2);overflow:hidden;">
-        <div style="padding:10px 14px;background:rgba(93,184,126,0.1);border-bottom:1px solid rgba(93,184,126,0.15);display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:10px;font-weight:500;color:#5db87e;text-transform:uppercase;letter-spacing:0.06em;">Your story</span>
+      // Hide share button since user already has a story
+      const shareBtnEl = document.querySelector('#page-journeys .stories-share-btn');
+      if (shareBtnEl) shareBtnEl.style.display = 'none';
+
+      html += `<div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(93,184,126,0.18);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#5db87e;flex-shrink:0;">${(myStory.name||'Me').substring(0,2).toUpperCase()}</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${myStory.name || 'You'}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${myStory.origin || ''} ${myStory.months ? '· ' + myStory.months + ' months' : ''}</div>
+            </div>
+          </div>
           <span style="font-size:9px;padding:2px 8px;border-radius:99px;background:${statusBg};color:${statusColor};font-weight:500;">${statusLabel}</span>
         </div>
-        <div style="padding:14px;">
-          <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:12px;font-style:italic;">"${myStory.story_text}"</div>
-          <div style="display:flex;gap:8px;">
-            <button onclick="editMyStory()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;padding:7px;font-size:11px;color:rgba(255,255,255,0.6);font-family:inherit;cursor:pointer;">Edit</button>
-            <button onclick="deleteMyStory()" style="flex:1;background:rgba(226,75,74,0.08);border:1px solid rgba(226,75,74,0.2);border-radius:99px;padding:7px;font-size:11px;color:#f09595;font-family:inherit;cursor:pointer;">Delete</button>
-          </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${myStory.story_text}"</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="editMyStory()" style="padding:6px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:99px;font-size:11px;color:rgba(255,255,255,0.55);font-family:inherit;cursor:pointer;">Edit</button>
+          <button onclick="deleteMyStory()" style="padding:6px 16px;background:none;border:1px solid rgba(226,75,74,0.25);border-radius:99px;font-size:11px;color:rgba(240,149,149,0.7);font-family:inherit;cursor:pointer;">Delete</button>
         </div>
       </div>`;
 
       // Divider before others
       if (items.length > 0) {
-        html += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);padding:16px 16px 8px;">From the community</div>`;
+        html += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);padding:14px 16px 6px;">From the community</div>`;
       }
     }
 
@@ -2913,6 +2923,8 @@ async function deleteMyStory() {
     if (error) throw error;
     window._myStoryId = null;
     showToast('Story deleted');
+    const sbEl = document.querySelector('#page-journeys .stories-share-btn');
+    if (sbEl) sbEl.style.display = '';
     renderStories();
     renderHomeStoryCard();
   } catch(e) {
