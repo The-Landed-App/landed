@@ -31,10 +31,20 @@
       return;
     }
 
-    const { data: profile } = await window._sb.from('profiles')
+    const { data: profile, error: profileError } = await window._sb.from('profiles')
       .select('paid, state')
       .eq('id', session.user.id)
       .single();
+
+    // If profile fetch fails (network error etc), don't kick the user out
+    if (profileError) {
+      console.warn('Profile fetch error:', profileError);
+      // Still set session so app works, just without paid check
+      window._sbSession = session;
+      setTimeout(() => renderHomeStoryCard(), 200);
+      setTimeout(() => unlockMia(), 100);
+      return;
+    }
 
     if (!profile?.paid) {
       await window._sb.auth.signOut();
@@ -51,8 +61,9 @@
     setTimeout(() => unlockMia(), 100);
 
   } catch(e) {
-    // If Supabase fails to load, don't block the app
+    // If Supabase fails, don't redirect - just warn and let the app load
     console.warn('Auth check failed:', e);
+    // Don't redirect on error - could be a network issue
   }
 })();
 </script>
