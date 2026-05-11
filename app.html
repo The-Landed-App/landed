@@ -2737,7 +2737,7 @@ async function renderStories() {
       .order('created_at', { ascending: false });
     if (error) throw error;
     // Map DB rows to display format
-    const STORIES = (data || []).map(s => ({
+    const STORIES = (data || []).filter(s => s.user_id !== userId).map(s => ({
       initials: s.name ? s.name.substring(0,2).toUpperCase() : '?',
       color: 'rgba(93,184,126,0.18)',
       textColor: '#5db87e',
