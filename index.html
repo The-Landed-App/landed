@@ -459,7 +459,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
     </div>
     <div class="hero-right-bottom">
       <div class="price-row">
-        <span class="price-num">$2.99</span>
+        <span class="price-num">$3.99</span>
         <span class="price-note">one-time · yours forever</span>
       </div>
       <div class="cta-row" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -482,7 +482,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
   <div class="features-header" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:48px;">
     <div>
       <p class="features-label">What's inside</p>
-      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,38px);font-weight:500;color:var(--forest);line-height:1.25;margin:0;">Everything you need, nothing you don't — and Mia is always there if you get stuck.</h2>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,38px);font-weight:500;color:var(--forest);line-height:1.25;margin:0;">Everything you need, nothing you don't — all in one place.</h2>
     </div>
     <!-- Cycling quote -->
     <div id="quote-block" style="position:relative;padding:32px 36px;background:var(--forest);border-radius:18px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;">
@@ -563,7 +563,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
       <div class="stat-label">Know exactly what to expect before your interview day</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num">$2.99</div>
+      <div class="stat-num">$3.99</div>
       <div class="stat-label">One-time cost — no subscription, no upsells</div>
     </div>
     <div class="stat-card">
@@ -624,7 +624,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
       <div id="auth-sub" class="auth-sub">Start your path to citizenship today.</div>
       <div class="auth-price-pill">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        $2.99 one-time · instant access
+        $3.99 one-time · instant access
       </div>
     </div>
     <div class="auth-form">
@@ -635,7 +635,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
       </div>
       <input class="auth-input" id="auth-email" type="email" placeholder="Email address"/>
       <input class="auth-input" id="auth-password" type="password" placeholder="Password"/>
-      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $2.99</button>
+      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $3.99</button>
       <div class="auth-divider"><span>or</span></div>
       <div class="auth-switch" id="auth-switch-text">
         Already have an account? <button onclick="switchAuthMode('signIn')">Sign in</button>
@@ -680,7 +680,7 @@ function setSignUpMode(){
   _authMode = 'signUp';
   document.getElementById('auth-title').textContent = 'Create your account';
   document.getElementById('auth-sub').textContent = 'Start your path to citizenship today.';
-  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $2.99';
+  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $3.99';
   document.getElementById('name-field').style.display = 'flex';
   document.getElementById('auth-switch-text').innerHTML = 'Already have an account? <button onclick="switchAuthMode(\'signIn\')">Sign in</button>';
 }
@@ -772,7 +772,7 @@ async function handleAuth(){
   } catch(e) {
     err.textContent = e.message || 'Something went wrong. Please try again.';
     err.classList.add('show');
-    btn.textContent = _authMode==='signUp' ? 'Create account & pay $2.99' : 'Sign in';
+    btn.textContent = _authMode==='signUp' ? 'Create account & pay $3.99' : 'Sign in';
     btn.disabled = false;
   }
 }
@@ -837,7 +837,7 @@ document.getElementById('auth-modal').addEventListener('click', e => {
 </style>
 
 <!-- Floating button -->
-<button id="mia-btn" onclick="toggleMia()">
+<button id="mia-btn" style="display:none;" onclick="toggleMia()">
   <div class="mia-avatar">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
   </div>
@@ -849,7 +849,7 @@ document.getElementById('auth-modal').addEventListener('click', e => {
 </button>
 
 <!-- Chat panel -->
-<div id="mia-panel">
+<div id="mia-panel" style="display:none;">
   <div class="mia-header">
     <div class="mia-header-avatar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#a8dbb8" stroke-width="1.5"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="#a8dbb8" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -878,8 +878,8 @@ document.getElementById('auth-modal').addEventListener('click', e => {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg>
     </div>
     <div class="mia-gate-title">Mia is a paid feature</div>
-    <div class="mia-gate-sub">Get Landed for $2.99 to unlock Mia and everything else — yours forever.</div>
-    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $2.99</button>
+    <div class="mia-gate-sub">Get Landed for $3.99 to unlock Mia and everything else — yours forever.</div>
+    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $3.99</button>
     <span class="mia-gate-price">One-time · Instant access · No subscription</span>
   </div>
 
@@ -940,7 +940,7 @@ WHAT YOU KNOW:
 3. CIVICS TEST: 100 official USCIS questions on American history, government, geography.
 4. ENGLISH TEST: Reading comprehension sentences.
 5. PROCESSING TIMES: Average 12–24 months. Fastest: 8–10 months. Slowest (NYC/LA/Chicago): 24–36 months. ~91% approval rate at interview.
-6. LANDED: $2.99 one-time, instant access, includes timeline tracker, N-400 guide, interview coach, document center, pro tips, legal help finder, and Mia (AI assistant).
+6. LANDED: $3.99 one-time, instant access, includes timeline tracker, N-400 guide, interview coach, document center, pro tips, legal help finder, and pro tips.
 
 STRICT RULES:
 1. Only answer questions about naturalization and Landed.
@@ -1139,10 +1139,10 @@ setInterval(showNavAffirmation, 7000);
       <div class="gift-header">
         <div class="gift-icon">🎁</div>
         <div class="gift-title">Give the gift of citizenship</div>
-        <div class="gift-sub">Know someone on the path? Send them everything they need for $2.99 — no subscription, yours forever.</div>
+        <div class="gift-sub">Know someone on the path? Send them everything they need for $3.99 — no subscription, yours forever.</div>
         <div class="gift-price-pill">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          $2.99 one-time · instant delivery
+          $3.99 one-time · instant delivery
         </div>
       </div>
       <div class="gift-form">
@@ -1158,7 +1158,7 @@ setInterval(showNavAffirmation, 7000);
         <input class="gift-input" id="gift-sender-email" type="email" placeholder="Your email (for receipt)"/>
         <textarea class="gift-input" id="gift-note" placeholder="Personal note (optional) — e.g. 'Rooting for you every step of the way.'"></textarea>
         <button class="gift-submit" id="gift-submit-btn" onclick="submitGift()">
-          <span>Send the gift — $2.99</span>
+          <span>Send the gift — $3.99</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px;">They'll receive a beautiful email with their activation link instantly.</p>
@@ -1241,7 +1241,7 @@ async function submitGift() {
   } catch(e) {
     err.textContent = e.message || 'Something went wrong. Please try again.';
     err.classList.add('show');
-    btn.innerHTML = '<span>Send the gift — $2.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    btn.innerHTML = '<span>Send the gift — $3.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     btn.disabled = false;
   }
 }
