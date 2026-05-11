@@ -233,8 +233,23 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
 <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<script type="text/javascript">
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({
+    pageLanguage:'en',
+    autoDisplay:false
+  },'gt-el');
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<style>
+.goog-te-banner-frame,.goog-te-ftab-float{display:none!important;}
+body{top:0!important;position:static!important;}
+#gt-el{display:none;}
+</style>
 </head>
 <body>
+<div id="gt-el"></div>
 
 <!-- NAV -->
 <nav>
@@ -249,7 +264,21 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
   </div>
   <div class="nav-right">
     <span id="nav-affirmation" style="font-size:13px;color:rgba(232,223,200,0.6);font-family:'Playfair Display',serif;font-style:italic;transition:opacity 0.5s;"></span>
-    <button class="nav-link" onclick="openHelp()">Contact</button>
+    <select onchange="setLang(this.value)" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:rgba(232,223,200,0.8);font-size:11px;padding:4px 8px;font-family:inherit;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;">
+  <option value="en">🌐 EN</option>
+  <option value="es">ES</option>
+  <option value="fr">FR</option>
+  <option value="pt">PT</option>
+  <option value="zh-CN">中文</option>
+  <option value="hi">हिन्दी</option>
+  <option value="ar">AR</option>
+  <option value="ru">RU</option>
+  <option value="ko">한국어</option>
+  <option value="vi">VI</option>
+  <option value="tl">TL</option>
+  <option value="ht">HT</option>
+</select>
+<button class="nav-link" onclick="openHelp()">Contact</button>
     <button class="nav-cta" onclick="openAuth('signIn')">Sign in</button>
   </div>
 </nav>
@@ -617,7 +646,7 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
     </div>
     <div class="stat-card">
       <div class="stat-num">65+</div>
-      <div class="stat-label">Languages supported for document translation</div>
+      <div class="stat-label">Languages supported for document translation via our legal help finder</div>
     </div>
   </div>
 </section>
@@ -1424,5 +1453,18 @@ function closeLegal() {
 }
 </script>
 
+<script>
+function setLang(lang) {
+  const apply = setInterval(() => {
+    const sel = document.querySelector('.goog-te-combo');
+    if (sel) {
+      clearInterval(apply);
+      sel.value = lang;
+      sel.dispatchEvent(new Event('change'));
+    }
+  }, 100);
+  setTimeout(() => clearInterval(apply), 5000);
+}
+</script>
 </body>
 </html>
