@@ -2805,19 +2805,6 @@ async function renderStories() {
     return;
   }
 
-  // Also fetch current user's own story (any status)
-    let myStory = null;
-    if (userId) {
-      const { data: myData } = await window._sb
-        .from('stories')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      myStory = myData;
-    }
-
     // Build HTML
     let html = '';
 
