@@ -539,7 +539,7 @@ function googleTranslateElementInit(){
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">After mailing your N-400, enter your USPS tracking number here. It will show on your home dashboard.</div>
     <div id="n400-mail-no-tracking">
       <div style="display:flex;gap:8px;">
-        <input id="mail-tracking-input" type="text" placeholder="e.g. 9400111899223397614928" style="flex:1;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--forest);background:#fff;outline:none;" onkeydown="if(event.key==='Enter')saveTrackingNumber()"/>
+        <input id="mail-tracking-input" type="text" placeholder="e.g. 9400111899223397614928" style="flex:1;border:1.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;color:var(--forest);background:#faf8f4;outline:none;" onkeydown="if(event.key==='Enter')saveTrackingNumber()"/>
         <button onclick="saveTrackingNumber()" style="background:var(--forest);color:var(--cream2);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Save</button>
       </div>
     </div>
@@ -2057,7 +2057,7 @@ function renderScoreHistory() {
       <div><span style="font-size:13px;font-weight:500;color:var(--forest);">${label}</span><span style="font-size:11px;color:var(--muted);margin-left:8px;">${latest.date}</span></div>
       <div style="display:flex;align-items:center;gap:8px;">
         ${trend !== null ? `<span style="font-size:11px;color:${trend >= 0 ? 'var(--grass)' : '#c8952a'};">${trend >= 0 ? '▲' : '▼'} ${Math.abs(trend)}%</span>` : ''}
-        <span style="font-family:'Playfair Display',serif;font-size:20px;color:${pct >= 80 ? 'var(--grass)' : pct >= 60 ? '#c8952a' : '#c0392b'};font-weight:500;">${pct}%</span>
+        <span style="font-size:14px;font-weight:500;color:${pct >= 80 ? 'var(--grass)' : pct >= 60 ? '#c8952a' : '#c0392b'};">${pct}%</span>
       </div>
     </div>`;
   };
