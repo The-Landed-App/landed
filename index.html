@@ -1222,10 +1222,11 @@ async function submitGift() {
   }
 
   err.classList.remove('show');
-  btn.innerHTML = '<span>Processing…</span>';
+  btn.innerHTML = '<span>Checking…</span>';
   btn.disabled = true;
 
   try {
+
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
       method: 'POST',
       headers: {
@@ -1245,13 +1246,21 @@ async function submitGift() {
     });
     const data = await res.json();
     if (data.url) {
-      // Redirect to Stripe Checkout
       window.location.href = data.url;
+    } else if (data.error === 'recipient_has_account') {
+      err.textContent = 'It looks like this person already has Landed! Consider gifting to someone else who is on the path.';
+      err.classList.add('show');
+      btn.innerHTML = '<span>Send the gift — $3.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btn.disabled = false;
+      return;
     } else {
-      throw new Error(data.error || JSON.stringify(data) || 'Something went wrong');
+      throw new Error(data.error || 'Something went wrong');
     }
   } catch(e) {
-    err.textContent = e.message || 'Something went wrong. Please try again.';
+    const rawMsg = e.message || '';
+    err.textContent = rawMsg === 'recipient_has_account'
+      ? 'It looks like this person already has Landed! Consider gifting to someone else who is on the path.'
+      : 'Something went wrong — please try again.';
     err.classList.add('show');
     btn.innerHTML = '<span>Send the gift — $3.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     btn.disabled = false;
