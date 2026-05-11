@@ -32,7 +32,7 @@
     }
 
     const { data: profile } = await window._sb.from('profiles')
-      .select('paid')
+      .select('paid, state')
       .eq('id', session.user.id)
       .single();
 
@@ -44,7 +44,9 @@
 
     // ✅ Authenticated + paid
     window._sbSession = session;
-setTimeout(() => renderHomeStoryCard(), 200);
+    // Load user's state preference from profile
+    if (profile?.state) window._userState = profile.state;
+    setTimeout(() => renderHomeStoryCard(), 200);
     // Unlock Mia once DOM is ready
     setTimeout(() => unlockMia(), 100);
 
@@ -1101,7 +1103,9 @@ function saveState() {
 
 // ── STATE SELECTION ───────────────────────────────────
 function getSelectedState() {
-  return localStorage.getItem('landed_state') || null;
+  // Try profile first, fall back to localStorage
+  if (window._userState) return window._userState;
+  try { return localStorage.getItem('landed_state') || null; } catch(e) { return null; }
 }
 
 function initState() {
@@ -1132,7 +1136,12 @@ function dismissStateModal() {
 function saveStateFromModal() {
   const val = document.getElementById('state-select-modal').value;
   if (!val) { showToast('Please select your state'); return; }
-  localStorage.setItem('landed_state', val);
+  try { localStorage.setItem('landed_state', val); } catch(e) {}
+  window._userState = val;
+  // Also save to Supabase profile
+  if (window._sb && window._sbSession) {
+    window._sb.from('profiles').update({ state: val }).eq('id', window._sbSession.user.id).then(() => {});
+  }
   dismissStateModal();
   renderStateIndicator();
   showToast('📍 State set to ' + val);
@@ -3270,6 +3279,8 @@ async function sendMia(){
   addMiaTyping();
   try{
     const session = window._sbSession || (await window._sb.auth.getSession()).data.session;
+    let systemPrompt;
+    try { systemPrompt = buildMiaSystemPrompt(); } catch(pe) { console.error('System prompt error:', pe); systemPrompt = 'You are Mia, a helpful assistant for the Landed naturalization app.'; }
     const res=await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/mia',{
       method:'POST',
       headers:{
@@ -3277,18 +3288,18 @@ async function sendMia(){
         'Authorization': `Bearer ${session.access_token}`,
       },
       body:JSON.stringify({
-        system:buildMiaSystemPrompt(),
+        system:systemPrompt,
         messages:window._miaHistory
       })
     });
     const data=await res.json();
+    console.log('Mia response:', JSON.stringify(data).substring(0,200));
     removeMiaTyping();
     const reply = data.content?.[0]?.text || "I'm having trouble right now — try again in a moment.";
     addMiaMsg(reply,'mia');
     window._miaHistory.push({role:'assistant', content:reply});
-    // Keep history to last 10 exchanges to avoid token limits
     if(window._miaHistory.length > 20) window._miaHistory = window._miaHistory.slice(-20);
-  }catch(e){removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
+  }catch(e){console.error('Mia error:', e);removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
 }
 function addMiaMsg(text,role){
   const msgs=document.getElementById('mia-msgs');
