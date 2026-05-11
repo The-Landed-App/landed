@@ -2615,13 +2615,15 @@ function toggleFAQS(i) {}
 window._faqsFilter = 'All';
 
 function initFAQsLayout() {
+  window._faqsFilter = 'All';
   const stages = ['All','Filing','Biometrics','Waiting','Interview','Ceremony'];
   const sidebar = document.getElementById('faqs-sidebar');
   if (!sidebar) return;
   sidebar.innerHTML = stages.map(s => `
     <div onclick="setFAQFilter('${s}')" id="fchip-${s}" style="padding:9px 10px;font-size:10px;line-height:1.35;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;${s==='All'?'color:#5db87e;border-left-color:#5db87e;background:rgba(93,184,126,0.07);':'color:rgba(255,255,255,0.4);'}">${s}</div>
   `).join('');
-  renderFAQs();
+  // Use requestAnimationFrame to ensure DOM is painted before rendering content
+  requestAnimationFrame(() => renderFAQs());
 }
 
 function setFAQFilter(stage) {
