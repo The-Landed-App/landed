@@ -2689,7 +2689,7 @@ function renderFAQs() {
   const normal = rest.filter(g => !g.warn);
 
   let html = '';
-  if (pinned.length && !query) {
+  if (pinned.length && !rawQuery) {
     html += '<div style="font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);margin-bottom:8px;">Pinned</div>';
     html += pinned.map(g => faqCard(g,'pinned')).join('');
   }
