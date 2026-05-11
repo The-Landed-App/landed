@@ -3437,8 +3437,11 @@ async function sendMia(){
       })
     });
     const data=await res.json();
-    console.log('Mia response:', JSON.stringify(data).substring(0,200));
     removeMiaTyping();
+    if(res.status === 429 || data.error === 'daily_limit_reached') {
+      addMiaMsg("You've reached your 10 message daily limit — I'll be back tomorrow! In the meantime, the FAQs and Tips sections have a lot of answers. 🌿",'mia');
+      return;
+    }
     const reply = data.content?.[0]?.text || "I'm having trouble right now — try again in a moment.";
     addMiaMsg(reply,'mia');
     window._miaHistory.push({role:'assistant', content:reply});
