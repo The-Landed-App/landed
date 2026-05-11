@@ -3120,7 +3120,7 @@ function unlockMia(){
 }
 function buildMiaSystemPrompt() {
   // ── User's live app state ──────────────────────────
-  const activeStep = STEPS.find(s => s.status === 'active') || STEPS.find(s => s.status === 'pending');
+  const activeStep = STEPS.find((s,i) => getStepStatus(i) === 'active') || STEPS.find((s,i) => getStepStatus(i) === 'pending');
   const doneSteps = STEPS.filter((s,i) => getStepStatus(i) === 'done').map(s => s.name).join(', ') || 'None yet';
   const civicsScores = scores.filter(s => s.type === 'civics');
   const englishScores = scores.filter(s => s.type === 'english');
@@ -3208,7 +3208,7 @@ HOW TO USE THE APP:
 YOUR KNOWLEDGE — you know everything inside the Landed app:
 
 1. THE NATURALIZATION TIMELINE (8 steps):
-${STEPS.map(s => `- ${s.emoji} ${s.name} (${s.time}) — ${s.status}`).join('\n')}
+${STEPS.map((s,i) => `- ${s.emoji} ${s.name} (${s.time}) — ${getStepStatus(i)}`).join('\n')}
 
 2. THE N-400 CHECKLIST (${clTotal} items across 9 sections):
 ${allExplains}
