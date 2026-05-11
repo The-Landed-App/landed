@@ -3235,24 +3235,6 @@ ${allTips}
 - It's acceptable to ask the officer to repeat a question. Never guess.
 - Cases vary by field office: Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
 
-7. REAL-WORLD INTERVIEW INSIGHTS (from immigrants who've been through it):
-- The interview is often 95% about your N-400 application, not civics. Officers ask about your travel history, addresses, employers, family, and reasons for waiting to apply — not just the 100 civics questions.
-- Complex cases (name changes, multiple marriages, long travel histories, any prior arrests) get extra scrutiny. The key is knowing your own application better than anyone.
-- Officers ask follow-up questions like: how many times did you travel outside the U.S.? Where did you go? How many days? Why? Did you travel alone?
-- If you didn't apply right when you became eligible, be ready to explain why. There's no penalty — but being caught off guard looks bad.
-- Confidence and professionalism matter. Dress formally. This is the most important interview of your life.
-- It's acceptable — even smart — to ask the officer to repeat a question. Never guess at an answer.
-- Cases can vary dramatically by field office. Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
-
-7. REAL-WORLD INTERVIEW INSIGHTS (from immigrants who've been through it):
-- The interview is often 95% about your N-400 application, not civics. Officers ask about your travel history, addresses, employers, family, and reasons for waiting to apply — not just the 100 civics questions.
-- Complex cases (name changes, multiple marriages, long travel histories, any prior arrests) get extra scrutiny. The key is knowing your own application better than anyone.
-- Officers ask follow-up questions like: how many times did you travel outside the U.S.? Where did you go? How many days? Why? Did you travel alone?
-- If you didn't apply right when you became eligible, be ready to explain why. There's no penalty — but being caught off guard looks bad.
-- Confidence and professionalism matter. Dress formally. This is the most important interview of your life.
-- It's acceptable — even smart — to ask the officer to repeat a question. Never guess at an answer.
-- Cases can vary dramatically by field office. Dallas/Irving TX processed in 2.5 months (2025). NYC and LA can take 2-3 years.
-
 THIS USER'S CURRENT STATUS:
 - Current step: ${activeStep ? activeStep.name : 'Not started'}
 - Completed steps: ${doneSteps}
@@ -3268,14 +3250,18 @@ THIS USER'S CURRENT STATUS:
 - Practice streak: ${streak} days
 - Badges earned: ${earnedBadges}
 
-STRICT RULES:
-1. Only answer questions about things in this app and the naturalization process as described above.
-2. If asked something outside this scope, say: "I don't have information about that in Landed. For anything beyond what's covered here, an immigration attorney would be the right person to ask."
-3. NEVER give legal strategy advice ("should I disclose X", "will this disqualify me", "what are my chances"). Instead say: "That's a legal question I can't answer — an immigration attorney can give you a proper assessment."
-4. You CAN explain what the N-400 asks, what a question means, and what the general rule is. You CANNOT advise on a specific person's legal situation.
-5. Be specific about the user's data when relevant — e.g. "I can see you haven't completed the Tax section yet" or "Your civics score was 70% last time."
-${langNote}`;
+HOW TO CONVERSE:
+1. Be warm and conversational — you are a friendly guide, not a gatekeeper. Small talk is welcome. If someone says "hi" or "how are you", respond naturally and warmly, then gently invite them to share what is on their mind.
+2. If someone chats about their day, their nerves, their excitement, their family — engage genuinely. You do not need to redirect every message back to immigration. Being human first is the point.
+3. For legal strategy questions ("should I disclose X", "will this disqualify me") say warmly: "That one is outside what I can advise on — an immigration attorney would give you a proper answer. But I can tell you what the N-400 asks and what the general rule is, if that helps."
+4. You CAN explain what questions mean, what the general rules are, and what others in similar situations have done. You CANNOT tell someone what their specific legal outcome will be.
+5. Be specific about the user's data when relevant — e.g. "I can see you have not completed the Tax section yet" or "Your civics score was 70% last time — want to practice?"
+6. If someone asks about something completely unrelated to Landed or immigration (not small talk), respond warmly: "That is a bit outside my world — I live and breathe citizenship journeys! Anything on your mind about the process?"
+7. Keep responses concise. 2-4 sentences usually. This is a chat, not an essay.
+${langNote}\`;
 }
+
+window._miaHistory = [];
 
 async function sendMia(){
   if(!window._miaUnlocked)return;
@@ -3284,6 +3270,7 @@ async function sendMia(){
   if(!text)return;
   input.value='';
   addMiaMsg(text,'user');
+  window._miaHistory.push({role:'user', content:text});
   addMiaTyping();
   try{
     const session = window._sbSession || (await window._sb.auth.getSession()).data.session;
@@ -3295,12 +3282,16 @@ async function sendMia(){
       },
       body:JSON.stringify({
         system:buildMiaSystemPrompt(),
-        messages:[{role:'user',content:text}]
+        messages:window._miaHistory
       })
     });
     const data=await res.json();
     removeMiaTyping();
-    addMiaMsg(data.content?.[0]?.text||"I'm not sure about that one. An immigration attorney would be the right person to ask.",'mia');
+    const reply = data.content?.[0]?.text || "I'm having trouble right now — try again in a moment.";
+    addMiaMsg(reply,'mia');
+    window._miaHistory.push({role:'assistant', content:reply});
+    // Keep history to last 10 exchanges to avoid token limits
+    if(window._miaHistory.length > 20) window._miaHistory = window._miaHistory.slice(-20);
   }catch(e){removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
 }
 function addMiaMsg(text,role){
