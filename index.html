@@ -1219,7 +1219,10 @@ async function submitGift() {
   try {
     const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
       body: JSON.stringify({
         email: senderEmail,
         userId: 'gift',
@@ -1227,7 +1230,7 @@ async function submitGift() {
         recipient: { email: recipientEmail, fname: recipientFname, lname: recipientLname },
         sender: { name: senderName, email: senderEmail },
         note,
-        successUrl: window.location.origin + window.location.pathname + '?gift=success',
+        successUrl: 'https://thelandedapp.com/?gift=success',
         cancelUrl: 'https://thelandedapp.com/',
       })
     });
@@ -1236,7 +1239,7 @@ async function submitGift() {
       // Redirect to Stripe Checkout
       window.location.href = data.url;
     } else {
-      throw new Error(data.error || 'Something went wrong');
+      throw new Error(data.error || JSON.stringify(data) || 'Something went wrong');
     }
   } catch(e) {
     err.textContent = e.message || 'Something went wrong. Please try again.';
