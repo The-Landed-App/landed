@@ -771,14 +771,14 @@ function setSignInMode(){
   document.getElementById('auth-submit-btn').textContent = 'Sign in';
   document.getElementById('name-field').style.display = 'none';
   document.getElementById('auth-price-pill').style.display = 'none';
-  document.getElementById('auth-switch-text').innerHTML = 'New here? <button onclick="switchAuthMode(\'signUp\')">Create account</button>';
+  document.getElementById('auth-switch-text').innerHTML = 'New here? <button onclick="switchAuthMode(\'signUp\')">Create account</button> · <button onclick="sendPasswordReset()">Forgot password?</button>';
 }
 
 function switchAuthMode(mode){
   mode === 'signIn' ? setSignInMode() : setSignUpMode();
 }
 
-async function sendToCheckout(email, userId) {
+async function sendToCheckout(email, userId, credentials) {
   const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
     method: 'POST',
     headers: {
@@ -788,7 +788,10 @@ async function sendToCheckout(email, userId) {
     body: JSON.stringify({
       email,
       userId,
-      successUrl: 'https://thelandedapp.com/app',
+      fname: credentials?.fname || '',
+      lname: credentials?.lname || '',
+      password: credentials?.password || '',
+      successUrl: 'https://thelandedapp.com/?paid=success',
       cancelUrl: 'https://thelandedapp.com/'
     })
   });
@@ -813,26 +816,9 @@ async function handleAuth(){
 
   try {
     if(_authMode === 'signUp') {
-      // 1. Try to create Supabase user
-      const { data, error } = await window._sb.auth.signUp({
-        email, password,
-        options: { data: { first_name: fname, last_name: lname } }
-      });
-
-      // If already registered, sign them in instead
-      if(error && (error.message.includes('already registered') || error.message.includes('User already registered'))) {
-        const { data: signInData, error: signInError } = await window._sb.auth.signInWithPassword({ email, password });
-        if(signInError) throw signInError;
-        const { data: profile } = await window._sb.from('profiles')
-          .select('paid').eq('id', signInData.user.id).single();
-        if(profile?.paid) { window.location.replace('https://thelandedapp.com/app'); return; }
-        await sendToCheckout(email, signInData.user.id);
-        return;
-      }
-      if(error) throw error;
-
-      // 2. Create Stripe checkout session
-      await sendToCheckout(email, data.user.id);
+      // Don't create account yet — send to Stripe first
+      // Account is created by the webhook after payment is confirmed
+      await sendToCheckout(email, null, { fname, lname, password });
 
     } else {
       // Sign in
@@ -853,7 +839,7 @@ async function handleAuth(){
     const msg = e.message || '';
     if (msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('credentials')) {
       err.textContent = _authMode === 'signUp'
-        ? 'An account with this email already exists. Try signing in instead, or use a different email.'
+        ? 'An account with this email already exists but the password is incorrect. Try signing in below, or reset your password.'
         : 'Incorrect email or password. Please try again.';
     } else {
       err.textContent = msg || 'Something went wrong. Please try again.';
@@ -1475,5 +1461,29 @@ function setLang(lang) {
   setTimeout(() => clearInterval(apply), 5000);
 }
 </script>
+
+<script>
+// If returning from Stripe after successful payment, show sign in prompt
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('paid') === 'success') {
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        // Switch to sign in mode and show success message
+        switchAuthMode('signIn');
+        openAuth('signIn');
+        const err = document.getElementById('auth-error');
+        if (err) {
+          err.textContent = 'Payment confirmed! Sign in to access your Landed kit.';
+          err.style.color = '#2d6647';
+          err.style.background = '#edf7f0';
+          err.classList.add('show');
+        }
+      }, 500);
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
