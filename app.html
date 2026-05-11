@@ -2851,7 +2851,7 @@ async function submitStory() {
     });
     if (!res.ok) throw new Error('Submission failed');
     hideShareStory();
-    showToast('Thank you for sharing your journey 🙏');
+    showToast('Thank you! Your story may take a few days to appear while we review it 🙏');
     document.getElementById('story-name').value = '';
     document.getElementById('story-origin').value = '';
     document.getElementById('story-months').value = '';
