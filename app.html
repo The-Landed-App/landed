@@ -31,17 +31,17 @@
       return;
     }
 
-    const { data: profile } = await window._sb.from('profiles')
+    const { data: profile, error: profileError } = await window._sb
+      .from('profiles')
       .select('paid, state')
       .eq('id', session.user.id)
       .single();
 
-    if (!profile?.paid) {
+    if (profileError || !profile || !profile.paid) {
       await window._sb.auth.signOut();
       window.location.replace(LANDING);
       return;
     }
-
     // ✅ Authenticated + paid
     window._sbSession = session;
     // Load user's state preference from profile
