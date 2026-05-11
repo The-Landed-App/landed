@@ -44,7 +44,7 @@
 
     // ✅ Authenticated + paid
     window._sbSession = session;
-renderHomeStoryCard();
+setTimeout(() => renderHomeStoryCard(), 200);
     // Unlock Mia once DOM is ready
     setTimeout(() => unlockMia(), 100);
 
@@ -3254,7 +3254,7 @@ HOW TO CONVERSE:
 5. Be specific about the user's data when relevant — e.g. "I can see you have not completed the Tax section yet" or "Your civics score was 70% last time — want to practice?"
 6. If someone asks about something completely unrelated to Landed or immigration (not small talk), respond warmly: "That is a bit outside my world — I live and breathe citizenship journeys! Anything on your mind about the process?"
 7. Keep responses concise. 2-4 sentences usually. This is a chat, not an essay.
-${langNote}\`;
+${langNote}`;
 }
 
 window._miaHistory = [];
