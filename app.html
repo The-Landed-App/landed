@@ -31,17 +31,17 @@
       return;
     }
 
-    const { data: profile, error: profileError } = await window._sb
-      .from('profiles')
+    const { data: profile } = await window._sb.from('profiles')
       .select('paid, state')
       .eq('id', session.user.id)
       .single();
 
-    if (profileError || !profile || !profile.paid) {
+    if (!profile?.paid) {
       await window._sb.auth.signOut();
       window.location.replace(LANDING);
       return;
     }
+
     // ✅ Authenticated + paid
     window._sbSession = session;
     // Load user's state preference from profile
@@ -2730,69 +2730,36 @@ async function renderStories() {
   el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Loading…</div>';
 
   try {
+    const userId = window._sbSession?.user?.id || null;
+
+    // Fetch approved community stories (excluding user's own)
     const { data, error } = await window._sb
       .from('stories')
       .select('*')
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
     if (error) throw error;
-    // Map DB rows to display format
-    const STORIES = (data || []).filter(s => s.user_id !== userId).map(s => ({
+
+    const STORIES = (data || []).filter(s => !userId || s.user_id !== userId).map(s => ({
       initials: s.name ? s.name.substring(0,2).toUpperCase() : '?',
       color: 'rgba(93,184,126,0.18)',
       textColor: '#5db87e',
       name: s.name || 'Anonymous',
       origin: s.origin || '',
-      state: '',
       months: s.months || 0,
       speed: s.speed || 'typical',
       tags: [s.origin, s.months ? s.months + ' months' : null].filter(Boolean),
       story: s.story_text,
-      likes: 0,
     }));
-    // Show/hide filter chips — only show if there are community stories AND user has no story
+
+    // Always hide filter chips
     const chipsEl = document.getElementById('stories-filter-chips');
-    if (chipsEl) chipsEl.style.display = 'none'; // always hidden for now
-    // Hide/show share button based on whether user already has a story
-    const shareBtn = document.querySelector('#page-journeys button[onclick="showShareStory()"]');
+    if (chipsEl) chipsEl.style.display = 'none';
+
     const filter = window._storyFilter || 'all';
     const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
-  if (!items.length) {
-    el.innerHTML = `
-      <div style="padding:12px 16px 0;">
-        <div style="opacity:0.3;">
-          <div style="display:flex;align-items:center;gap:10px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);flex-shrink:0;"></div>
-            <div style="flex:1;"><div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.08);width:60%;margin-bottom:6px;"></div><div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.05);width:40%;"></div></div>
-          </div>
-          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:95%;margin:12px 0 6px;"></div>
-          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:80%;margin-bottom:6px;"></div>
-          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:88%;margin-bottom:16px;"></div>
-        </div>
-        <div style="opacity:0.15;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.04);">
-          <div style="display:flex;align-items:center;gap:10px;padding:16px 0 10px;">
-            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);flex-shrink:0;"></div>
-            <div style="flex:1;"><div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.08);width:50%;margin-bottom:6px;"></div><div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.05);width:35%;"></div></div>
-          </div>
-          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:90%;margin-bottom:6px;"></div>
-          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:70%;"></div>
-        </div>
-      </div>
-      <div style="text-align:center;padding:12px 24px 20px;">
-        <div style="width:52px;height:52px;border-radius:50%;background:rgba(93,184,126,0.12);border:1px solid rgba(93,184,126,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 9C3 6.24 5.24 4 8 4C9.74 4 11.27 4.93 12 6.28C12.73 4.93 14.26 4 16 4C18.76 4 21 6.24 21 9C21 15 12 21 12 21Z" stroke="#5db87e" stroke-width="1.5" fill="rgba(93,184,126,0.15)"/></svg>
-        </div>
-        <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:8px;line-height:1.4;">Be the first to share your journey</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.65;margin-bottom:18px;">This is a space for immigrants to share their real experience — the wait, the nerves, the moment it all became worth it.</div>
-        <button onclick="showShareStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:11px 24px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Share your story</button>
-        <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:10px;">Takes 2 minutes · reviewed before publishing</div>
-      </div>`;
-    return;
-  }
-
-  // Also fetch current user's own story (any status)
-    const userId = window._sbSession?.user?.id;
+    // Fetch user's own story (any status)
     let myStory = null;
     if (userId) {
       const { data: myData } = await window._sb
@@ -2805,10 +2772,38 @@ async function renderStories() {
       myStory = myData;
     }
 
+    // Hide/show share button
+    const shareBtnEl = document.querySelector('#page-journeys .stories-share-btn');
+    if (shareBtnEl) shareBtnEl.style.display = myStory ? 'none' : '';
+
+    // Show empty state only if no community stories AND no own story
+    if (!items.length && !myStory) {
+      el.innerHTML = `
+        <div style="padding:12px 16px 0;">
+          <div style="opacity:0.3;">
+            <div style="display:flex;align-items:center;gap:10px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);flex-shrink:0;"></div>
+              <div style="flex:1;"><div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.08);width:60%;margin-bottom:6px;"></div><div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.05);width:40%;"></div></div>
+            </div>
+            <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:95%;margin:12px 0 6px;"></div>
+            <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:80%;margin-bottom:6px;"></div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:12px 24px 20px;">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(93,184,126,0.12);border:1px solid rgba(93,184,126,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 9C3 6.24 5.24 4 8 4C9.74 4 11.27 4.93 12 6.28C12.73 4.93 14.26 4 16 4C18.76 4 21 6.24 21 9C21 15 12 21 12 21Z" stroke="#5db87e" stroke-width="1.5" fill="rgba(93,184,126,0.15)"/></svg>
+          </div>
+          <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:8px;">Be the first to share your journey</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.65;margin-bottom:18px;">This is a space for immigrants to share their real experience.</div>
+          <button onclick="showShareStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:11px 24px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Share your story</button>
+        </div>`;
+      return;
+    }
+
     // Build HTML
     let html = '';
 
-    // My story card — pinned at top, distinct style
+    // My story card pinned at top
     if (myStory) {
       const statusColor = myStory.status === 'approved' ? '#5db87e' : myStory.status === 'rejected' ? '#f09595' : '#c8952a';
       const statusLabel = myStory.status === 'approved' ? 'Live' : myStory.status === 'rejected' ? 'Not approved' : 'Under review';
@@ -2818,10 +2813,6 @@ async function renderStories() {
       window._myStoryOrigin = myStory.origin;
       window._myStoryMonths = myStory.months;
       window._myStoryName = myStory.name;
-
-      // Hide share button since user already has a story
-      const shareBtnEl = document.querySelector('#page-journeys .stories-share-btn');
-      if (shareBtnEl) shareBtnEl.style.display = 'none';
 
       html += `<div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.06);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -2841,30 +2832,29 @@ async function renderStories() {
         </div>
       </div>`;
 
-      // Divider before others
       if (items.length > 0) {
         html += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);padding:14px 16px 6px;">From the community</div>`;
       }
     }
 
     html += items.map(s => `
-    <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div style="width:36px;height:36px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
-        <div>
-          <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} · ${s.months} months</div>
+      <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} · ${s.months} months</div>
+          </div>
         </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story}"</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
       </div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story}"</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
-    </div>
-  `).join('');
+    `).join('');
 
-    // If no stories from others and no my story, show empty state (handled above)
-    el.innerHTML = html || el.innerHTML;
+    el.innerHTML = html;
 
   } catch(e) {
+    console.error('renderStories error:', e);
     el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Could not load stories</div>';
   }
 }
@@ -2896,10 +2886,22 @@ async function updateMyStory() {
         origin: document.getElementById('story-origin').value.trim() || null,
         months: parseInt(document.getElementById('story-months').value) || null,
         story_text: text,
-        status: 'pending', // back to review after edit
+        status: 'pending',
       })
       .eq('id', window._myStoryId);
     if (error) throw error;
+    // Send email notification about the edit
+    await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/swift-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('story-name').value.trim() || null,
+        origin: document.getElementById('story-origin').value.trim() || null,
+        months: document.getElementById('story-months').value || null,
+        story_text: '[EDIT] ' + text,
+        user_id: window._sbSession?.user?.id || null,
+      }),
+    }).catch(() => {}); // don't block on email failure
     hideShareStory();
     showToast('Story updated — back under review 🙏');
     renderStories();
