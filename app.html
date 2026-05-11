@@ -723,7 +723,7 @@ function googleTranslateElementInit(){
     </div>
   </div>
   <!-- Filter chips -->
-  <div style="display:flex;gap:6px;overflow-x:auto;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;">
+  <div id="stories-filter-chips" style="display:none;gap:6px;overflow-x:auto;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;">
     <span onclick="filterStories('all')" id="story-chip-all" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;">All</span>
     <span onclick="filterStories('fast')" id="story-chip-fast" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Fast (&lt;1yr)</span>
     <span onclick="filterStories('typical')" id="story-chip-typical" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Typical</span>
@@ -2720,6 +2720,9 @@ function faqCard(g, variant) {
 function renderStories() {
   const el = document.getElementById('stories-list');
   if (!el) return;
+  // Show/hide filter chips based on whether there are stories
+  const chipsEl = document.getElementById('stories-filter-chips');
+  if (chipsEl) chipsEl.style.display = STORIES.length ? 'flex' : 'none';
   const filter = window._storyFilter || 'all';
   const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
