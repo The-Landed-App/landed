@@ -2789,27 +2789,134 @@ async function renderStories() {
     return;
   }
 
-  el.innerHTML = items.map(s => `
+  // Also fetch current user's own story (any status)
+    const userId = window._sbSession?.user?.id;
+    let myStory = null;
+    if (userId) {
+      const { data: myData } = await window._sb
+        .from('stories')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      myStory = myData;
+    }
+
+    // Build HTML
+    let html = '';
+
+    // My story card — pinned at top, distinct style
+    if (myStory) {
+      const statusColor = myStory.status === 'approved' ? '#5db87e' : myStory.status === 'rejected' ? '#f09595' : '#c8952a';
+      const statusLabel = myStory.status === 'approved' ? 'Live' : myStory.status === 'rejected' ? 'Not approved' : 'Under review';
+      const statusBg = myStory.status === 'approved' ? 'rgba(93,184,126,0.15)' : myStory.status === 'rejected' ? 'rgba(226,75,74,0.15)' : 'rgba(200,149,42,0.15)';
+      window._myStoryId = myStory.id;
+      window._myStoryText = myStory.story_text;
+      window._myStoryOrigin = myStory.origin;
+      window._myStoryMonths = myStory.months;
+      window._myStoryName = myStory.name;
+
+      html += `<div style="margin:14px 16px 0;border-radius:12px;background:rgba(93,184,126,0.08);border:1px solid rgba(93,184,126,0.2);overflow:hidden;">
+        <div style="padding:10px 14px;background:rgba(93,184,126,0.1);border-bottom:1px solid rgba(93,184,126,0.15);display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:10px;font-weight:500;color:#5db87e;text-transform:uppercase;letter-spacing:0.06em;">Your story</span>
+          <span style="font-size:9px;padding:2px 8px;border-radius:99px;background:${statusBg};color:${statusColor};font-weight:500;">${statusLabel}</span>
+        </div>
+        <div style="padding:14px;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.7;margin-bottom:12px;font-style:italic;">"${myStory.story_text}"</div>
+          <div style="display:flex;gap:8px;">
+            <button onclick="editMyStory()" style="flex:1;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;padding:7px;font-size:11px;color:rgba(255,255,255,0.6);font-family:inherit;cursor:pointer;">Edit</button>
+            <button onclick="deleteMyStory()" style="flex:1;background:rgba(226,75,74,0.08);border:1px solid rgba(226,75,74,0.2);border-radius:99px;padding:7px;font-size:11px;color:#f09595;font-family:inherit;cursor:pointer;">Delete</button>
+          </div>
+        </div>
+      </div>`;
+
+      // Divider before others
+      if (items.length > 0) {
+        html += `<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);padding:16px 16px 8px;">From the community</div>`;
+      }
+    }
+
+    html += items.map(s => `
     <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
         <div style="width:36px;height:36px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
         <div>
           <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} → ${s.state} · ${s.months} months</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} · ${s.months} months</div>
         </div>
       </div>
       <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story}"</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
-        <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.2);">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 9C3 6.24 5.24 4 8 4C9.74 4 11.27 4.93 12 6.28C12.73 4.93 14.26 4 16 4C18.76 4 21 6.24 21 9C21 15 12 21 12 21Z" stroke="rgba(255,255,255,0.25)" stroke-width="1.4" fill="none"/></svg>
-          ${s.likes||Math.floor(Math.random()*40+5)}
-        </div>
-      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
     </div>
   `).join('');
+
+    // If no stories from others and no my story, show empty state (handled above)
+    el.innerHTML = html || el.innerHTML;
+
   } catch(e) {
     el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Could not load stories</div>';
+  }
+}
+
+function editMyStory() {
+  // Pre-fill the share form with existing story data
+  document.getElementById('story-name').value = window._myStoryName || '';
+  document.getElementById('story-origin').value = window._myStoryOrigin || '';
+  document.getElementById('story-months').value = window._myStoryMonths || '';
+  document.getElementById('story-text').value = window._myStoryText || '';
+  // Change button to update
+  const btn = document.getElementById('story-submit-btn');
+  btn.textContent = 'Update story';
+  btn.onclick = updateMyStory;
+  showShareStory();
+}
+
+async function updateMyStory() {
+  const text = document.getElementById('story-text').value.trim();
+  if (!text) { showToast('Please enter your story'); return; }
+  const btn = document.getElementById('story-submit-btn');
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const { error } = await window._sb
+      .from('stories')
+      .update({
+        name: document.getElementById('story-name').value.trim() || null,
+        origin: document.getElementById('story-origin').value.trim() || null,
+        months: parseInt(document.getElementById('story-months').value) || null,
+        story_text: text,
+        status: 'pending', // back to review after edit
+      })
+      .eq('id', window._myStoryId);
+    if (error) throw error;
+    hideShareStory();
+    showToast('Story updated — back under review 🙏');
+    renderStories();
+    renderHomeStoryCard();
+  } catch(e) {
+    showToast('Something went wrong — please try again');
+  } finally {
+    btn.textContent = 'Submit story';
+    btn.onclick = submitStory;
+    btn.disabled = false;
+  }
+}
+
+async function deleteMyStory() {
+  if (!confirm('Are you sure you want to delete your story? This cannot be undone.')) return;
+  try {
+    const { error } = await window._sb
+      .from('stories')
+      .delete()
+      .eq('id', window._myStoryId);
+    if (error) throw error;
+    window._myStoryId = null;
+    showToast('Story deleted');
+    renderStories();
+    renderHomeStoryCard();
+  } catch(e) {
+    showToast('Something went wrong — please try again');
   }
 }
 
