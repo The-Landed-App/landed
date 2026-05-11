@@ -2759,7 +2759,20 @@ async function renderStories() {
     const filter = window._storyFilter || 'all';
     const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
-  if (!items.length) {
+    // Fetch user's own story BEFORE empty state check
+    let myStory = null;
+    if (userId) {
+      const { data: myData } = await window._sb
+        .from('stories')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      myStory = myData;
+    }
+
+  if (!items.length && !myStory) {
     el.innerHTML = `
       <div style="padding:12px 16px 0;">
         <div style="opacity:0.3;">
