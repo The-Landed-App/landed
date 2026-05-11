@@ -3153,7 +3153,8 @@ renderScoreHistory();
 renderGamification();
 startAffirmations();
 loadLanguage();
-initState();
+// Delay initState so _userState is populated from profile first
+setTimeout(initState, 300);
 // Re-render journey map once layout is complete
 setTimeout(renderJourneyMap, 100);
 </script>
