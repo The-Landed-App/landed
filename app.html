@@ -2722,14 +2722,37 @@ function faqCard(g, variant) {
 }
 
 // ── JOURNEYS / STORIES ────────────────────────────────
-function renderStories() {
+async function renderStories() {
   const el = document.getElementById('stories-list');
   if (!el) return;
-  // Show/hide filter chips based on whether there are stories
-  const chipsEl = document.getElementById('stories-filter-chips');
-  if (chipsEl) chipsEl.style.display = STORIES.length ? 'flex' : 'none';
-  const filter = window._storyFilter || 'all';
-  const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
+  el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Loading…</div>';
+
+  try {
+    const { data, error } = await window._sb
+      .from('stories')
+      .select('*')
+      .eq('status', 'approved')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    // Map DB rows to display format
+    const STORIES = (data || []).map(s => ({
+      initials: s.name ? s.name.substring(0,2).toUpperCase() : '?',
+      color: 'rgba(93,184,126,0.18)',
+      textColor: '#5db87e',
+      name: s.name || 'Anonymous',
+      origin: s.origin || '',
+      state: '',
+      months: s.months || 0,
+      speed: s.speed || 'typical',
+      tags: [s.origin, s.months ? s.months + ' months' : null].filter(Boolean),
+      story: s.story_text,
+      likes: 0,
+    }));
+    // Show/hide filter chips
+    const chipsEl = document.getElementById('stories-filter-chips');
+    if (chipsEl) chipsEl.style.display = STORIES.length ? 'flex' : 'none';
+    const filter = window._storyFilter || 'all';
+    const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
   if (!items.length) {
     el.innerHTML = `
@@ -2783,6 +2806,9 @@ function renderStories() {
       </div>
     </div>
   `).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Could not load stories</div>';
+  }
 }
 
 function filterStories(f) {
