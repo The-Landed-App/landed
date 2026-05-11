@@ -738,13 +738,18 @@ function googleTranslateElementInit(){
         <div style="font-size:15px;font-weight:500;color:#fff;">Share your journey</div>
         <button onclick="hideShareStory()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;line-height:1;">×</button>
       </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:14px;padding:10px 12px;background:rgba(93,184,126,0.07);border-radius:8px;border-left:2px solid rgba(93,184,126,0.3);">
+        Your privacy matters. Your name is optional — you can share anonymously. Every story is reviewed before it's published.
+      </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <input id="story-name" placeholder="Your first name" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
-        <input id="story-origin" placeholder="e.g. Nigeria → Texas" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
-        <input id="story-months" placeholder="How many months did it take?" type="number" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
-        <textarea id="story-text" placeholder="What surprised you? What do you wish you'd known? What helped most?" rows="5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;resize:none;line-height:1.6;"></textarea>
-        <button onclick="submitStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:12px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Submit story</button>
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:center;line-height:1.5;">Reviewed before publishing · only your first name shown</div>
+        <div>
+          <input id="story-name" placeholder="First name (optional — leave blank to stay anonymous)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;width:100%;" />
+        </div>
+        <input id="story-origin" placeholder="e.g. Nigeria → Texas (optional)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <input id="story-months" placeholder="How many months did it take? (optional)" type="number" min="1" max="120" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <textarea id="story-text" placeholder="What surprised you? What do you wish you'd known? What helped most? *" rows="5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;resize:none;line-height:1.6;"></textarea>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);">* Only your story is required. Everything else is optional.</div>
+        <button onclick="submitStory()" id="story-submit-btn" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:12px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Submit story</button>
       </div>
     </div>
   </div>
@@ -2801,18 +2806,36 @@ function showShareStory() {
 function hideShareStory() {
   document.getElementById('share-story-modal').style.display = 'none';
 }
-function submitStory() {
+async function submitStory() {
   const name = document.getElementById('story-name').value.trim();
   const origin = document.getElementById('story-origin').value.trim();
   const months = document.getElementById('story-months').value;
   const text = document.getElementById('story-text').value.trim();
-  if (!name || !text) { showToast('Please fill in your name and story'); return; }
-  hideShareStory();
-  showToast('Thank you! Your story has been submitted for review.');
-  document.getElementById('story-name').value = '';
-  document.getElementById('story-origin').value = '';
-  document.getElementById('story-months').value = '';
-  document.getElementById('story-text').value = '';
+  if (!text) { showToast('Please share your story before submitting'); return; }
+
+  const btn = document.getElementById('story-submit-btn');
+  btn.textContent = 'Submitting…';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/swift-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name || null, origin, months: months || null, story_text: text }),
+    });
+    if (!res.ok) throw new Error('Submission failed');
+    hideShareStory();
+    showToast('Thank you for sharing your journey 🙏');
+    document.getElementById('story-name').value = '';
+    document.getElementById('story-origin').value = '';
+    document.getElementById('story-months').value = '';
+    document.getElementById('story-text').value = '';
+  } catch(e) {
+    showToast('Something went wrong — please try again');
+  } finally {
+    btn.textContent = 'Submit story';
+    btn.disabled = false;
+  }
 }
 
 // ── LANGUAGE ─────────────────────────────────────────
