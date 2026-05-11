@@ -409,7 +409,7 @@ function googleTranslateElementInit(){
     </div>
 
     <!-- Tip ticker -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px 14px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('tips')">
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px 14px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('faqs')">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:5px;">💡 Pro tip <span style="font-size:9px;color:var(--sage);margin-left:4px;">See all →</span></div>
       <div class="tip-ticker-text" id="tip-ticker-text" style="color:var(--forest);font-size:12px;line-height:1.55;">Loading tip…</div>
       <div class="tip-ticker-tag" id="tip-ticker-tag" style="color:var(--grass);font-size:9px;margin-top:5px;font-weight:500;"></div>
@@ -873,13 +873,7 @@ const GUIDE = [
   {stage:'Ceremony', type:'tip', warn:false, pin:false, title:"The first thing you do after the ceremony: start your U.S. passport application", body:"Go straight from the ceremony to get your passport photos if you can. Make several certified copies of your certificate immediately — you'll need them for your passport, Social Security update, and employer records."},
 ];
 
-const STORIES = [
-  {initials:'AM', color:'rgba(93,184,126,0.2)', textColor:'#5db87e', name:'Amara M.', origin:'Nigeria', state:'Texas', months:14, speed:'typical', tags:['Interview', 'Texas'], story:"The interview officer was kind and made me feel at ease. She asked about one of my trips to Lagos and I'm so glad I had my passport ready. My biggest tip: bring every document you ever filed. You won't regret it."},
-  {initials:'JL', color:'rgba(200,149,42,0.2)', textColor:'#c8952a', name:'Jorge L.', origin:'Mexico', state:'California', months:11, speed:'fast', tags:['Filing', 'California'], story:"I was nervous about my taxes from 2019 but the officer didn't even ask. Focus on the N-400 itself. Know every answer you wrote down — that's what matters. I studied my own application more than the civics questions."},
-  {initials:'PK', color:'rgba(93,126,184,0.2)', textColor:'#7ba4e8', name:'Priya K.', origin:'India', state:'New York', months:22, speed:'long', tags:['Long wait', 'Ceremony'], story:"The wait was the hardest part. 18 months of total silence. I questioned everything. But the ceremony was worth every single day of it. Cry your eyes out — everyone does, and nobody judges you for it."},
-  {initials:'SC', color:'rgba(184,93,150,0.2)', textColor:'#e87bc8', name:'Sofia C.', origin:'Brazil', state:'Florida', months:9, speed:'fast', tags:['Filing', 'Interview'], story:"I filed exactly on my 5-year date and had my interview 9 months later. The thing nobody tells you: organize every document by date before you walk in. The officer was impressed and it made everything go smoothly."},
-  {initials:'DT', color:'rgba(93,150,184,0.2)', textColor:'#7bb4e8', name:'David T.', origin:'Philippines', state:'Illinois', months:18, speed:'typical', tags:['Waiting', 'Interview'], story:"Six months of silence after biometrics. I was convinced something was wrong. Then out of nowhere, an interview date. The wait is psychological warfare — but it ends. Stay busy, keep studying, trust the process."},
-];
+const STORIES = [];  // populated by user submissions
 
 window._storyFilter = 'all';
 
@@ -1779,6 +1773,8 @@ function switchPage(id) {
   document.querySelectorAll(`[data-page="${id}"]`).forEach(t => t.classList.add('active'));
   window.scrollTo(0,0);
   reapplyTranslation();
+  if (id === 'faqs') { initFAQsLayout(); }
+  if (id === 'journeys') { renderStories(); }
 }
 
 function reapplyTranslation() {
