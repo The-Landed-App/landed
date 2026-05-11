@@ -408,12 +408,8 @@ function googleTranslateElementInit(){
       <div id="badges-grid" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:2px;min-height:16px;"></div>
     </div>
 
-    <!-- Tip ticker -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:12px 14px;cursor:pointer;overflow:hidden;" id="tip-ticker-card" onclick="switchPage('faqs')">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);font-weight:500;margin-bottom:5px;">💡 Pro tip <span style="font-size:9px;color:var(--sage);margin-left:4px;">See all →</span></div>
-      <div class="tip-ticker-text" id="tip-ticker-text" style="color:var(--forest);font-size:12px;line-height:1.55;">Loading tip…</div>
-      <div class="tip-ticker-tag" id="tip-ticker-tag" style="color:var(--grass);font-size:9px;margin-top:5px;font-weight:500;"></div>
-    </div>
+    <!-- Your story card -->
+    <div id="home-story-card" style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px 14px;cursor:pointer;overflow:hidden;"></div>
 
   </div>
 
@@ -1372,6 +1368,7 @@ function renderChecklist() {
   Object.keys(clState).forEach(k => { if(!validKeys.has(k)) delete clState[k]; });
   updateCLProgress();
   renderRings();
+renderHomeStoryCard();
 }
 
 function renderRings() {
@@ -2844,10 +2841,11 @@ async function submitStory() {
   btn.disabled = true;
 
   try {
+    const userId = window._sbSession?.user?.id || null;
     const res = await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/swift-task', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name || null, origin, months: months || null, story_text: text }),
+      body: JSON.stringify({ name: name || null, origin, months: months || null, story_text: text, user_id: userId }),
     });
     if (!res.ok) throw new Error('Submission failed');
     hideShareStory();
@@ -2856,12 +2854,62 @@ async function submitStory() {
     document.getElementById('story-origin').value = '';
     document.getElementById('story-months').value = '';
     document.getElementById('story-text').value = '';
+    // Refresh home story card
+    renderHomeStoryCard();
   } catch(e) {
     showToast('Something went wrong — please try again');
   } finally {
     btn.textContent = 'Submit story';
     btn.disabled = false;
   }
+}
+
+async function renderHomeStoryCard() {
+  const el = document.getElementById('home-story-card');
+  if (!el) return;
+  const userId = window._sbSession?.user?.id;
+  if (!userId) {
+    renderHomeStoryCardEmpty(el);
+    return;
+  }
+  // Check if user has submitted a story
+  const { data } = await window._sb
+    .from('stories')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) {
+    renderHomeStoryCardEmpty(el);
+    return;
+  }
+
+  // User has a story — show preview
+  const statusColor = data.status === 'approved' ? '#5db87e' : '#c8952a';
+  const statusLabel = data.status === 'approved' ? 'Live in feed' : 'Under review';
+  const statusBg = data.status === 'approved' ? 'rgba(93,184,126,0.15)' : 'rgba(200,149,42,0.15)';
+  const preview = data.story_text.length > 100 ? data.story_text.substring(0, 100) + '…' : data.story_text;
+
+  el.onclick = () => switchPage('journeys');
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);font-weight:500;">Your story</div>
+      <span style="font-size:9px;padding:2px 8px;border-radius:99px;background:${statusBg};color:${statusColor};font-weight:500;">${statusLabel}</span>
+    </div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.55;font-style:italic;">"${preview}"</div>
+    ${data.status === 'approved' ? '<div style="font-size:9px;color:#5db87e;margin-top:6px;font-weight:500;">View in Stories →</div>' : ''}
+  `;
+}
+
+function renderHomeStoryCardEmpty(el) {
+  el.onclick = () => { switchPage('journeys'); setTimeout(() => showShareStory(), 300); };
+  el.innerHTML = `
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);font-weight:500;margin-bottom:7px;">Your story</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.55;margin-bottom:8px;">Share your naturalization journey with other immigrants going through the same thing.</div>
+    <div style="font-size:10px;color:#5db87e;font-weight:500;">Share your story →</div>
+  `;
 }
 
 // ── LANGUAGE ─────────────────────────────────────────
