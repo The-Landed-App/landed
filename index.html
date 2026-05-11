@@ -571,10 +571,10 @@ footer p{font-size:11px;color:rgba(168,196,168,0.55);line-height:1.7;text-align:
 
 <!-- FOOTER -->
 <footer>
-  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;">
     <span class="footer-logo">Landed</span>
-    <p>Boston, Massachusetts · 2026</p>
-    <p style="font-size:10px;color:rgba(168,196,168,0.4);">Landed is an educational tool and does not provide legal advice. Not a substitute for a licensed immigration attorney. © 2026 Landed.</p>
+    <span style="font-size:11px;color:rgba(168,196,168,0.55);line-height:1;">Boston, Massachusetts · 2026</span>
+    <span style="font-size:10px;color:rgba(168,196,168,0.4);line-height:1.5;">Landed is an educational tool and does not provide legal advice. Not a substitute for a licensed immigration attorney. 2026 Landed.</span>
   </div>
 </footer>
 
@@ -648,7 +648,7 @@ window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   if (session) {
     const { data: profile } = await window._sb.from('profiles')
       .select('paid').eq('id', session.user.id).single();
-    if (profile?.paid) window.location.replace('https://thelandedapp.com/app');
+    if (profile?.paid) window.location.replace('https://thelandedapp.com/index.html');
   }
 })();
 </script>
@@ -700,8 +700,8 @@ async function sendToCheckout(email, userId) {
     body: JSON.stringify({
       email,
       userId,
-      successUrl: 'https://thelandedapp.com/app',
-      cancelUrl: 'https://thelandedapp.com/'
+      successUrl: 'https://thelandedapp.com/index.html',
+      cancelUrl: 'https://thelandedapp.com/landing.html'
     })
   });
   const { url, error } = await res.json();
@@ -737,7 +737,7 @@ async function handleAuth(){
         if(signInError) throw signInError;
         const { data: profile } = await window._sb.from('profiles')
           .select('paid').eq('id', signInData.user.id).single();
-        if(profile?.paid) { window.location.replace('https://thelandedapp.com/app'); return; }
+        if(profile?.paid) { window.location.replace('https://thelandedapp.com/index.html'); return; }
         await sendToCheckout(email, signInData.user.id);
         return;
       }
@@ -756,7 +756,7 @@ async function handleAuth(){
         .select('paid').eq('id', data.user.id).single();
 
       if(profile?.paid) {
-        window.location.replace('https://thelandedapp.com/app');
+        window.location.replace('https://thelandedapp.com/index.html');
       } else {
         await sendToCheckout(email, data.user.id);
       }
@@ -1220,7 +1220,7 @@ async function submitGift() {
         sender: { name: senderName, email: senderEmail },
         note,
         successUrl: window.location.origin + window.location.pathname + '?gift=success',
-        cancelUrl: 'https://thelandedapp.com/',
+        cancelUrl: 'https://thelandedapp.com/landing.html',
       })
     });
     const data = await res.json();
