@@ -701,7 +701,7 @@ async function sendToCheckout(email, userId) {
       email,
       userId,
       successUrl: 'https://thelandedapp.com/app',
-      cancelUrl: 'https://thelandedapp.com/landing.html'
+      cancelUrl: 'https://thelandedapp.com/'
     })
   });
   const { url, error } = await res.json();
@@ -1220,7 +1220,7 @@ async function submitGift() {
         sender: { name: senderName, email: senderEmail },
         note,
         successUrl: window.location.origin + window.location.pathname + '?gift=success',
-        cancelUrl: 'https://thelandedapp.com/landing.html',
+        cancelUrl: 'https://thelandedapp.com/',
       })
     });
     const data = await res.json();
