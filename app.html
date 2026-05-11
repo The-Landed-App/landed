@@ -678,25 +678,25 @@ function googleTranslateElementInit(){
 </div>
 
 <!-- ══ PRO TIPS ══ -->
-<div class="page" id="page-guide" style="background:#0d1f14;padding:0;min-height:100vh;">
+<div class="page" id="page-faqs" style="background:#0d1f14;padding:0;min-height:100vh;">
   <!-- Dark header -->
-  <div style="background:#081510;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Guide</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Tips, FAQs, and insider knowledge</div>
-      </div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.25);" id="guide-count"></div>
+  <div style="background:#081510;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:#fff;letter-spacing:-0.3px;">FAQs</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.25);" id="faqs-count"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input id="guide-search" type="text" placeholder="Search tips &amp; FAQs…" oninput="renderGuide()" style="background:none;border:none;outline:none;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;width:100%;" />
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 11px;display:flex;align-items:center;gap:8px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="faqs-search" type="text" placeholder="Search…" oninput="renderFAQs()" style="background:none;border:none;outline:none;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;width:100%;" />
     </div>
   </div>
-  <!-- Stage filter chips -->
-  <div id="guide-chips" style="display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;"></div>
-  <!-- Content -->
-  <div id="guide-list" style="padding:14px 20px 80px;"></div>
+  <!-- Sidebar + content layout -->
+  <div style="display:flex;min-height:calc(100vh - 120px);">
+    <!-- Left sidebar -->
+    <div id="faqs-sidebar" style="width:90px;background:#081510;border-right:1px solid rgba(255,255,255,0.05);padding:10px 0;flex-shrink:0;"></div>
+    <!-- Content area -->
+    <div id="faqs-list" style="flex:1;padding:12px 14px 80px;overflow:hidden;min-width:0;"></div>
+  </div>
 </div>
 
 <!-- ══ LEGAL ══ -->
@@ -712,39 +712,39 @@ function googleTranslateElementInit(){
 </div>
 
 <!-- ══ JOURNEYS ══ -->
-<div class="page" id="page-journeys" style="background:#0d1f14;padding:0;min-height:100vh;">
-  <div style="background:#081510;padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);">
+<div class="page" id="page-journeys" style="background:#0d1f14;padding:0;min-height:100vh;position:relative;">
+  <div style="background:#081510;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.05);">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Stories</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">Real journeys from real people</div>
+        <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Stories</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">Real journeys · real people</div>
       </div>
-      <button onclick="showShareStory()" style="font-size:11px;padding:6px 14px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
+      <button onclick="showShareStory()" style="font-size:10px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
     </div>
   </div>
   <!-- Filter chips -->
-  <div style="display:flex;gap:6px;overflow-x:auto;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;">
+  <div style="display:flex;gap:6px;overflow-x:auto;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,0.05);scrollbar-width:none;">
     <span onclick="filterStories('all')" id="story-chip-all" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;">All</span>
     <span onclick="filterStories('fast')" id="story-chip-fast" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Fast (&lt;1yr)</span>
     <span onclick="filterStories('typical')" id="story-chip-typical" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Typical</span>
     <span onclick="filterStories('long')" id="story-chip-long" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);">Long wait</span>
   </div>
-  <div id="stories-list" style="padding:14px 20px 80px;"></div>
+  <div id="stories-list" style="padding-bottom:80px;"></div>
 
   <!-- Share story modal -->
-  <div id="share-story-modal" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.7);z-index:500;padding:40px 20px;">
-    <div style="background:#1a3020;border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:20px;">
+  <div id="share-story-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;padding:40px 20px;overflow-y:auto;">
+    <div style="background:#1a3020;border-radius:16px;border:1px solid rgba(255,255,255,0.08);padding:20px;max-width:400px;margin:0 auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <div style="font-size:15px;font-weight:500;color:#fff;">Share your journey</div>
-        <button onclick="hideShareStory()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;line-height:1;">×</button>
+        <button onclick="hideShareStory()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:22px;cursor:pointer;line-height:1;">×</button>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <input id="story-name" placeholder="Your first name" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
-        <input id="story-origin" placeholder="Country of origin → State (e.g. Nigeria → Texas)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
+        <input id="story-origin" placeholder="e.g. Nigeria → Texas" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
         <input id="story-months" placeholder="How many months did it take?" type="number" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;" />
-        <textarea id="story-text" placeholder="Share your experience — what surprised you, what you wish you'd known, what helped most…" rows="5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;resize:none;line-height:1.6;"></textarea>
+        <textarea id="story-text" placeholder="What surprised you? What do you wish you'd known? What helped most?" rows="5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:inherit;outline:none;resize:none;line-height:1.6;"></textarea>
         <button onclick="submitStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:12px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;">Submit story</button>
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:center;line-height:1.5;">Stories are reviewed before publishing. Your privacy is respected — we only show your first name.</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);text-align:center;line-height:1.5;">Reviewed before publishing · only your first name shown</div>
       </div>
     </div>
   </div>
@@ -791,9 +791,9 @@ function googleTranslateElementInit(){
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
     <div class="nav-lbl">Coach</div>
   </button>
-  <button class="nav-item" data-page="guide">
+  <button class="nav-item" data-page="faqs">
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.12"/><line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/><line x1="8" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/><line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/></svg></div>
-    <div class="nav-lbl">Guide</div>
+    <div class="nav-lbl">FAQs</div>
   </button>
   <button class="nav-item" data-page="journeys">
     <div class="nav-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14C12.31 14 15 16.69 15 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="9" r="2.5" stroke="currentColor" stroke-width="1.4" fill="currentColor" fill-opacity="0.15"/><path d="M15.5 19.5C15.5 17.57 16.57 16 18 16C19.43 16 20.5 17.57 20.5 19.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
@@ -2603,39 +2603,40 @@ function exitQuiz() {
 function renderFAQStandalone() {}
 function toggleFAQS(i) {}
 
-// ── GUIDE (unified tips + FAQs) ───────────────────────
-window._guideFilter = 'All';
+// ── FAQs (unified tips + FAQs) with sidebar layout ───
+window._faqsFilter = 'All';
 
-function initGuideChips() {
+function initFAQsLayout() {
   const stages = ['All','Filing','Biometrics','Waiting','Interview','Ceremony'];
-  const el = document.getElementById('guide-chips');
-  if (!el) return;
-  el.innerHTML = stages.map(s => `
-    <span onclick="setGuideFilter('${s}')" id="gchip-${s}" style="font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;transition:all 0.15s;${s==='All'?'background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);'}">${s}</span>
+  const sidebar = document.getElementById('faqs-sidebar');
+  if (!sidebar) return;
+  sidebar.innerHTML = stages.map(s => `
+    <div onclick="setFAQFilter('${s}')" id="fchip-${s}" style="padding:9px 10px;font-size:10px;line-height:1.35;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;${s==='All'?'color:#5db87e;border-left-color:#5db87e;background:rgba(93,184,126,0.07);':'color:rgba(255,255,255,0.4);'}">${s}</div>
   `).join('');
+  renderFAQs();
 }
 
-function setGuideFilter(stage) {
-  window._guideFilter = stage;
+function setFAQFilter(stage) {
+  window._faqsFilter = stage;
   const stages = ['All','Filing','Biometrics','Waiting','Interview','Ceremony'];
   stages.forEach(s => {
-    const c = document.getElementById('gchip-'+s);
+    const c = document.getElementById('fchip-'+s);
     if (!c) return;
     if (s === stage) {
-      c.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;background:rgba(93,184,126,0.18);border:1px solid rgba(93,184,126,0.3);color:#5db87e;font-weight:500;';
+      c.style.cssText = 'padding:9px 10px;font-size:10px;line-height:1.35;cursor:pointer;color:#5db87e;border-left:2px solid #5db87e;background:rgba(93,184,126,0.07);';
     } else {
-      c.style.cssText = 'font-size:10px;padding:4px 12px;border-radius:99px;white-space:nowrap;cursor:pointer;flex-shrink:0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);';
+      c.style.cssText = 'padding:9px 10px;font-size:10px;line-height:1.35;cursor:pointer;color:rgba(255,255,255,0.4);border-left:2px solid transparent;';
     }
   });
-  renderGuide();
+  renderFAQs();
 }
 
-function renderGuide() {
-  const el = document.getElementById('guide-list');
-  const countEl = document.getElementById('guide-count');
+function renderFAQs() {
+  const el = document.getElementById('faqs-list');
+  const countEl = document.getElementById('faqs-count');
   if (!el) return;
-  const query = (document.getElementById('guide-search')?.value || '').toLowerCase();
-  const filter = window._guideFilter || 'All';
+  const query = (document.getElementById('faqs-search')?.value || '').toLowerCase();
+  const filter = window._faqsFilter || 'All';
 
   let items = GUIDE.filter(g => {
     const matchStage = filter === 'All' || g.stage === filter;
@@ -2646,58 +2647,47 @@ function renderGuide() {
   if (countEl) countEl.textContent = items.length + ' articles';
 
   if (!items.length) {
-    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">No results found</div>';
+    el.innerHTML = '<div style="text-align:center;padding:30px 0;color:rgba(255,255,255,0.25);font-size:12px;">No results</div>';
     return;
   }
 
-  // Pinned first
   const pinned = items.filter(g => g.pin);
   const rest = items.filter(g => !g.pin);
   const warn = rest.filter(g => g.warn);
   const normal = rest.filter(g => !g.warn);
 
   let html = '';
-
   if (pinned.length && !query) {
-    html += '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin-bottom:10px;">Pinned</div>';
-    html += pinned.map((g,i) => guideCard(g, 'pinned')).join('');
+    html += '<div style="font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);margin-bottom:8px;">Pinned</div>';
+    html += pinned.map(g => faqCard(g,'pinned')).join('');
   }
-
   if (warn.length && !query) {
-    html += '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin:14px 0 10px;">Watch out for</div>';
-    html += warn.map(g => guideCard(g, 'warn')).join('');
+    html += '<div style="font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);margin:12px 0 8px;">Watch out for</div>';
+    html += warn.map(g => faqCard(g,'warn')).join('');
   }
-
-  const regularLabel = query ? '' : '<div style="font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);margin:14px 0 10px;">Tips &amp; FAQs</div>';
-  html += regularLabel + normal.map(g => guideCard(g, 'normal')).join('');
-
+  const label = query ? '' : '<div style="font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.25);margin:12px 0 8px;">Tips &amp; FAQs</div>';
+  html += label + normal.map(g => faqCard(g,'normal')).join('');
   el.innerHTML = html;
 }
 
-function guideCard(g, variant) {
+function faqCard(g, variant) {
   const stageColors = {Filing:'rgba(93,184,126,0.15)',Biometrics:'rgba(93,126,184,0.15)',Waiting:'rgba(200,149,42,0.15)',Interview:'rgba(184,93,150,0.15)',Ceremony:'rgba(93,150,184,0.15)'};
   const stageTextColors = {Filing:'#5db87e',Biometrics:'#7ba4e8',Waiting:'#c8952a',Interview:'#e87bc8',Ceremony:'#7bb4e8'};
-  const stageTag = `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:${stageColors[g.stage]||'rgba(255,255,255,0.08)'};color:${stageTextColors[g.stage]||'rgba(255,255,255,0.4)'};font-weight:500;">${g.stage}</span>`;
-  const typeTag = `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);">${g.type==='faq'?'FAQ':'Tip'}</span>`;
-
-  if (variant === 'pinned') {
-    return `<div style="background:rgba(93,184,126,0.1);border:1px solid rgba(93,184,126,0.2);border-radius:12px;padding:13px 15px;margin-bottom:8px;">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}${typeTag}</div>
-      <div style="font-size:13px;font-weight:500;color:#fff;line-height:1.45;margin-bottom:5px;">${g.title}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.6;">${g.body}</div>
-    </div>`;
-  }
-  if (variant === 'warn') {
-    return `<div style="background:rgba(226,75,74,0.07);border:1px solid rgba(226,75,74,0.15);border-left:2px solid rgba(226,75,74,0.45);border-radius:0 12px 12px 0;padding:13px 15px;margin-bottom:8px;">
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(226,75,74,0.15);color:#f09595;font-weight:500;">Critical</span></div>
-      <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.88);line-height:1.45;margin-bottom:5px;">${g.title}</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">${g.body}</div>
-    </div>`;
-  }
-  return `<div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:13px 15px;margin-bottom:8px;">
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">${stageTag}${typeTag}</div>
-    <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.88);line-height:1.45;margin-bottom:5px;">${g.title}</div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.6;">${g.body}</div>
+  const typeTag = `<span style="font-size:8px;padding:2px 6px;border-radius:99px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.3);">${g.type==='faq'?'FAQ':'Tip'}</span>`;
+  if (variant==='pinned') return `<div style="background:rgba(93,184,126,0.09);border:1px solid rgba(93,184,126,0.18);border-radius:10px;padding:11px 12px;margin-bottom:7px;">
+    <div style="display:flex;gap:5px;margin-bottom:6px;">${typeTag}</div>
+    <div style="font-size:12px;font-weight:500;color:#fff;line-height:1.4;margin-bottom:4px;">${g.title}</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.45);line-height:1.55;">${g.body}</div>
+  </div>`;
+  if (variant==='warn') return `<div style="background:rgba(226,75,74,0.06);border:1px solid rgba(226,75,74,0.12);border-left:2px solid rgba(226,75,74,0.4);border-radius:0 10px 10px 0;padding:11px 12px;margin-bottom:7px;">
+    <div style="display:flex;gap:5px;margin-bottom:6px;"><span style="font-size:8px;padding:2px 6px;border-radius:99px;background:rgba(226,75,74,0.15);color:#f09595;">Critical</span></div>
+    <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.88);line-height:1.4;margin-bottom:4px;">${g.title}</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.4);line-height:1.55;">${g.body}</div>
+  </div>`;
+  return `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:11px 12px;margin-bottom:7px;">
+    <div style="display:flex;gap:5px;margin-bottom:6px;">${typeTag}</div>
+    <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);line-height:1.4;margin-bottom:4px;">${g.title}</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.4);line-height:1.55;">${g.body}</div>
   </div>`;
 }
 
@@ -2709,21 +2699,55 @@ function renderStories() {
   const items = filter === 'all' ? STORIES : STORIES.filter(s => s.speed === filter);
 
   if (!items.length) {
-    el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">No stories yet for this filter</div>';
+    el.innerHTML = `
+      <div style="padding:20px 16px 0;">
+        <div style="opacity:0.3;">
+          <div style="display:flex;align-items:center;gap:10px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.08);width:60%;margin-bottom:6px;"></div><div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.05);width:40%;"></div></div>
+          </div>
+          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:95%;margin:12px 0 6px;"></div>
+          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:80%;margin-bottom:6px;"></div>
+          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:88%;margin-bottom:16px;"></div>
+        </div>
+        <div style="opacity:0.15;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,0.04);">
+          <div style="display:flex;align-items:center;gap:10px;padding:16px 0 10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);flex-shrink:0;"></div>
+            <div style="flex:1;"><div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.08);width:50%;margin-bottom:6px;"></div><div style="height:8px;border-radius:99px;background:rgba(255,255,255,0.05);width:35%;"></div></div>
+          </div>
+          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:90%;margin-bottom:6px;"></div>
+          <div style="height:10px;border-radius:99px;background:rgba(255,255,255,0.06);width:70%;"></div>
+        </div>
+      </div>
+      <div style="text-align:center;padding:28px 24px 20px;">
+        <div style="width:52px;height:52px;border-radius:50%;background:rgba(93,184,126,0.12);border:1px solid rgba(93,184,126,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 9C3 6.24 5.24 4 8 4C9.74 4 11.27 4.93 12 6.28C12.73 4.93 14.26 4 16 4C18.76 4 21 6.24 21 9C21 15 12 21 12 21Z" stroke="#5db87e" stroke-width="1.5" fill="rgba(93,184,126,0.15)"/></svg>
+        </div>
+        <div style="font-size:15px;font-weight:500;color:#fff;margin-bottom:8px;line-height:1.4;">Be the first to share your journey</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.65;margin-bottom:18px;">This is a space for immigrants to share their real experience — the wait, the nerves, the moment it all became worth it.</div>
+        <button onclick="showShareStory()" style="background:#4a9e6b;color:#fff;border:none;border-radius:99px;padding:11px 24px;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;">Share your story</button>
+        <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:10px;">Takes 2 minutes · reviewed before publishing</div>
+      </div>`;
     return;
   }
 
   el.innerHTML = items.map(s => `
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;margin-bottom:10px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <div style="width:32px;height:32px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
+    <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
         <div>
-          <div style="font-size:12px;font-weight:500;color:rgba(255,255,255,0.75);">${s.name}</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.3);">${s.origin} → ${s.state} · ${s.months} months</div>
+          <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} → ${s.state} · ${s.months} months</div>
         </div>
       </div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.65;font-style:italic;">"${s.story}"</div>
-      <div style="display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story}"</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
+        <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.2);">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 15 3 9C3 6.24 5.24 4 8 4C9.74 4 11.27 4.93 12 6.28C12.73 4.93 14.26 4 16 4C18.76 4 21 6.24 21 9C21 15 12 21 12 21Z" stroke="rgba(255,255,255,0.25)" stroke-width="1.4" fill="none"/></svg>
+          ${s.likes||Math.floor(Math.random()*40+5)}
+        </div>
+      </div>
     </div>
   `).join('');
 }
