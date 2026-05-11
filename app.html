@@ -3107,6 +3107,7 @@ setTimeout(renderJourneyMap, 100);
 
 <script>
 function handleLogout(){
+  try { sessionStorage.removeItem('mia_history'); } catch(e) {}
   if(window._sb){
     window._sb.auth.signOut().then(() => {
       window.location.replace("https://thelandedapp.com/");
@@ -3126,6 +3127,11 @@ function unlockMia(){
   window._miaUnlocked=true;
   document.getElementById('mia-gate').style.display='none';
   document.getElementById('mia-input-row').style.display='flex';
+  // Restore previous messages
+  if(window._miaHistory.length > 0) {
+    const msgs = document.getElementById('mia-msgs');
+    window._miaHistory.forEach(m => addMiaMsg(m.content, m.role === 'user' ? 'user' : 'mia'));
+  }
 }
 function buildMiaSystemPrompt() {
   // ── User's live app state ──────────────────────────
@@ -3266,7 +3272,11 @@ HOW TO CONVERSE:
 ${langNote}`;
 }
 
-window._miaHistory = [];
+// Load Mia history from sessionStorage
+try {
+  const saved = sessionStorage.getItem('mia_history');
+  window._miaHistory = saved ? JSON.parse(saved) : [];
+} catch(e) { window._miaHistory = []; }
 
 async function sendMia(){
   if(!window._miaUnlocked)return;
@@ -3276,6 +3286,7 @@ async function sendMia(){
   input.value='';
   addMiaMsg(text,'user');
   window._miaHistory.push({role:'user', content:text});
+  try { sessionStorage.setItem('mia_history', JSON.stringify(window._miaHistory)); } catch(e) {}
   addMiaTyping();
   try{
     const session = window._sbSession || (await window._sb.auth.getSession()).data.session;
@@ -3299,6 +3310,7 @@ async function sendMia(){
     addMiaMsg(reply,'mia');
     window._miaHistory.push({role:'assistant', content:reply});
     if(window._miaHistory.length > 20) window._miaHistory = window._miaHistory.slice(-20);
+    try { sessionStorage.setItem('mia_history', JSON.stringify(window._miaHistory)); } catch(e) {}
   }catch(e){console.error('Mia error:', e);removeMiaTyping();addMiaMsg("Sorry, trouble connecting. Try again in a moment.",'mia');}
 }
 function addMiaMsg(text,role){
