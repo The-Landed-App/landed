@@ -44,6 +44,7 @@
 
     // ✅ Authenticated + paid
     window._sbSession = session;
+renderHomeStoryCard();
     // Unlock Mia once DOM is ready
     if(document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => unlockMia());
@@ -409,7 +410,7 @@ function googleTranslateElementInit(){
     </div>
 
     <!-- Your story card -->
-    <div id="home-story-card" style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px 14px;cursor:pointer;overflow:hidden;"></div>
+    <div id="home-story-card" style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px 14px;cursor:pointer;overflow:hidden;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);font-weight:500;margin-bottom:7px;">Your story</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.55;margin-bottom:8px;">Share your naturalization journey with other immigrants going through the same thing.</div><div style="font-size:10px;color:#5db87e;font-weight:500;">Share your story →</div></div>
 
   </div>
 
@@ -1368,7 +1369,6 @@ function renderChecklist() {
   Object.keys(clState).forEach(k => { if(!validKeys.has(k)) delete clState[k]; });
   updateCLProgress();
   renderRings();
-renderHomeStoryCard();
 }
 
 function renderRings() {
@@ -2999,16 +2999,14 @@ function addToCalendar(i) {
   showToast('📅 Opening calendar…');
 }
 window._activeSection = null;
-window._activeSection = null;
 loadState();
 loadScores();
 loadGamification();
 loadMailTracker();
 renderTimeline();
-renderFAQStandalone();
+renderJourneyMap();
 renderDocs();
 renderRings();
-renderTips();
 updateSnapDocs();
 updateSnapDays();
 updateHomeProgress();
@@ -3016,7 +3014,6 @@ updateCurrentStep();
 updateLifeGraphic();
 renderScoreHistory();
 renderGamification();
-startTicker();
 startAffirmations();
 loadLanguage();
 initState();
