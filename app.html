@@ -2730,6 +2730,7 @@ async function renderStories() {
   el.innerHTML = '<div style="text-align:center;padding:40px 0;color:rgba(255,255,255,0.25);font-size:13px;">Loading…</div>';
 
   try {
+    const userId = window._sbSession?.user?.id || null;
     const { data, error } = await window._sb
       .from('stories')
       .select('*')
@@ -2737,7 +2738,7 @@ async function renderStories() {
       .order('created_at', { ascending: false });
     if (error) throw error;
     // Map DB rows to display format
-    const STORIES = (data || []).filter(s => s.user_id !== userId).map(s => ({
+    const STORIES = (data || []).filter(s => !userId || s.user_id !== userId).map(s => ({
       initials: s.name ? s.name.substring(0,2).toUpperCase() : '?',
       color: 'rgba(93,184,126,0.18)',
       textColor: '#5db87e',
@@ -2792,7 +2793,6 @@ async function renderStories() {
   }
 
   // Also fetch current user's own story (any status)
-    const userId = window._sbSession?.user?.id;
     let myStory = null;
     if (userId) {
       const { data: myData } = await window._sb
@@ -2896,10 +2896,22 @@ async function updateMyStory() {
         origin: document.getElementById('story-origin').value.trim() || null,
         months: parseInt(document.getElementById('story-months').value) || null,
         story_text: text,
-        status: 'pending', // back to review after edit
+        status: 'pending',
       })
       .eq('id', window._myStoryId);
     if (error) throw error;
+    // Send email notification about the edit
+    await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/swift-task', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('story-name').value.trim() || null,
+        origin: document.getElementById('story-origin').value.trim() || null,
+        months: document.getElementById('story-months').value || null,
+        story_text: '[EDIT] ' + text,
+        user_id: window._sbSession?.user?.id || null,
+      }),
+    }).catch(() => {}); // don't block on email failure
     hideShareStory();
     showToast('Story updated — back under review 🙏');
     renderStories();
