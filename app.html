@@ -606,7 +606,7 @@ function googleTranslateElementInit(){
         <span style="font-size:13px;font-weight:500;color:var(--forest);">Score history</span>
         <button onclick="clearScores()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;">Clear all</button>
       </div>
-      <div id="score-history">No scores yet — take a practice test below.</div>
+      <div id="score-history" style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);">No scores yet — take a practice test below.</div>
     </div>
 
     <!-- Study plan -->
@@ -2045,7 +2045,7 @@ function clearScores() {
 function renderScoreHistory() {
   const el = document.getElementById('score-history');
   if (!el) return;
-  if (!scores.length) { el.innerHTML = '<span style="color:var(--muted);">No scores yet — take a practice test below.</span>'; updateHomeScores(); return; }
+  if (!scores.length) { el.innerHTML = '<span style="font-family:DM Sans,sans-serif;font-size:13px;color:var(--muted);">No scores yet — take a practice test below.</span>'; updateHomeScores(); return; }
   const civics = scores.filter(s => s.type === 'civics');
   const english = scores.filter(s => s.type === 'english');
   const renderRow = (arr, label) => {
