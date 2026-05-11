@@ -46,11 +46,7 @@
     window._sbSession = session;
 renderHomeStoryCard();
     // Unlock Mia once DOM is ready
-    if(document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => unlockMia());
-    } else {
-      unlockMia();
-    }
+    setTimeout(() => unlockMia(), 100);
 
   } catch(e) {
     // If Supabase fails to load, don't block the app
