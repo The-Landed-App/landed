@@ -1,4 +1,7 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "routes": [
+    { "src": "/sitemap.xml", "dest": "/sitemap.xml" }
+  ]
 }
