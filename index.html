@@ -1211,6 +1211,11 @@ async function submitGift() {
     err.classList.add('show');
     return;
   }
+  if (recipientEmail.toLowerCase() === senderEmail.toLowerCase()) {
+    err.textContent = 'The recipient and your email address can\'t be the same — this is a gift for someone else!';
+    err.classList.add('show');
+    return;
+  }
 
   err.classList.remove('show');
   btn.innerHTML = '<span>Processing…</span>';
