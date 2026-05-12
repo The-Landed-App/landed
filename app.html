@@ -524,7 +524,7 @@ function googleTranslateElementInit(){
 <div class="page" id="page-documents">
   <div class="page-title-bar">
     <div class="page-title-icon">📁</div>
-    <div><div class="page-title-text">Document Center</div><div class="page-title-sub">Track your citizenship pathway documents</div></div>
+    <div><div class="page-title-text">Document Center</div><div class="page-title-sub">Track which documents you have ready</div></div>
   </div>
   <div class="doc-progress" style="background:#faf8f4;border:1px solid rgba(0,0,0,0.07);">
     <div class="doc-progress-top"><span class="doc-progress-label">Documents obtained</span><span class="doc-progress-count" id="doc-count">0 / 5</span></div>
@@ -1349,10 +1349,10 @@ function renderDocs() {
       <div class="doc-emoji">${d.emoji}</div>
       <div class="doc-info">
         <div class="doc-name">${d.name}</div>
-        <div class="doc-status">${docState[d.key] ? 'Uploaded' : 'Not uploaded'}</div>
+        <div class="doc-status">${docState[d.key] ? 'Ready' : 'Not ready'}</div>
       </div>
       <button class="doc-btn ${docState[d.key]?'uploaded':''}" onclick="toggleDoc('${d.key}')">
-        ${docState[d.key] ? '✓ Filed' : 'Mark filed'}
+        ${docState[d.key] ? '✓ Got it' : 'Mark ready'}
       </button>
     </div>
   `).join('');
