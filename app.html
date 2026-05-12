@@ -1533,7 +1533,8 @@ function renderJourneyMap() {
 
   // Fixed compact spacing — 8 dots across full width
   const pad = 10;
-  const W = el.offsetWidth > 60 ? el.offsetWidth : 300;
+  // Force layout recalc if offsetWidth is 0
+  const W = el.offsetWidth > 60 ? el.offsetWidth : (el.parentElement?.offsetWidth || 300);
   const spacing = Math.floor((W - pad * 2) / (n - 1));
   const dotR = 5;
   const trackY = 16;
