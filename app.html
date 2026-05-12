@@ -44,6 +44,7 @@
       console.warn('Profile fetch error:', profileError);
       // Still set session so app works, just without paid check
       window._sbSession = session;
+      initState();
       setTimeout(() => renderHomeStoryCard(), 200);
       setTimeout(() => unlockMia(), 100);
       return;
@@ -59,6 +60,8 @@
     window._sbSession = session;
     // Load user's state preference from profile
     if (profile?.state) window._userState = profile.state;
+    // Init state AFTER profile loaded so modal only shows if truly not set
+    initState();
     setTimeout(() => renderHomeStoryCard(), 200);
     // Unlock Mia once DOM is ready
     setTimeout(() => unlockMia(), 100);
@@ -3156,8 +3159,7 @@ renderScoreHistory();
 renderGamification();
 startAffirmations();
 loadLanguage();
-// Delay initState so _userState is populated from profile first
-setTimeout(initState, 300);
+// initState is called from inside the auth block after profile loads
 // Re-render journey map once layout is complete
 setTimeout(renderJourneyMap, 100);
 </script>
