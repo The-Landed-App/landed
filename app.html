@@ -745,9 +745,30 @@ function googleTranslateElementInit(){
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:#fff;letter-spacing:-0.3px;">FAQs</div>
       <div style="font-size:10px;color:rgba(255,255,255,0.25);" id="faqs-count"></div>
     </div>
-    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 11px;display:flex;align-items:center;gap:8px;">
+    <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:7px 11px;display:flex;align-items:center;gap:8px;margin-bottom:10px;">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input id="faqs-search" type="text" placeholder="Search…" oninput="renderFAQs()" style="background:none;border:none;outline:none;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;width:100%;" />
+      <input id="faqs-search" type="text" placeholder="Search tips and FAQs…" oninput="onFAQsSearch()" onfocus="showFAQsSuggestions()" style="background:none;border:none;outline:none;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;width:100%;" />
+      <button id="faqs-search-clear" onclick="clearFAQsSearch()" style="display:none;background:none;border:none;color:rgba(255,255,255,0.3);font-size:16px;cursor:pointer;padding:0;line-height:1;">×</button>
+    </div>
+    <!-- Suggestions area -->
+    <div id="faqs-suggestions">
+      <!-- Recent searches -->
+      <div id="faqs-recents" style="display:none;margin-bottom:8px;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);font-weight:500;margin-bottom:6px;">Recent</div>
+        <div id="faqs-recents-list" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+      </div>
+      <!-- Suggestion chips -->
+      <div id="faqs-chips">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);font-weight:500;margin-bottom:6px;">Try searching</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;">
+          <button onclick="setFAQsSearch('How long will this take')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">How long will this take?</button>
+          <button onclick="setFAQsSearch('travel while pending')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">Travel while pending</button>
+          <button onclick="setFAQsSearch('RFE')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">What is an RFE?</button>
+          <button onclick="setFAQsSearch('interview tips')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">Interview tips</button>
+          <button onclick="setFAQsSearch('do I need a lawyer')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">Do I need a lawyer?</button>
+          <button onclick="setFAQsSearch('filing fee')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:inherit;cursor:pointer;white-space:nowrap;">Filing fee</button>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Sidebar + content layout -->
@@ -2761,8 +2782,78 @@ function initFAQsLayout() {
   sidebar.innerHTML = stages.map(s => `
     <div onclick="setFAQFilter('${s}')" id="fchip-${s}" style="padding:9px 10px;font-size:10px;line-height:1.35;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;${s==='All'?'color:#5db87e;border-left-color:#5db87e;background:rgba(93,184,126,0.07);':'color:rgba(255,255,255,0.4);'}">${s}</div>
   `).join('');
+  // Show suggestions on init
+  showFAQsSuggestions();
+  renderFAQsRecents();
   // Use requestAnimationFrame to ensure DOM is painted before rendering content
   requestAnimationFrame(() => renderFAQs());
+}
+
+// ── FAQS SEARCH WITH RECENTS ─────────────────────────
+let _faqsRecents = [];
+try { _faqsRecents = JSON.parse(localStorage.getItem('faqs_recents') || '[]'); } catch(e) {}
+
+function saveFAQsRecent(q) {
+  if (!q || q.length < 2) return;
+  _faqsRecents = [q, ..._faqsRecents.filter(r => r !== q)].slice(0, 5);
+  try { localStorage.setItem('faqs_recents', JSON.stringify(_faqsRecents)); } catch(e) {}
+}
+
+function showFAQsSuggestions() {
+  const suggestions = document.getElementById('faqs-suggestions');
+  if (suggestions) suggestions.style.display = 'block';
+  renderFAQsRecents();
+}
+
+function hideFAQsSuggestions() {
+  const suggestions = document.getElementById('faqs-suggestions');
+  if (suggestions) suggestions.style.display = 'none';
+}
+
+function renderFAQsRecents() {
+  const el = document.getElementById('faqs-recents');
+  const list = document.getElementById('faqs-recents-list');
+  if (!el || !list) return;
+  if (!_faqsRecents.length) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  list.innerHTML = _faqsRecents.map(r =>
+    `<button onclick="setFAQsSearch('${r.replace(/'/g, "\'")}')" style="font-size:10px;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 3M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      ${r}
+    </button>`
+  ).join('');
+}
+
+function setFAQsSearch(q) {
+  const input = document.getElementById('faqs-search');
+  if (input) { input.value = q; input.focus(); }
+  hideFAQsSuggestions();
+  saveFAQsRecent(q);
+  renderFAQs();
+  const clearBtn = document.getElementById('faqs-search-clear');
+  if (clearBtn) clearBtn.style.display = 'block';
+}
+
+function onFAQsSearch() {
+  const input = document.getElementById('faqs-search');
+  const q = input ? input.value.trim() : '';
+  const clearBtn = document.getElementById('faqs-search-clear');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+  if (q) {
+    hideFAQsSuggestions();
+  } else {
+    showFAQsSuggestions();
+  }
+  renderFAQs();
+}
+
+function clearFAQsSearch() {
+  const input = document.getElementById('faqs-search');
+  if (input) { input.value = ''; input.focus(); }
+  const clearBtn = document.getElementById('faqs-search-clear');
+  if (clearBtn) clearBtn.style.display = 'none';
+  showFAQsSuggestions();
+  renderFAQs();
 }
 
 function setFAQFilter(stage) {
@@ -2785,6 +2876,7 @@ function renderFAQs() {
   const countEl = document.getElementById('faqs-count');
   if (!el) return;
   const rawQuery = (document.getElementById('faqs-search')?.value || '').toLowerCase().trim();
+  if (rawQuery.length > 2) saveFAQsRecent(rawQuery);
   const filter = window._faqsFilter || 'All';
   const words = rawQuery.split(/\s+/).filter(Boolean);
 
