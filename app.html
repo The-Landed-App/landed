@@ -414,13 +414,13 @@ function googleTranslateElementInit(){
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
     <div id="snap-mail" style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;cursor:pointer;" onclick="switchPage('n400')">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">N-400 Mail</div>
-      <div id="snap-mail-status" style="font-size:18px;margin-bottom:2px;line-height:1;">📬</div>
+      <div id="snap-mail-status" style="margin-bottom:2px;line-height:1;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#4a6650" stroke-width="1.5" fill="none"/><path d="M2 8l10 7 10-7" stroke="#4a6650" stroke-width="1.5" stroke-linecap="round"/></svg></div>
       <div id="snap-mail-label" style="font-size:9px;color:var(--muted);">Not mailed yet</div>
     </div>
     <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;cursor:pointer;" onclick="openShareDashboard()">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Streak</div>
       <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;"><span id="streak-count">0</span><span style="font-size:13px;color:var(--muted);"> days</span></div>
-      <div style="font-size:9px;color:var(--muted);margin-top:2px;">🔥 keep it up</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;">keep it up</div>
     </div>
   </div>
 
@@ -489,7 +489,7 @@ function googleTranslateElementInit(){
 
       <!-- Streak -->
       <div style="background:var(--approved-bg);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
-        <span style="font-size:24px;">🔥</span>
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--approved-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2C12 2 7 8 7 13C7 15.76 9.24 18 12 18C14.76 18 17 15.76 17 13C17 8 12 2 12 2Z" stroke="#2d6647" stroke-width="1.5" fill="#2d6647" fill-opacity="0.2"/><circle cx="12" cy="13" r="3" fill="#2d6647" fill-opacity="0.4" stroke="#2d6647" stroke-width="1.2"/></svg></div>
         <div>
           <div style="font-size:13px;font-weight:500;color:var(--forest);" id="dash-streak">0 day streak</div>
           <div style="font-size:11px;color:var(--muted);">Practicing every day</div>
@@ -562,7 +562,7 @@ function googleTranslateElementInit(){
 
   <!-- Certified mail tracking -->
   <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
-    <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">📬 Certified Mail Tracking</div>
+    <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">Certified Mail Tracking</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">After mailing your N-400, enter your USPS tracking number here. It will show on your home dashboard.</div>
     <div id="n400-mail-no-tracking">
       <div style="display:flex;gap:8px;">
@@ -624,7 +624,7 @@ function googleTranslateElementInit(){
     <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">🏛️ Know your U.S. Representative</div>
+          <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">Know your U.S. Representative</div>
           <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">This question appears on the civics test but is district-specific — there are 435 congressional districts. USCIS officers know this. Saying <em style="color:var(--forest);">"I don't know their name, but I know how to find out"</em> is an accepted answer. Still, knowing yours is best.</div>
           <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:99px;padding:8px 16px;font-size:12px;font-weight:500;">Find my representative ↗</a>
         </div>
@@ -641,7 +641,7 @@ function googleTranslateElementInit(){
     <!-- Study plan -->
     <div id="study-plan-wrap" style="display:none;background:var(--approved-bg);border-radius:var(--r);border:1px solid var(--sage);padding:16px;margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:13px;font-weight:500;color:var(--forest);">📚 Your study plan</span>
+        <span style="font-size:13px;font-weight:500;color:var(--forest);">Your study plan</span>
         <button onclick="exportStudyPlan()" style="font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--grass);background:var(--white);color:var(--forest);cursor:pointer;font-family:inherit;">Export notes</button>
       </div>
       <div id="study-plan-content" style="font-size:13px;color:var(--forest);line-height:1.7;"></div>
@@ -651,12 +651,12 @@ function googleTranslateElementInit(){
     <div class="slabel">Start a practice test</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
       <div onclick="startQuiz('civics')" style="background:#0d1f14;border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-        <div style="font-size:22px;margin-bottom:8px;">🏛️</div>
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="18" width="20" height="2" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="6" y="8" width="3" height="10" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="11" y="6" width="3" height="12" rx="1" fill="#e8dfc8" fill-opacity="0.6"/><rect x="16" y="10" width="3" height="8" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><path d="M4 4h16" stroke="#e8dfc8" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/></svg></div>
         <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Civics</div>
         <div style="font-size:11px;color:var(--sage);">100 USCIS questions · 10 at a time</div>
       </div>
       <div onclick="startQuiz('english')" style="background:#0d1f14;border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-        <div style="font-size:22px;margin-bottom:8px;">📖</div>
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 4h7a2 2 0 0 1 2 2v13a1.5 1.5 0 0 0-1.5-1.5H4V4Z" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.15"/><path d="M20 4h-7a2 2 0 0 0-2 2v13a1.5 1.5 0 0 1 1.5-1.5H20V4Z" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.15"/></svg></div>
         <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">English</div>
         <div style="font-size:11px;color:var(--sage);">Reading · 10 sentences</div>
       </div>
@@ -788,7 +788,7 @@ function googleTranslateElementInit(){
 <!-- ══ STATE PICKER MODAL ══ -->
 <div id="state-modal">
   <div class="state-modal-box">
-    <div style="font-size:22px;margin-bottom:10px;">📍</div>
+    <div style="width:40px;height:40px;border-radius:12px;background:var(--approved-bg);display:flex;align-items:center;justify-content:center;margin-bottom:10px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 5 14 5 9C5 5.69 8.13 3 12 3C15.87 3 19 5.69 19 9C19 14 12 21 12 21Z" stroke="#1a3d2b" stroke-width="1.5" fill="#1a3d2b" fill-opacity="0.12"/><circle cx="12" cy="9" r="3" stroke="#1a3d2b" stroke-width="1.5" fill="none"/></svg></div>
     <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--forest);margin-bottom:6px;">Where do you live?</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;">Your state determines three civics questions — your governor, your senators, and your representative. We'll show you the right answers.</div>
     <select id="state-select-modal" class="state-select-el">
@@ -1199,7 +1199,7 @@ function renderStateIndicator() {
   if (sd) {
     el.innerHTML = `
       <div>
-        <span style="font-size:12px;font-weight:500;color:var(--forest);">📍 ${state}</span>
+        <span style="font-size:12px;font-weight:500;color:var(--forest);">${state}</span>
         <div style="font-size:11px;color:var(--muted);margin-top:1px;">Gov: ${sd.gov.n} · Sen: ${sd.sens[0].n}, ${sd.sens[1].n}</div>
       </div>
       <button onclick="showStateModal()" style="background:none;border:1px solid var(--cream2);border-radius:99px;color:var(--muted);font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit;white-space:nowrap;">Change</button>`;
@@ -1287,7 +1287,7 @@ function renderTimeline() {
           </div>
           ${dateDisplay ? `
             <div style="display:flex;align-items:center;gap:8px;margin-top:6px;" onclick="event.stopPropagation()">
-              <span style="font-size:11px;color:var(--forest);font-weight:500;">📅 ${dateDisplay}</span>
+              <span style="font-size:11px;color:var(--forest);font-weight:500;">${dateDisplay}</span>
               ${countdown !== null ? `<span style="font-size:10px;color:${countdown < 0 ? 'var(--muted)' : countdown <= 7 ? '#c8952a' : 'var(--muted)'};">${countdown < 0 ? 'Passed' : countdown === 0 ? 'Today!' : `${countdown} days away`}</span>` : ''}
               <button onclick="addToCalendar(${i})" style="font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--grass);background:var(--approved-bg);color:var(--forest);cursor:pointer;font-family:inherit;">Add to calendar</button>
               <button onclick="clearStepDate(${i})" style="font-size:10px;padding:2px 6px;border-radius:99px;border:1px solid var(--cream2);background:none;color:var(--muted);cursor:pointer;font-family:inherit;">×</button>
@@ -1698,7 +1698,7 @@ function renderTips() {
   });
 
   el.innerHTML = cards.length ? cards.map((c, i) => {
-    const tag = `<span class="tip-tag ${c.warn ? 'tip-tag-warn' : 'tip-tag-normal'}">${c.warn ? '⚠️ Watch out' : '💡 ' + c.section}</span>`;
+    const tag = `<span class="tip-tag ${c.warn ? 'tip-tag-warn' : 'tip-tag-normal'}">${c.warn ? 'Watch out' : c.section}</span>`;
     const isLong = c.text.length > TIP_COLLAPSE_THRESHOLD;
     if (!isLong) {
       return `<div class="tip-card-static">${tag}<div class="tip-card-static-text">${c.text}</div></div>`;
@@ -2133,9 +2133,9 @@ function generateStudyPlan() {
   if (civics.length) {
     const latest = civics[civics.length-1];
     const pct = Math.round(latest.val/latest.total*100);
-    if (pct < 60) plan.push('🔴 <strong>Civics needs work.</strong> Practice daily. Focus on government structure and history first.');
-    else if (pct < 80) plan.push('🟡 <strong>Civics is improving.</strong> Review the questions below and focus on those categories.');
-    else plan.push('🟢 <strong>Civics is strong.</strong> Quick review once a week to stay sharp.');
+    if (pct < 60) plan.push('<span style="color:#e24b4a;font-weight:500;">Civics needs work.</span> Practice daily. Focus on government structure and history first.');
+    else if (pct < 80) plan.push('<span style="color:#ba7517;font-weight:500;">Civics is improving.</span> Review the questions below and focus on those categories.');
+    else plan.push('<span style="color:#1a3d2b;font-weight:500;">Civics is strong.</span> Quick review once a week to stay sharp.');
 
     // List actual wrong questions
     const wrongQs = (latest.wrong || []);
@@ -2148,9 +2148,9 @@ function generateStudyPlan() {
   if (english.length) {
     const latest = english[english.length-1];
     const pct = Math.round(latest.val/latest.total*100);
-    if (pct < 60) plan.push('🔴 <strong>English needs practice.</strong> Read a short English article daily. Practice reading sentences aloud.');
-    else if (pct < 80) plan.push('🟡 <strong>English is okay.</strong> Practice reading aloud and work on longer sentences.');
-    else plan.push('🟢 <strong>English is solid.</strong> You\'re ready for the reading portion of the interview.');
+    if (pct < 60) plan.push('<span style="color:#e24b4a;font-weight:500;">English needs practice.</span> Read a short English article daily. Practice reading sentences aloud.');
+    else if (pct < 80) plan.push('<span style="color:#ba7517;font-weight:500;">English is okay.</span> Practice reading aloud and work on longer sentences.');
+    else plan.push('<span style="color:#1a3d2b;font-weight:500;">English is solid.</span> You\'re ready for the reading portion of the interview.');
 
     const wrongQs = (latest.wrong || []);
     if (wrongQs.length) {
@@ -2609,11 +2609,11 @@ function answerQuestion(btn) {
   if (correct) {
     quizCorrect++;
     feedback.style.cssText='display:block;background:var(--approved-bg);border:1px solid var(--grass);color:var(--forest);border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
-    feedback.innerHTML = q.note ? `✅ Correct! <span style="font-size:12px;opacity:0.8;">(${q.note})</span>` : '✅ Correct!';
+    feedback.innerHTML = q.note ? `Correct! <span style="font-size:12px;opacity:0.8;">(${q.note})</span>` : 'Correct!';
   } else {
     quizWrong.push({q:q.q, correct:q.altAnswer ? `${q.a} or ${q.altAnswer}` : q.a, cat:q.cat||'General'});
     feedback.style.cssText='display:block;background:#fdf0f0;border:1px solid #e74c3c;color:#c0392b;border-radius:var(--r);padding:12px 14px;font-size:13px;margin-bottom:12px;';
-    feedback.innerHTML = q.altAnswer ? `❌ Either <strong>${q.a}</strong> or <strong>${q.altAnswer}</strong> is correct` : `❌ The correct answer is: <strong>${q.a}</strong>`;
+    feedback.innerHTML = q.altAnswer ? `Either <strong>${q.a}</strong> or <strong>${q.altAnswer}</strong> is correct` : `The correct answer is: <strong>${q.a}</strong>`;
   }
   const nextBtn = document.getElementById('quiz-next-btn');
   nextBtn.style.display = 'block';
@@ -3231,7 +3231,7 @@ setTimeout(renderJourneyMap, 100);
 
 <!-- ── FLOATING SHARE ── -->
 <button id="share-btn" onclick="referFriend()" style="position:fixed;bottom:72px;left:16px;z-index:300;background:#ede7dc;border:1px solid rgba(0,0,0,0.1);border-radius:99px;padding:10px 16px 10px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 16px rgba(26,61,43,0.12);font-family:inherit;transition:transform 0.15s,box-shadow 0.15s;">
-  <span style="font-size:16px;line-height:1;">🤝</span>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 12v8a1 1 0 001 1h14a1 1 0 001-1v-8" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 6 12 2 8 6" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg>
   <span style="font-size:12px;font-weight:500;color:var(--forest);">Share</span>
 </button>
 
@@ -3519,7 +3519,7 @@ function removeMiaTyping(){const t=document.getElementById('mia-typing');if(t)t.
 <div id="share-sheet" onclick="if(event.target===this)closeShareSheet()">
   <div class="share-box">
     <button class="share-close-btn" onclick="closeShareSheet()">×</button>
-    <div class="share-emoji">🤝</div>
+    <div style="width:48px;height:48px;border-radius:14px;background:var(--approved-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 12v8a1 1 0 001 1h14a1 1 0 001-1v-8" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 6 12 2 8 6" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     <div class="share-title">Know someone on this path?</div>
     <div class="share-sub">Share Landed with a friend or family member going through the citizenship process.</div>
     <div class="share-pill">
