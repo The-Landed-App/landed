@@ -616,54 +616,74 @@ function googleTranslateElementInit(){
       </div>
       <div><div class="page-title-text">Interview Coach</div><div class="page-title-sub">Civics & English practice</div></div>
     </div>
-    <p class="coach-intro">Practice the 100 USCIS civics questions and English reading test. Your results are tracked and turned into a personal study plan.</p>
 
-    <div id="state-indicator" class="state-indicator-bar"></div>
-
-    <!-- Know your representative -->
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">Know your U.S. Representative</div>
-          <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">This question appears on the civics test but is district-specific — there are 435 congressional districts. USCIS officers know this. Saying <em style="color:var(--forest);">"I don't know their name, but I know how to find out"</em> is an accepted answer. Still, knowing yours is best.</div>
-          <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:99px;padding:8px 16px;font-size:12px;font-weight:500;">Find my representative ↗</a>
+    <!-- Scores panel -->
+    <div style="background:#0d1f14;border-radius:var(--r);padding:14px 16px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;">Your scores</span>
+        <button onclick="clearScores()" style="font-size:10px;color:rgba(255,255,255,0.2);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;">Clear</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="score-history">
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:11px 12px;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:4px;">Civics</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;color:#5db87e;line-height:1;">—</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">No scores yet</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:11px 12px;">
+          <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:4px;">English</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;color:#5db87e;line-height:1;">—</div>
+          <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">No scores yet</div>
         </div>
       </div>
     </div>
-    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:13px;font-weight:500;color:var(--forest);">Score history</span>
-        <button onclick="clearScores()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;">Clear all</button>
-      </div>
-      <div id="score-history" style="font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);">No scores yet — take a practice test below.</div>
-    </div>
 
     <!-- Study plan -->
-    <div id="study-plan-wrap" style="display:none;background:var(--approved-bg);border-radius:var(--r);border:1px solid var(--sage);padding:16px;margin-bottom:16px;">
+    <div id="study-plan-wrap" style="display:none;background:var(--approved-bg);border-radius:var(--r);border:1px solid var(--sage);padding:14px 16px;margin-bottom:12px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <span style="font-size:13px;font-weight:500;color:var(--forest);">Your study plan</span>
-        <button onclick="exportStudyPlan()" style="font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--grass);background:var(--white);color:var(--forest);cursor:pointer;font-family:inherit;">Export notes</button>
+        <span style="font-size:13px;font-weight:500;color:var(--forest);">Study plan</span>
+        <button onclick="exportStudyPlan()" style="font-size:11px;padding:4px 12px;border-radius:99px;border:1px solid var(--grass);background:var(--white);color:var(--forest);cursor:pointer;font-family:inherit;">Export</button>
       </div>
       <div id="study-plan-content" style="font-size:13px;color:var(--forest);line-height:1.7;"></div>
     </div>
 
-    <!-- Quiz buttons -->
-    <div class="slabel">Start a practice test</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
-      <div onclick="startQuiz('civics')" style="background:#0d1f14;border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="18" width="20" height="2" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="6" y="8" width="3" height="10" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="11" y="6" width="3" height="12" rx="1" fill="#e8dfc8" fill-opacity="0.6"/><rect x="16" y="10" width="3" height="8" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><path d="M4 4h16" stroke="#e8dfc8" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/></svg></div>
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">Civics</div>
-        <div style="font-size:11px;color:var(--sage);">100 USCIS questions · 10 at a time</div>
+    <!-- Practice -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Practice</span>
+      <div style="flex:1;height:1px;background:rgba(0,0,0,0.08);"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div onclick="startQuiz('civics')" style="background:#0d1f14;border-radius:var(--r);padding:16px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="2" y="18" width="20" height="2" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="5" y="8" width="3" height="10" rx="1" fill="#e8dfc8" fill-opacity="0.4"/><rect x="11" y="5" width="3" height="13" rx="1" fill="#e8dfc8" fill-opacity="0.6"/><rect x="17" y="11" width="3" height="7" rx="1" fill="#e8dfc8" fill-opacity="0.4"/></svg>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:3px;">Civics</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);">100 questions · 10 at a time</div>
       </div>
-      <div onclick="startQuiz('english')" style="background:#0d1f14;border-radius:var(--r);padding:20px;cursor:pointer;transition:opacity 0.15s;border:1px solid rgba(255,255,255,0.08);" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
-        <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 4h7a2 2 0 0 1 2 2v13a1.5 1.5 0 0 0-1.5-1.5H4V4Z" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.15"/><path d="M20 4h-7a2 2 0 0 0-2 2v13a1.5 1.5 0 0 1 1.5-1.5H20V4Z" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.15"/></svg></div>
-        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:4px;">English</div>
-        <div style="font-size:11px;color:var(--sage);">Reading · 10 sentences</div>
+      <div onclick="startQuiz('english')" style="background:#0d1f14;border-radius:var(--r);padding:16px;cursor:pointer;border:1px solid rgba(255,255,255,0.06);transition:opacity 0.15s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 4h7a2 2 0 0 1 2 2v13a1.5 1.5 0 0 0-1.5-1.5H4V4Z" stroke="#e8dfc8" stroke-width="1.4" fill="#e8dfc8" fill-opacity="0.12"/><path d="M20 4h-7a2 2 0 0 0-2 2v13a1.5 1.5 0 0 1 1.5-1.5H20V4Z" stroke="#e8dfc8" stroke-width="1.4" fill="#e8dfc8" fill-opacity="0.12"/></svg>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--cream2);margin-bottom:3px;">English</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);">Reading · 10 sentences</div>
       </div>
+    </div>
+
+    <!-- State -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Your state</span>
+      <div style="flex:1;height:1px;background:rgba(0,0,0,0.08);"></div>
+    </div>
+    <div id="state-indicator" class="state-indicator-bar"></div>
+
+    <!-- Know your representative -->
+    <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:6px;">Know your U.S. Representative</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">This question appears on the civics test but is district-specific. Saying <em style="color:var(--forest);">"I know how to find out"</em> is accepted. Knowing yours is best.</div>
+      <a href="https://www.house.gov/representatives/find-your-representative" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:var(--forest);color:var(--cream2);text-decoration:none;border-radius:99px;padding:8px 16px;font-size:12px;font-weight:500;">Find my representative ↗</a>
     </div>
   </div>
 
-  <!-- Quiz screen -->
+    <!-- Quiz screen -->
   <div id="quiz-screen" style="display:none;">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
       <button onclick="exitQuiz()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0;line-height:1;">←</button>
@@ -1369,20 +1389,35 @@ function toggleFAQ(i) {
 }
 
 // ── RENDER DOCUMENTS ─────────────────────────────────
+const DOC_ICONS = {
+  passport: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.3" fill="none"/><line x1="8" y1="16" x2="16" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+  marriage: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 3 14 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.91 3.81 13 5.08C14.09 3.81 15.76 3 17.5 3C20.58 3 23 5.42 23 8.5C23 14 14 21 12 21Z" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>`,
+  police:   `<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>`,
+  medical:  `<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="15" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  birth:    `<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/><line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><line x1="8" y1="16" x2="12" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+};
+
 function renderDocs() {
   const el = document.getElementById('doc-list');
-  el.innerHTML = DOCS.map(d => `
-    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid ${docState[d.key] ? 'rgba(74,158,107,0.3)' : 'rgba(0,0,0,0.07)'};padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color 0.2s;">
-      <div style="width:36px;height:36px;border-radius:10px;background:${docState[d.key] ? 'var(--approved-bg)' : 'var(--cream)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;">${d.emoji}</div>
+  el.innerHTML = DOCS.map(d => {
+    const done = docState[d.key];
+    const icon = DOC_ICONS[d.key] || DOC_ICONS.birth;
+    const checkSvg = `<svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const xSvg = `<svg width="10" height="10" viewBox="0 0 12 12" fill="none"><line x1="3" y1="3" x2="9" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="9" y1="3" x2="3" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+    return `
+    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid ${done ? 'rgba(74,158,107,0.3)' : 'rgba(0,0,0,0.07)'};padding:11px 13px;display:flex;align-items:center;gap:11px;transition:border-color 0.2s;cursor:pointer;" onclick="toggleDoc('${d.key}')">
+      <div style="width:34px;height:34px;border-radius:9px;background:${done ? 'var(--approved-bg)' : '#f5f2ee'};display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${done ? 'var(--forest2)' : '#9aada2'};">
+        ${icon}
+      </div>
       <div style="flex:1;">
         <div style="font-size:13px;font-weight:500;color:var(--forest);">${d.name}</div>
-        <div style="font-size:11px;color:${docState[d.key] ? 'var(--grass)' : 'var(--muted)'};margin-top:2px;">${docState[d.key] ? '✓ Ready' : 'Not ready'}</div>
+        <div style="font-size:11px;color:${done ? 'var(--grass)' : 'var(--muted)'};margin-top:2px;">${done ? 'Ready' : 'Not ready'}</div>
       </div>
-      <button style="font-size:11px;padding:6px 14px;border-radius:99px;border:1px solid ${docState[d.key] ? 'var(--grass)' : 'var(--cream2)'};background:${docState[d.key] ? 'var(--approved-bg)' : 'var(--cream)'};color:${docState[d.key] ? 'var(--forest)' : 'var(--muted)'};font-family:inherit;cursor:pointer;white-space:nowrap;font-weight:${docState[d.key] ? '500' : '400'};" onclick="toggleDoc('${d.key}')">
-        ${docState[d.key] ? '✓ Got it' : 'Mark ready'}
-      </button>
-    </div>
-  `).join('');
+      <div style="width:22px;height:22px;border-radius:50%;background:${done ? 'var(--approved-bg)' : '#f0ebe0'};display:flex;align-items:center;justify-content:center;color:${done ? 'var(--forest2)' : '#b8c4bc'};">
+        ${done ? checkSvg : xSvg}
+      </div>
+    </div>`;
+  }).join('');
   updateDocProgress();
 }
 
@@ -2099,23 +2134,30 @@ function clearScores() {
 function renderScoreHistory() {
   const el = document.getElementById('score-history');
   if (!el) return;
-  if (!scores.length) { el.innerHTML = '<span style="font-family:DM Sans,sans-serif;font-size:13px;color:var(--muted);">No scores yet — take a practice test below.</span>'; updateHomeScores(); return; }
   const civics = scores.filter(s => s.type === 'civics');
   const english = scores.filter(s => s.type === 'english');
-  const renderRow = (arr, label) => {
-    if (!arr.length) return '';
+
+  const renderScoreCard = (arr, label) => {
+    if (!arr.length) return `
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:11px 12px;">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:4px;">${label}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:24px;color:rgba(255,255,255,0.2);line-height:1;">—</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.2);margin-top:3px;">No scores yet</div>
+      </div>`;
     const latest = arr[arr.length-1];
     const pct = Math.round(latest.val/latest.total*100);
-    const trend = arr.length > 1 ? Math.round(arr[arr.length-1].val/arr[arr.length-1].total*100) - Math.round(arr[arr.length-2].val/arr[arr.length-2].total*100) : null;
-    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--cream2);">
-      <div><span style="font-size:13px;font-weight:500;color:var(--forest);">${label}</span><span style="font-size:11px;color:var(--muted);margin-left:8px;">${latest.date}</span></div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        ${trend !== null ? `<span style="font-size:11px;color:${trend >= 0 ? 'var(--grass)' : '#c8952a'};">${trend >= 0 ? '▲' : '▼'} ${Math.abs(trend)}%</span>` : ''}
-        <span style="font-size:14px;font-weight:500;color:${pct >= 80 ? 'var(--grass)' : pct >= 60 ? '#c8952a' : '#c0392b'};">${pct}%</span>
-      </div>
-    </div>`;
+    const trend = arr.length > 1 ? pct - Math.round(arr[arr.length-2].val/arr[arr.length-2].total*100) : null;
+    const scoreColor = pct >= 80 ? '#5db87e' : pct >= 60 ? '#c8952a' : '#f09595';
+    const trendText = trend !== null ? `${trend >= 0 ? '+' : ''}${trend}% from last` : latest.date;
+    return `
+      <div style="background:rgba(255,255,255,0.05);border-radius:10px;padding:11px 12px;">
+        <div style="font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:4px;">${label}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:24px;color:${scoreColor};line-height:1;">${pct}%</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-top:3px;">${trendText}</div>
+      </div>`;
   };
-  el.innerHTML = renderRow(civics, 'Civics') + renderRow(english, 'English');
+
+  el.innerHTML = renderScoreCard(civics, 'Civics') + renderScoreCard(english, 'English');
   generateStudyPlan();
   updateHomeScores();
 }
