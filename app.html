@@ -2411,7 +2411,7 @@ function closeShareSheet() {
 
 function shareVia(method) {
   const url = 'https://thelandedapp.com/';
-  const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $3.99.`;
+  const msg = `I've been using Landed to prep for my U.S. citizenship interview — covers the whole process: N-400, civics practice, documents, and more. All for $9.99.`;
 
   if (method === 'copy') {
     navigator.clipboard.writeText(url).then(() => { showToast('🔗 Link copied!'); closeShareSheet(); });
@@ -3232,8 +3232,8 @@ setTimeout(renderJourneyMap, 100);
   <div class="mia-gate" id="mia-gate">
     <div class="mia-gate-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     <div class="mia-gate-title">Mia is a paid feature</div>
-    <div class="mia-gate-sub">Get Landed for $3.99 to unlock Mia — yours forever.</div>
-    <button class="mia-gate-cta" onclick="toggleMia()">Get Landed — $3.99</button>
+    <div class="mia-gate-sub">Get Landed for $9.99 to unlock Mia — instant access.</div>
+    <button class="mia-gate-cta" onclick="toggleMia()">Get Landed — $9.99</button>
     <span class="mia-gate-note">One-time · Instant access</span>
   </div>
   <div class="mia-input-row" id="mia-input-row" style="display:none;">
@@ -3340,7 +3340,7 @@ When someone expresses an emotion, acknowledge it first before offering informat
 Never minimize what someone is feeling. Never say "don't worry" without first acknowledging why they're worried. Never be clinical when someone is vulnerable.
 
 ABOUT LANDED — you can explain this to any user who asks:
-Landed is a $3.99 one-time app built by immigrants for immigrants. It covers everything a green card holder needs to navigate the U.S. naturalization process from start to finish. Here's what's inside:
+Landed is a $9.99 one-time app built by immigrants for immigrants. It covers everything a green card holder needs to navigate the U.S. naturalization process from start to finish. Here's what's inside:
 
 - 📍 MY TIMELINE: An 8-step visual tracker of the full naturalization process. Users can set appointment dates for biometrics, interview, and oath ceremony — and get countdowns and calendar reminders.
 - 📁 DOCUMENT CENTER: Track the 5 key citizenship documents (passport, birth certificate, marriage certificate, medical exam, police certificate). Mark each one as filed.
@@ -3495,7 +3495,7 @@ function removeMiaTyping(){const t=document.getElementById('mia-typing');if(t)t.
     <div class="share-sub">Share Landed with a friend or family member going through the citizenship process.</div>
     <div class="share-pill">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      $3.99 one-time · yours forever
+      $9.99 one-time · instant access
     </div>
     <div class="share-options">
       <button class="share-option-btn" onclick="shareVia('copy')">
@@ -3614,7 +3614,7 @@ document.getElementById('help-modal').addEventListener('click', e => {
 <script>
 const PRIVACY_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>Landed is committed to protecting your privacy. This policy explains what we collect, how we use it, and your rights.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What we collect</p><p style='margin-bottom:16px;'>When you create an account, we collect your name and email address. We store your progress data — checklist completion, timeline steps, quiz scores, and appointment dates. If you submit a story, we store the content you provide. We do not collect immigration documents, case numbers, or government-issued identification.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>How we use your information</p><p style='margin-bottom:16px;'>Your data is used solely to provide the Landed service. We do not sell your data to any third party. We do not use your data for advertising.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Payment</p><p style='margin-bottom:16px;'>Payments are processed by Stripe. We do not store your credit card information.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Data storage</p><p style='margin-bottom:16px;'>Your data is stored securely using Supabase. Data is encrypted in transit and at rest.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Your rights</p><p style='margin-bottom:16px;'>You may request deletion of your account and all associated data at any time by contacting us at thelandedapp@gmail.com. We will process your request within 30 days.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
 
-const TERMS_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>By using Landed, you agree to these Terms of Service.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What Landed is</p><p style='margin-bottom:16px;'>Landed is an educational tool to help green card holders prepare for U.S. naturalization. It is not a law firm and does not provide legal advice. Nothing in the app creates an attorney-client relationship.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Purchase and access</p><p style='margin-bottom:16px;'>Landed is a one-time purchase of $3.99 granting lifetime access for personal use. We do not offer refunds after access has been granted. You may not share your account or resell access.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>No legal advice</p><p style='margin-bottom:16px;'>All content in Landed — checklists, tips, FAQs, civics questions, and AI responses — is for general educational purposes only. Always consult a licensed immigration attorney for advice about your specific situation.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>User content</p><p style='margin-bottom:16px;'>If you submit a story, you grant us the right to display it in the app after review. You may request removal at any time.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Limitation of liability</p><p style='margin-bottom:16px;'>Landed is provided as-is. We make no guarantees about the accuracy or completeness of information. We are not liable for any outcomes related to your immigration case.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
+const TERMS_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>By using Landed, you agree to these Terms of Service.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What Landed is</p><p style='margin-bottom:16px;'>Landed is an educational tool to help green card holders prepare for U.S. naturalization. It is not a law firm and does not provide legal advice. Nothing in the app creates an attorney-client relationship.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Purchase and access</p><p style='margin-bottom:16px;'>Landed is a one-time purchase of $9.99 granting lifetime access for personal use. We do not offer refunds after access has been granted. You may not share your account or resell access.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>No legal advice</p><p style='margin-bottom:16px;'>All content in Landed — checklists, tips, FAQs, civics questions, and AI responses — is for general educational purposes only. Always consult a licensed immigration attorney for advice about your specific situation.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>User content</p><p style='margin-bottom:16px;'>If you submit a story, you grant us the right to display it in the app after review. You may request removal at any time.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Limitation of liability</p><p style='margin-bottom:16px;'>Landed is provided as-is. We make no guarantees about the accuracy or completeness of information. We are not liable for any outcomes related to your immigration case.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
 
 function openPrivacy() {
   document.getElementById("legal-modal-title").textContent = "Privacy Policy";
