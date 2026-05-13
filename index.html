@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="theme-color" content="#1a3d2b"/>
 <title>Landed — U.S. Citizenship Guide for Green Card Holders</title>
-<meta name="description" content="The complete U.S. naturalization kit for green card holders. Timeline tracker, N-400 checklist, civics practice, document center — everything you need for $3.99, one-time."/>
+<meta name="description" content="The complete U.S. naturalization kit for green card holders. Timeline tracker, N-400 checklist, civics practice, document center — everything you need for $9.99, one-time."/>
 <meta name="keywords" content="US citizenship, naturalization, green card, N-400, civics test, USCIS, immigration, citizenship guide"/>
 <link rel="canonical" href="https://thelandedapp.com/"/>
 
@@ -13,7 +13,7 @@
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://thelandedapp.com/"/>
 <meta property="og:title" content="Landed — U.S. Citizenship Guide for Green Card Holders"/>
-<meta property="og:description" content="The complete naturalization kit built by immigrants, for immigrants. Timeline, N-400 guide, civics practice, and document tracking — $3.99, yours forever."/>
+<meta property="og:description" content="The complete naturalization kit built by immigrants, for immigrants. Timeline, N-400 guide, civics practice, and document tracking — $9.99, no subscription."/>
 <meta property="og:image" content="https://thelandedapp.com/favicon-512.png"/>
 <meta property="og:site_name" content="Landed"/>
 <meta property="og:locale" content="en_US"/>
@@ -21,7 +21,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Landed — U.S. Citizenship Guide for Green Card Holders"/>
-<meta name="twitter:description" content="The complete naturalization kit built by immigrants, for immigrants. Timeline, N-400 guide, civics practice — $3.99, yours forever."/>
+<meta name="twitter:description" content="The complete naturalization kit built by immigrants, for immigrants. Timeline, N-400 guide, civics practice — $9.99, no subscription."/>
 <meta name="twitter:image" content="https://thelandedapp.com/favicon-512.png"/>
 
 <!-- Structured Data -->
@@ -93,7 +93,7 @@ html{overflow-x:hidden;max-width:100%;}body{overflow-x:hidden;max-width:100%;min
   .hero-title{font-size:26px !important;line-height:1.2 !important;margin-bottom:12px !important;}
   .hero-sub{font-size:14px !important;max-width:100% !important;}
   .price-num{font-size:32px !important;}
-  .price-note{display:none !important;}
+  .price-note{font-size:12px !important;}
   .price-row{flex-wrap:wrap;align-items:flex-start;gap:4px !important;margin-bottom:16px !important;}
   .cta-row{flex-direction:column !important;gap:10px !important;}
   .cta-btn{width:100% !important;justify-content:center !important;font-size:14px !important;padding:13px 20px !important;}
@@ -533,8 +533,9 @@ body{top:0!important;position:static!important;}
     </div>
     <div class="hero-right-bottom">
       <div class="price-row">
-        <span class="price-num">$3.99</span>
-        <span class="price-note">one-time · yours forever</span>
+        <span class="price-num">$9.99</span>
+        <span class="price-note">one-time · no subscription</span>
+
       </div>
       <div class="cta-row" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <button id="get-started-btn" class="cta-btn" onclick="openAuth('signUp')">
@@ -637,7 +638,7 @@ body{top:0!important;position:static!important;}
       <div class="stat-label">Know exactly what to expect before your interview day</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num">$3.99</div>
+      <div class="stat-num">$9.99</div>
       <div class="stat-label">One-time cost — no subscription, no upsells</div>
     </div>
     <div class="stat-card">
@@ -702,7 +703,7 @@ body{top:0!important;position:static!important;}
       <div id="auth-sub" class="auth-sub">Start your path to citizenship today.</div>
       <div class="auth-price-pill" id="auth-price-pill">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        $3.99 one-time · instant access
+        $9.99 one-time · no subscription
       </div>
     </div>
     <div class="auth-form">
@@ -713,7 +714,7 @@ body{top:0!important;position:static!important;}
       </div>
       <input class="auth-input" id="auth-email" type="email" placeholder="Email address"/>
       <input class="auth-input" id="auth-password" type="password" placeholder="Password"/>
-      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $3.99</button>
+      <button class="auth-submit" id="auth-submit-btn" onclick="handleAuth()">Create account & pay $9.99</button>
       <div class="auth-divider"><span>or</span></div>
       <div class="auth-switch" id="auth-switch-text">
         Already have an account? <button onclick="switchAuthMode('signIn')">Sign in</button>
@@ -758,7 +759,7 @@ function setSignUpMode(){
   _authMode = 'signUp';
   document.getElementById('auth-title').textContent = 'Create your account';
   document.getElementById('auth-sub').textContent = 'Start your path to citizenship today.';
-  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $3.99';
+  document.getElementById('auth-submit-btn').textContent = 'Create account & pay $9.99';
   document.getElementById('name-field').style.display = 'flex';
   document.getElementById('auth-price-pill').style.display = 'inline-flex';
   document.getElementById('auth-switch-text').innerHTML = 'Already have an account? <button onclick="switchAuthMode(\'signIn\')">Sign in</button>';
@@ -845,7 +846,7 @@ async function handleAuth(){
       err.textContent = msg || 'Something went wrong. Please try again.';
     }
     err.classList.add('show');
-    btn.textContent = _authMode==='signUp' ? 'Create account & pay $3.99' : 'Sign in';
+    btn.textContent = _authMode==='signUp' ? 'Create account & pay $9.99' : 'Sign in';
     btn.disabled = false;
   }
 }
@@ -951,9 +952,9 @@ document.getElementById('auth-modal').addEventListener('click', e => {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#1a3d2b" stroke-width="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#1a3d2b" stroke-width="1.5" stroke-linecap="round"/></svg>
     </div>
     <div class="mia-gate-title">Mia is a paid feature</div>
-    <div class="mia-gate-sub">Get Landed for $3.99 to unlock Mia and everything else — yours forever.</div>
-    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $3.99</button>
-    <span class="mia-gate-price">One-time · Instant access · No subscription</span>
+    <div class="mia-gate-sub">Get Landed for $9.99 to unlock Mia and everything else — no subscription.</div>
+    <button class="mia-gate-btn" onclick="toggleMia();openAuth('signUp');">Get Landed — $9.99</button>
+    <span class="mia-gate-price">One-time · No subscription · No subscription</span>
   </div>
 
   <!-- Live input — shown to paying users only (hidden by default) -->
@@ -1013,7 +1014,7 @@ WHAT YOU KNOW:
 3. CIVICS TEST: 100 official USCIS questions on American history, government, geography.
 4. ENGLISH TEST: Reading comprehension sentences.
 5. PROCESSING TIMES: Average 12–24 months. Fastest: 8–10 months. Slowest (NYC/LA/Chicago): 24–36 months. ~91% approval rate at interview.
-6. LANDED: $3.99 one-time, instant access, includes timeline tracker, N-400 guide, interview coach, document center, pro tips, legal help finder, and pro tips.
+6. LANDED: $9.99 one-time, no subscription, includes timeline tracker, N-400 guide, interview coach, document center, pro tips, legal help finder, and pro tips.
 
 STRICT RULES:
 1. Only answer questions about naturalization and Landed.
@@ -1212,10 +1213,10 @@ setInterval(showNavAffirmation, 7000);
       <div class="gift-header">
         <div class="gift-icon">🎁</div>
         <div class="gift-title">Give the gift of citizenship</div>
-        <div class="gift-sub">Know someone on the path? Send them everything they need for $3.99 — no subscription, yours forever.</div>
+        <div class="gift-sub">Know someone on the path? Send them everything they need for $9.99 — no subscription, no subscription.</div>
         <div class="gift-price-pill">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#1a3d2b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          $3.99 one-time · instant delivery
+          $9.99 one-time · instant delivery
         </div>
       </div>
       <div class="gift-form">
@@ -1231,7 +1232,7 @@ setInterval(showNavAffirmation, 7000);
         <input class="gift-input" id="gift-sender-email" type="email" placeholder="Your email (for receipt)"/>
         <textarea class="gift-input" id="gift-note" placeholder="Personal note (optional) — e.g. 'Rooting for you every step of the way.'"></textarea>
         <button class="gift-submit" id="gift-submit-btn" onclick="submitGift()">
-          <span>Send the gift — $3.99</span>
+          <span>Send the gift — $9.99</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:4px;">They'll receive a beautiful email with their activation link instantly.</p>
@@ -1319,7 +1320,7 @@ async function submitGift() {
     } else if (data.error === 'recipient_has_account') {
       err.textContent = 'It looks like this person already has Landed! Consider gifting to someone else who is on the path.';
       err.classList.add('show');
-      btn.innerHTML = '<span>Send the gift — $3.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      btn.innerHTML = '<span>Send the gift — $9.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       btn.disabled = false;
       return;
     } else {
@@ -1331,7 +1332,7 @@ async function submitGift() {
       ? 'It looks like this person already has Landed! Consider gifting to someone else who is on the path.'
       : 'Something went wrong — please try again.';
     err.classList.add('show');
-    btn.innerHTML = '<span>Send the gift — $3.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    btn.innerHTML = '<span>Send the gift — $9.99</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M13 6L19 12L13 18" stroke="#e8dfc8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     btn.disabled = false;
   }
 }
@@ -1431,7 +1432,7 @@ document.getElementById('help-modal').addEventListener('click', e => {
 <script>
 const PRIVACY_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>Landed is committed to protecting your privacy. This policy explains what we collect, how we use it, and your rights.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What we collect</p><p style='margin-bottom:16px;'>When you create an account, we collect your name and email address. We store your progress data — checklist completion, timeline steps, quiz scores, and appointment dates. If you submit a story, we store the content you provide. We do not collect immigration documents, case numbers, or government-issued identification.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>How we use your information</p><p style='margin-bottom:16px;'>Your data is used solely to provide the Landed service. We do not sell your data to any third party. We do not use your data for advertising.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Payment</p><p style='margin-bottom:16px;'>Payments are processed by Stripe. We do not store your credit card information.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Data storage</p><p style='margin-bottom:16px;'>Your data is stored securely using Supabase. Data is encrypted in transit and at rest.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Your rights</p><p style='margin-bottom:16px;'>You may request deletion of your account and all associated data at any time by contacting us at thelandedapp@gmail.com. We will process your request within 30 days.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
 
-const TERMS_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>By using Landed, you agree to these Terms of Service.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What Landed is</p><p style='margin-bottom:16px;'>Landed is an educational tool to help green card holders prepare for U.S. naturalization. It is not a law firm and does not provide legal advice. Nothing in the app creates an attorney-client relationship.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Purchase and access</p><p style='margin-bottom:16px;'>Landed is a one-time purchase of $3.99 granting lifetime access for personal use. We do not offer refunds after access has been granted. You may not share your account or resell access.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>No legal advice</p><p style='margin-bottom:16px;'>All content in Landed — checklists, tips, FAQs, civics questions, and AI responses — is for general educational purposes only. Always consult a licensed immigration attorney for advice about your specific situation.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>User content</p><p style='margin-bottom:16px;'>If you submit a story, you grant us the right to display it in the app after review. You may request removal at any time.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Limitation of liability</p><p style='margin-bottom:16px;'>Landed is provided as-is. We make no guarantees about the accuracy or completeness of information. We are not liable for any outcomes related to your immigration case.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
+const TERMS_HTML = "<p style='color:#1a3d2b;font-weight:500;margin-bottom:4px;'>Last updated: May 2026</p><p style='margin-bottom:16px;'>By using Landed, you agree to these Terms of Service.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>What Landed is</p><p style='margin-bottom:16px;'>Landed is an educational tool to help green card holders prepare for U.S. naturalization. It is not a law firm and does not provide legal advice. Nothing in the app creates an attorney-client relationship.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Purchase and access</p><p style='margin-bottom:16px;'>Landed is a one-time purchase of $9.99 granting lifetime access for personal use. We do not offer refunds after access has been granted. You may not share your account or resell access.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>No legal advice</p><p style='margin-bottom:16px;'>All content in Landed — checklists, tips, FAQs, civics questions, and AI responses — is for general educational purposes only. Always consult a licensed immigration attorney for advice about your specific situation.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>User content</p><p style='margin-bottom:16px;'>If you submit a story, you grant us the right to display it in the app after review. You may request removal at any time.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Limitation of liability</p><p style='margin-bottom:16px;'>Landed is provided as-is. We make no guarantees about the accuracy or completeness of information. We are not liable for any outcomes related to your immigration case.</p><p style='font-weight:500;color:#1a3d2b;margin-bottom:6px;'>Contact</p><p>Questions? Email us at thelandedapp@gmail.com.</p>";
 
 function openPrivacy() {
   document.getElementById("legal-modal-title").textContent = "Privacy Policy";
