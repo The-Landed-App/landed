@@ -555,13 +555,43 @@ function googleTranslateElementInit(){
     </div>
     <div><div class="page-title-text">N-400 Guide</div><div class="page-title-sub">Pre-submit checklist · 50 items</div></div>
   </div>
-  <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank">
+
+  <!-- Progress banner -->
+  <div style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;">
+    <div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:3px;">Complete</div>
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:500;color:#5db87e;line-height:1;" id="cl-count">0 <span style="font-size:13px;color:rgba(255,255,255,0.25);">/ 50</span></div>
+    </div>
+    <div style="flex:1;">
+      <div style="background:rgba(255,255,255,0.08);border-radius:99px;height:3px;overflow:hidden;margin-bottom:5px;"><div id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#5db87e;transition:width 0.4s;"></div></div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.2);" id="cl-remaining">50 items remaining</div>
+    </div>
+    <button id="cl-check-all-btn" onclick="checkAllSections()" style="font-size:10px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);cursor:pointer;font-family:inherit;white-space:nowrap;">Check all</button>
+  </div>
+
+  <!-- Section accordion list -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+    <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Checklist sections</span>
+    <div style="flex:1;height:1px;background:rgba(0,0,0,0.08);"></div>
+  </div>
+  <div id="cl-sections" style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px;"></div>
+
+  <!-- Expanded section items -->
+  <div id="cl-expanded"></div>
+
+  <!-- Download & mail -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+    <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Download & mail</span>
+    <div style="flex:1;height:1px;background:rgba(0,0,0,0.08);"></div>
+  </div>
+
+  <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank" style="margin-bottom:10px;">
     <div><div class="n400-link-text">Download Form N-400 + Instructions</div><div class="n400-link-sub">Official USCIS form and filing guide</div></div>
     <div class="n400-link-arrow">↗</div>
   </a>
 
   <!-- Certified mail tracking -->
-  <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:16px;margin-bottom:16px;">
+  <div style="background:var(--white);border-radius:var(--r);border:1px solid var(--cream2);padding:14px 16px;margin-bottom:16px;">
     <div style="font-size:13px;font-weight:500;color:var(--forest);margin-bottom:4px;">Certified Mail Tracking</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">After mailing your N-400, enter your USPS tracking number here. It will show on your home dashboard.</div>
     <div id="n400-mail-no-tracking">
@@ -583,25 +613,6 @@ function googleTranslateElementInit(){
       </div>
     </div>
   </div>
-
-  <div class="slabel">Pre-submit checklist</div>
-
-  <!-- Rings dashboard -->
-  <div style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:18px 18px 16px;margin-bottom:12px;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
-      <div>
-        <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:4px;">Pre-submit checklist</div>
-        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:#5db87e;line-height:1;" id="cl-count">0 / 50</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">items complete</div>
-      </div>
-      <button id="cl-check-all-btn" onclick="checkAllSections()" style="font-size:11px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);cursor:pointer;font-family:inherit;white-space:nowrap;">Check all</button>
-    </div>
-    <div style="background:rgba(255,255,255,0.08);border-radius:99px;height:3px;margin-bottom:16px;"><div id="cl-prog-fill" style="width:0%;height:3px;border-radius:99px;background:#5db87e;transition:width 0.4s;"></div></div>
-    <div id="cl-rings" style="display:grid;grid-template-columns:repeat(10,1fr);gap:4px;"></div>
-  </div>
-
-  <!-- Expanded section items -->
-  <div id="cl-expanded"></div>
 
 </div>
 
@@ -1458,34 +1469,61 @@ function renderChecklist() {
 }
 
 function renderRings() {
-  const ringsEl = document.getElementById('cl-rings');
-  if (!ringsEl) return;
-  const SECTION_SHORT = ['Personal','Eligibility','Travel','Employment','Family','Tax','Character','Documents','Form','Filing'];
-  ringsEl.innerHTML = CHECKLIST.map((s,si) => {
-    const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
+  const sectionsEl = document.getElementById('cl-sections');
+  if (!sectionsEl) return;
+
+  const checkSvg = `<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#2d6647" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const chevSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#9aada2" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+
+  sectionsEl.innerHTML = CHECKLIST.map((s, si) => {
+    const done = s.items.filter((_, ii) => clState[`${si}-${ii}`]).length;
     const total = s.items.length;
-    const pct = Math.round(done/total*100);
-    const r = 16;
-    const circ = 2 * Math.PI * r;
-    const offset = circ - (pct/100)*circ;
-    const isActive = window._activeSection === si;
     const allDone = done === total;
-    const strokeColor = allDone ? '#4a9e6b' : pct > 0 ? '#c8952a' : '#d4c9b0';
-    return `<div onclick="toggleRingSection(${si})" style="display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;">
-      <svg width="40" height="40" viewBox="0 0 40 40" style="${isActive ? 'filter:drop-shadow(0 0 5px rgba(93,184,126,0.4));' : ''}">
-        <circle cx="20" cy="20" r="${r}" fill="${isActive ? 'rgba(93,184,126,0.12)' : 'rgba(255,255,255,0.04)'}" stroke="rgba(255,255,255,0.08)" stroke-width="3"/>
-        ${pct > 0 ? `<circle cx="20" cy="20" r="${r}" fill="none" stroke="${strokeColor}" stroke-width="3" stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 20 20)"/>` : ''}
-        <text x="20" y="24" text-anchor="middle" font-size="9" font-weight="500" fill="${allDone ? '#5db87e' : pct > 0 ? '#c8952a' : 'rgba(255,255,255,0.2)'}" font-family="DM Sans,sans-serif">${allDone ? '✓' : pct+'%'}</text>
-      </svg>
-      <div style="font-size:8px;color:${isActive ? '#5db87e' : 'rgba(255,255,255,0.4)'};font-weight:${isActive ? '600' : '400'};text-align:center;line-height:1.3;letter-spacing:0.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;">${SECTION_SHORT[si]||s.section}</div>
+    const partial = done > 0 && !allDone;
+    const isActive = window._activeSection === si;
+
+    const iconBg = allDone ? '#e8f5ee' : partial ? '#fff8e8' : '#f5f2ee';
+    const iconContent = allDone
+      ? checkSvg
+      : partial
+        ? `<div style="width:8px;height:8px;border-radius:50%;background:#c8952a;"></div>`
+        : `<div style="width:8px;height:8px;border-radius:50%;border:1.5px solid #d4c9b0;"></div>`;
+    const statusColor = allDone ? 'var(--grass)' : partial ? '#c8952a' : 'var(--muted)';
+    const statusText = allDone ? `${total} / ${total} complete` : partial ? `${done} / ${total} complete` : `${total} items`;
+    const borderColor = allDone ? 'rgba(74,158,107,0.25)' : partial ? 'rgba(200,149,42,0.2)' : 'rgba(0,0,0,0.07)';
+
+    return `<div style="background:#faf8f4;border-radius:var(--r);border:1px solid ${borderColor};padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;${isActive ? 'border-color:var(--grass);' : ''}" onclick="toggleRingSection(${si})">
+      <div style="width:30px;height:30px;border-radius:8px;background:${iconBg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${iconContent}
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:500;color:var(--forest);">${s.section}</div>
+        <div style="font-size:11px;color:${statusColor};margin-top:2px;">${statusText}</div>
+      </div>
+      <div style="transform:${isActive ? 'rotate(90deg)' : 'rotate(0)'};transition:transform 0.2s;">${chevSvg}</div>
     </div>`;
   }).join('');
+
   renderExpandedSection();
+  updateCLRemaining();
+}
+
+function updateCLRemaining() {
+  let done = 0, total = 0;
+  CHECKLIST.forEach((s, si) => s.items.forEach((_, ii) => { total++; if (clState[`${si}-${ii}`]) done++; }));
+  const rem = document.getElementById('cl-remaining');
+  if (rem) rem.textContent = `${total - done} item${total - done !== 1 ? 's' : ''} remaining`;
 }
 
 function toggleRingSection(si) {
   window._activeSection = (window._activeSection === si) ? null : si;
   renderRings();
+  if (window._activeSection !== null) {
+    setTimeout(() => {
+      const exp = document.getElementById('cl-expanded');
+      if (exp) exp.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 100);
+  }
 }
 
 function renderExpandedSection() {
@@ -1496,25 +1534,25 @@ function renderExpandedSection() {
   const s = CHECKLIST[si];
   const done = s.items.filter((_,ii) => clState[`${si}-${ii}`]).length;
   const allDone = done === s.items.length;
-  el.innerHTML = `<div style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);overflow:hidden;margin-bottom:8px;">
+  el.innerHTML = `<div style="background:#faf8f4;border-radius:var(--r);border:1px solid ${allDone ? 'rgba(74,158,107,0.25)' : 'rgba(0,0,0,0.07)'};overflow:hidden;margin-bottom:8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,0.05);background:#f9f7f3;">
-      <span style="font-size:13px;font-weight:500;color:var(--forest);">${s.section}</span>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <button onclick="checkAllSection(${si})" style="font-size:10px;padding:2px 9px;border-radius:99px;border:1px solid var(--cream2);background:${allDone?'var(--approved-bg)':'#fff'};color:${allDone?'var(--forest)':'var(--muted)'};cursor:pointer;font-family:inherit;">${allDone?'✓ Done':'Check all'}</button>
-        <span style="font-size:11px;background:${allDone?'var(--approved-bg)':'var(--cream2)'};color:${allDone?'var(--forest)':'var(--muted)'};padding:2px 9px;border-radius:99px;font-weight:500;">${done}/${s.items.length}</span>
+      <div>
+        <span style="font-size:13px;font-weight:500;color:var(--forest);">${s.section}</span>
+        <span style="font-size:11px;color:var(--muted);margin-left:8px;">${done} / ${s.items.length}</span>
       </div>
+      <button onclick="checkAllSection(${si})" style="font-size:10px;padding:4px 12px;border-radius:99px;border:1px solid ${allDone ? 'var(--grass)' : 'var(--cream2)'};background:${allDone ? 'var(--approved-bg)' : '#fff'};color:${allDone ? 'var(--forest)' : 'var(--muted)'};cursor:pointer;font-family:inherit;font-weight:${allDone ? '500' : '400'};">${allDone ? 'Uncheck all' : 'Check all'}</button>
     </div>
     ${s.items.map((item,ii) => `
-      <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,0.04);cursor:pointer;transition:background 0.1s;" id="clitem-${si}-${ii}" class="${clState[`${si}-${ii}`]?'checked':''}" onmouseover="this.style.background='#f9f7f3'" onmouseout="this.style.background='#fff'">
-        <div onclick="toggleCL(${si},${ii})" style="width:18px;height:18px;min-width:18px;border-radius:5px;border:1.5px solid ${clState[`${si}-${ii}`]?'#4a9e6b':'#d4c9b0'};background:${clState[`${si}-${ii}`]?'#4a9e6b':'#fff'};display:flex;align-items:center;justify-content:center;margin-top:2px;">
-          ${clState[`${si}-${ii}`]?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}
+      <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border-bottom:1px solid rgba(0,0,0,0.04);cursor:pointer;background:#fff;" onclick="toggleCL(${si},${ii})" onmouseover="this.style.background='#faf8f4'" onmouseout="this.style.background='#fff'">
+        <div style="width:18px;height:18px;min-width:18px;border-radius:5px;border:1.5px solid ${clState[`${si}-${ii}`] ? '#4a9e6b' : '#d4c9b0'};background:${clState[`${si}-${ii}`] ? '#4a9e6b' : '#fff'};display:flex;align-items:center;justify-content:center;margin-top:2px;flex-shrink:0;">
+          ${clState[`${si}-${ii}`] ? '<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
         </div>
         <div style="flex:1;min-width:0;">
-          <div onclick="toggleCL(${si},${ii})" style="font-size:13px;color:${clState[`${si}-${ii}`]?'#a0b0a0':'var(--text)'};${clState[`${si}-${ii}`]?'text-decoration:line-through;':''} line-height:1.45;">${item.t}</div>
-          ${item.n?`<div style="font-size:11px;color:var(--muted);margin-top:2px;">${item.n}</div>`:''}
-          ${item.e?`<div id="clexp-${si}-${ii}" style="display:none;margin-top:8px;padding:10px 12px;background:#fff8e8;border-left:2px solid #c8952a;border-radius:0 8px 8px 0;font-size:12px;color:#5a4010;line-height:1.6;">${item.e}</div>`:''}
+          <div style="font-size:13px;color:${clState[`${si}-${ii}`] ? '#a0b0a0' : 'var(--text)'};${clState[`${si}-${ii}`] ? 'text-decoration:line-through;' : ''} line-height:1.45;">${item.t}</div>
+          ${item.n ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${item.n}</div>` : ''}
+          ${item.e ? `<div id="clexp-${si}-${ii}" style="display:none;margin-top:8px;padding:10px 12px;background:#fff8e8;border-left:2px solid #c8952a;border-radius:0 8px 8px 0;font-size:12px;color:#5a4010;line-height:1.6;">${item.e}</div>` : ''}
         </div>
-        ${item.e?`<button onclick="toggleCLExplain('${si}-${ii}')" style="background:none;border:none;cursor:pointer;padding:0;flex-shrink:0;margin-top:2px;font-size:15px;color:#d4c9b0;line-height:1;">ℹ</button>`:''}
+        ${item.e ? `<button onclick="event.stopPropagation();toggleCLExplain('${si}-${ii}')" style="background:none;border:none;cursor:pointer;padding:2px 4px;flex-shrink:0;margin-top:1px;color:#d4c9b0;line-height:1;font-size:14px;">?</button>` : ''}
       </div>`).join('')}
   </div>`;
 }
@@ -1577,12 +1615,13 @@ function updateCLProgress() {
     if(clState[`${si}-${ii}`]===true) done++;
   }));
   const countEl = document.getElementById('cl-count');
-  if (countEl) countEl.textContent = `${done} / ${total}`;
+  if (countEl) countEl.innerHTML = `${done} <span style="font-size:13px;color:rgba(255,255,255,0.25);">/ ${total}</span>`;
   const fillEl = document.getElementById('cl-prog-fill');
   if (fillEl) fillEl.style.width = `${Math.round(done/total*100)}%`;
   const allDone = done === total && total > 0;
   const btn = document.getElementById('cl-check-all-btn');
   if (btn) btn.textContent = allDone ? 'Uncheck all' : 'Check all';
+  updateCLRemaining();
   updateHomeProgress();
 }
 
