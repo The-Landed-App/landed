@@ -375,69 +375,61 @@ function googleTranslateElementInit(){
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
 
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-top:16px;margin-bottom:16px;">
-
-    <!-- Current step -->
-    <div style="background:#0d1f14;border-radius:var(--r);padding:12px;border:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;" onclick="switchPage('timeline')">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:6px;">Step</div>
-      <div id="home-current-step" style="font-family:'Playfair Display',serif;font-size:12px;font-weight:500;color:#e8dfc8;line-height:1.3;">—</div>
-      <div id="home-step-status" style="font-size:9px;color:#5db87e;margin-top:4px;">View →</div>
+  <!-- Current step — full width prominent card -->
+  <div style="background:#0d1f14;border-radius:var(--r);padding:14px 16px;border:1px solid rgba(255,255,255,0.06);margin-top:16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="switchPage('timeline')">
+    <div style="width:8px;height:8px;border-radius:50%;background:#c8952a;box-shadow:0 0 0 4px rgba(200,149,42,0.2);flex-shrink:0;"></div>
+    <div style="flex:1;">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:3px;">Current step</div>
+      <div id="home-current-step" style="font-family:'Playfair Display',serif;font-size:14px;font-weight:500;color:#e8dfc8;line-height:1.3;">—</div>
+      <div id="home-step-status" style="font-size:9px;color:rgba(255,255,255,0.35);margin-top:2px;">View →</div>
     </div>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
 
-    <!-- Documents obtained -->
-    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;display:flex;flex-direction:column;justify-content:center;" onclick="switchPage('documents')">
-      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Docs</div>
-      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;" id="snap-docs">0/5</div>
-      <div style="font-size:9px;color:var(--muted);margin-top:3px;">obtained</div>
+  <!-- Stats 2x2 grid — consistent surfaces -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;cursor:pointer;" onclick="switchPage('documents')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Documents</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;" id="snap-docs">0<span style="font-size:13px;color:var(--muted);">/5</span></div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;">obtained</div>
     </div>
-
-    <!-- Days since filing -->
-    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Days filed</div>
       <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;" id="snap-days">—</div>
-      <div style="font-size:9px;color:var(--muted);margin-top:3px;">since N-400</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;">since N-400</div>
     </div>
+    <div style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px;cursor:pointer;" onclick="switchPage('interview')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:4px;">Civics</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:#5db87e;font-weight:500;line-height:1;" id="home-score">—</div>
+      <div style="font-size:9px;color:rgba(255,255,255,0.25);margin-top:2px;">last practice</div>
+    </div>
+    <div style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px;cursor:pointer;" onclick="switchPage('interview')">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:4px;">English</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:#5db87e;font-weight:500;line-height:1;" id="home-english-score">—</div>
+      <div id="badges-grid" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:4px;min-height:14px;"></div>
+    </div>
+  </div>
 
-    <!-- Mail tracker -->
-    <div id="snap-mail" style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;display:flex;flex-direction:column;justify-content:center;" onclick="switchPage('n400')">
+  <!-- N-400 Mail + Streak row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+    <div id="snap-mail" style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;cursor:pointer;" onclick="switchPage('n400')">
       <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">N-400 Mail</div>
-      <div id="snap-mail-status" style="font-size:13px;margin-bottom:3px;">📬</div>
+      <div id="snap-mail-status" style="font-size:18px;margin-bottom:2px;line-height:1;">📬</div>
       <div id="snap-mail-label" style="font-size:9px;color:var(--muted);">Not mailed yet</div>
     </div>
-
-  </div>
-
-  <!-- Second row: interview score + tip ticker -->
-  <div style="display:grid;grid-template-columns:1fr 3fr;gap:10px;margin-bottom:20px;">
-
-    <!-- Last practice scores — compact, side by side -->
-    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;gap:8px;" onclick="switchPage('interview')">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Civics</div>
-        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);font-weight:500;line-height:1;" id="home-score">—</div>
-      </div>
-      <div style="height:1px;background:var(--cream2);"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">English</div>
-        <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--forest);font-weight:500;line-height:1;" id="home-english-score">—</div>
-      </div>
-      <div id="badges-grid" style="display:flex;flex-wrap:wrap;gap:3px;margin-top:2px;min-height:16px;"></div>
-    </div>
-
-    <!-- Your story card -->
-    <div id="home-story-card" style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:12px 14px;cursor:pointer;overflow:hidden;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);font-weight:500;margin-bottom:7px;">Your story</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.55;margin-bottom:8px;">Share your naturalization journey with other immigrants going through the same thing.</div><div style="font-size:10px;color:#5db87e;font-weight:500;">Share your story →</div></div>
-
-  </div>
-
-  <!-- You are here — subway line -->
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-    <span style="font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">Your journey</span>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <span style="font-size:11px;color:var(--muted);"><span id="streak-count" style="font-weight:600;color:var(--forest);">0</span> day streak 🔥</span>
-      <button onclick="openShareDashboard()" style="font-size:11px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">Share</button>
+    <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px;cursor:pointer;" onclick="openShareDashboard()">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;margin-bottom:4px;">Streak</div>
+      <div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--forest);font-weight:500;line-height:1;"><span id="streak-count">0</span><span style="font-size:13px;color:var(--muted);"> days</span></div>
+      <div style="font-size:9px;color:var(--muted);margin-top:2px;">🔥 keep it up</div>
     </div>
   </div>
-  <div style="background:#faf8f4;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px 14px;margin-bottom:16px;cursor:pointer;" onclick="switchPage('timeline')">
+
+  <!-- Journey map -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span style="font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);">Your journey</span>
+    <button onclick="openShareDashboard()" style="font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;">Share</button>
+  </div>
+  <div style="background:#fff;border-radius:var(--r);border:1px solid rgba(0,0,0,0.07);padding:12px 14px;margin-bottom:10px;cursor:pointer;" onclick="switchPage('timeline')">
     <div id="journey-map"></div>
     <div style="display:flex;justify-content:flex-end;align-items:center;margin-top:8px;">
       <span style="font-size:11px;color:var(--grass);font-weight:500;" id="progress-pct"></span>
@@ -445,9 +437,13 @@ function googleTranslateElementInit(){
     <div id="progress-bar" style="display:none;"></div>
   </div>
 
+  <!-- Story card -->
+  <div id="home-story-card" style="background:#0d1f14;border-radius:var(--r);border:1px solid rgba(255,255,255,0.06);padding:14px 16px;cursor:pointer;overflow:hidden;margin-bottom:10px;"><div style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);font-weight:500;margin-bottom:7px;">Your story</div><div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.55;margin-bottom:8px;">Share your naturalization journey with other immigrants going through the same thing.</div><div style="font-size:10px;color:#5db87e;font-weight:500;">Share your story →</div></div>
+
   <!-- Footer -->
   <div style="text-align:center;padding:4px 0 24px;font-size:11px;color:#b0bdb5;">Built for immigrants, with love. · <span onclick="openPrivacy()" style="cursor:pointer;text-decoration:underline;">Privacy</span> · <span onclick="openTerms()" style="cursor:pointer;text-decoration:underline;">Terms</span></div>
 </div>
+
 
 <!-- ══ SHARE DASHBOARD MODAL ══ -->
 <div id="share-dashboard-modal" style="display:none;position:fixed;inset:0;background:rgba(10,24,16,0.55);z-index:400;align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
@@ -512,7 +508,9 @@ function googleTranslateElementInit(){
 <!-- ══ TIMELINE ══ -->
 <div class="page" id="page-timeline">
   <div class="page-title-bar">
-    <div class="page-title-icon">📍</div>
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><line x1="12" y1="3" x2="12" y2="21" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" opacity="0.35"/><circle cx="12" cy="5.5" r="2.5" stroke="#e8dfc8" stroke-width="1.4" fill="#e8dfc8" fill-opacity="0.2"/><circle cx="12" cy="12" r="2.5" stroke="#e8dfc8" stroke-width="1.4" fill="#e8dfc8" fill-opacity="0.2"/><circle cx="12" cy="18.5" r="2.5" stroke="#e8dfc8" stroke-width="1.4" fill="#e8dfc8" fill-opacity="0.2"/><line x1="14.5" y1="5.5" x2="20" y2="5.5" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/><line x1="9.5" y1="12" x2="4" y2="12" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/><line x1="14.5" y1="18.5" x2="19" y2="18.5" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
     <div><div class="page-title-text">My Timeline</div><div class="page-title-sub">Track every step of your journey</div></div>
   </div>
   <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;">Based on FY 2025 processing times, the full journey can take <strong style="color:var(--text);">3 to 6 years</strong> from receiving a green card. We'll help you navigate every step.</p>
@@ -523,21 +521,38 @@ function googleTranslateElementInit(){
 <!-- ══ DOCUMENTS ══ -->
 <div class="page" id="page-documents">
   <div class="page-title-bar">
-    <div class="page-title-icon">📁</div>
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="12" height="16" rx="1.5" fill="#e8dfc8" fill-opacity="0.15"/><rect x="6" y="2" width="12" height="16" rx="2" stroke="#e8dfc8" stroke-width="1.5" fill="none"/><line x1="9" y1="7" x2="15" y2="7" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><line x1="9" y1="10" x2="15" y2="10" stroke="#e8dfc8" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/><path d="M13 15L14.5 16.5L17 13.5" stroke="#e8dfc8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
     <div><div class="page-title-text">Document Center</div><div class="page-title-sub">Track which documents you have ready</div></div>
   </div>
-  <div class="doc-progress" style="background:#faf8f4;border:1px solid rgba(0,0,0,0.07);">
-    <div class="doc-progress-top"><span class="doc-progress-label">Documents obtained</span><span class="doc-progress-count" id="doc-count">0 / 5</span></div>
-    <div class="prog-bar-bg"><div class="prog-bar-fill" id="doc-prog-fill" style="width:0%"></div></div>
+
+  <!-- Progress banner -->
+  <div style="background:#0d1f14;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;">
+    <div>
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.3);font-weight:500;margin-bottom:3px;">Documents ready</div>
+      <div style="font-family:'Playfair Display',serif;font-size:26px;color:#5db87e;line-height:1;" id="doc-count">0 <span style="font-size:14px;color:rgba(255,255,255,0.25);">/ 5</span></div>
+    </div>
+    <div style="flex:1;">
+      <div style="background:rgba(255,255,255,0.08);border-radius:99px;height:4px;overflow:hidden;">
+        <div id="doc-prog-fill" style="width:0%;height:4px;border-radius:99px;background:#5db87e;transition:width 0.4s;"></div>
+      </div>
+    </div>
   </div>
-  <div class="slabel">Citizenship pathway documents</div>
-  <div id="doc-list"></div>
+
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+    <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);font-weight:500;">Citizenship pathway</span>
+    <div style="flex:1;height:1px;background:rgba(0,0,0,0.08);"></div>
+  </div>
+  <div id="doc-list" style="display:flex;flex-direction:column;gap:6px;"></div>
 </div>
 
 <!-- ══ N-400 ══ -->
 <div class="page" id="page-n400">
   <div class="page-title-bar">
-    <div class="page-title-icon">📋</div>
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.12"/><path d="M8 4V2.5M16 4V2.5" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="9" x2="21" y2="9" stroke="#e8dfc8" stroke-width="1.2" opacity="0.5"/><text x="12" y="18" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="6" font-weight="700" fill="#e8dfc8" letter-spacing="0.3">N-400</text></svg>
+    </div>
     <div><div class="page-title-text">N-400 Guide</div><div class="page-title-sub">Pre-submit checklist · 50 items</div></div>
   </div>
   <a class="n400-link" href="https://microotter.github.io/uscis-widgets/download-n400-and-nstructions.html" target="_blank">
@@ -596,7 +611,9 @@ function googleTranslateElementInit(){
   <!-- Home screen: choose quiz type -->
   <div id="quiz-home">
     <div class="page-title-bar">
-      <div class="page-title-icon">🏛️</div>
+      <div style="width:36px;height:36px;border-radius:10px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3.5" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.15"/><path d="M3 20C3 16.69 5.69 14 9 14" stroke="#e8dfc8" stroke-width="1.5" stroke-linecap="round"/><rect x="13" y="11" width="8" height="9" rx="1.5" stroke="#e8dfc8" stroke-width="1.4" fill="none"/><path d="M15 15H19M17 13V17" stroke="#e8dfc8" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
       <div><div class="page-title-text">Interview Coach</div><div class="page-title-sub">Civics & English practice</div></div>
     </div>
     <p class="coach-intro">Practice the 100 USCIS civics questions and English reading test. Your results are tracked and turned into a personal study plan.</p>
@@ -714,7 +731,9 @@ function googleTranslateElementInit(){
 <!-- ══ LEGAL ══ -->
 <div class="page" id="page-legal">
   <div class="page-title-bar">
-    <div class="page-title-icon">⚖️</div>
+    <div style="width:36px;height:36px;border-radius:10px;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3L4 7v5c0 5.25 3.5 9.74 8 11 4.5-1.26 8-5.75 8-11V7L12 3z" stroke="#e8dfc8" stroke-width="1.5" fill="#e8dfc8" fill-opacity="0.12"/><path d="M9 12l2 2 4-4" stroke="#e8dfc8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
     <div><div class="page-title-text">Legal Resources</div><div class="page-title-sub">Find attorneys and immigration help</div></div>
   </div>
   <div class="widget-frame-wrap">
@@ -1353,13 +1372,13 @@ function toggleFAQ(i) {
 function renderDocs() {
   const el = document.getElementById('doc-list');
   el.innerHTML = DOCS.map(d => `
-    <div class="doc-item">
-      <div class="doc-emoji">${d.emoji}</div>
-      <div class="doc-info">
-        <div class="doc-name">${d.name}</div>
-        <div class="doc-status">${docState[d.key] ? 'Ready' : 'Not ready'}</div>
+    <div style="background:#faf8f4;border-radius:var(--r);border:1px solid ${docState[d.key] ? 'rgba(74,158,107,0.3)' : 'rgba(0,0,0,0.07)'};padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color 0.2s;">
+      <div style="width:36px;height:36px;border-radius:10px;background:${docState[d.key] ? 'var(--approved-bg)' : 'var(--cream)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;">${d.emoji}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:500;color:var(--forest);">${d.name}</div>
+        <div style="font-size:11px;color:${docState[d.key] ? 'var(--grass)' : 'var(--muted)'};margin-top:2px;">${docState[d.key] ? '✓ Ready' : 'Not ready'}</div>
       </div>
-      <button class="doc-btn ${docState[d.key]?'uploaded':''}" onclick="toggleDoc('${d.key}')">
+      <button style="font-size:11px;padding:6px 14px;border-radius:99px;border:1px solid ${docState[d.key] ? 'var(--grass)' : 'var(--cream2)'};background:${docState[d.key] ? 'var(--approved-bg)' : 'var(--cream)'};color:${docState[d.key] ? 'var(--forest)' : 'var(--muted)'};font-family:inherit;cursor:pointer;white-space:nowrap;font-weight:${docState[d.key] ? '500' : '400'};" onclick="toggleDoc('${d.key}')">
         ${docState[d.key] ? '✓ Got it' : 'Mark ready'}
       </button>
     </div>
@@ -1378,8 +1397,10 @@ function toggleDoc(key) {
 function updateDocProgress() {
   const done = Object.values(docState).filter(Boolean).length;
   const total = DOCS.length;
-  document.getElementById('doc-count').textContent = `${done} / ${total}`;
-  document.getElementById('doc-prog-fill').style.width = `${Math.round(done/total*100)}%`;
+  const countEl = document.getElementById('doc-count');
+  if (countEl) countEl.innerHTML = `${done} <span style="font-size:14px;color:rgba(255,255,255,0.25);">/ ${total}</span>`;
+  const fillEl = document.getElementById('doc-prog-fill');
+  if (fillEl) fillEl.style.width = `${Math.round(done/total*100)}%`;
 }
 
 function updateSnapDocs() {
