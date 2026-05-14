@@ -3037,7 +3037,7 @@ function renderMatcherStep() {
         <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:10px;">${step.q}</div>
         <div style="display:flex;flex-direction:column;gap:5px;">
           ${step.options.map(o => `
-            <button onclick="answerMatcherStep('${o.replace(/'/g,"\'")}' )" style="text-align:left;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(93,184,126,0.12)';this.style.borderColor='rgba(93,184,126,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'">${o}</button>
+            <button onclick="answerMatcherStep('${o.replace(/'/g,"\'")}')  " style="text-align:left;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(93,184,126,0.12)';this.style.borderColor='rgba(93,184,126,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'">${o}</button>
           `).join('')}
         </div>
       </div>`;
@@ -3223,20 +3223,22 @@ async function renderStories() {
       for (const [country, flag] of Object.entries(flags)) {
         if (originLower.includes(country)) { flagEmoji = flag; break; }
       }
-      return ({
-      initials: flagEmoji || (s.origin ? s.origin.substring(0,2).toUpperCase() : null),
-      isFlag: !!flagEmoji,
-      avatarBg,
-      avatarColor,
-      color: avatarBg,
-      textColor: avatarColor,
-      name: s.name || 'Anonymous',
-      origin: s.origin || '',
-      months: s.months || 0,
-      speed: s.speed || 'typical',
-      tags: [s.origin, s.months ? s.months + ' months' : null].filter(Boolean),
-      story: s.story_text,
-    });});
+      return {
+        initials: flagEmoji || (s.origin ? s.origin.substring(0,2).toUpperCase() : null),
+        isFlag: !!flagEmoji,
+        avatarBg,
+        avatarColor,
+        color: avatarBg,
+        textColor: avatarColor,
+        name: s.name || 'Anonymous',
+        origin: s.origin || '',
+        months: s.months || 0,
+        speed: s.speed || 'typical',
+        tags: [s.origin, s.months ? s.months + ' months' : null].filter(Boolean),
+        story: s.story_text,
+        id: s.id,
+      };
+    });
 
     // Always hide filter chips
     const chipsEl = document.getElementById('stories-filter-chips');
