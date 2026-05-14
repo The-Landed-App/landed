@@ -797,12 +797,29 @@ function googleTranslateElementInit(){
 <!-- ══ JOURNEYS ══ -->
 <div class="page" id="page-journeys" style="background:#0d1f14;padding:0;min-height:100vh;position:relative;">
   <div style="background:#081510;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.05);">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
       <div>
         <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:500;color:#fff;letter-spacing:-0.3px;">Stories</div>
         <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">Real journeys · real people</div>
       </div>
       <button onclick="showShareStory()" class="stories-share-btn" style="font-size:10px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55);cursor:pointer;font-family:inherit;white-space:nowrap;">+ Share yours</button>
+    </div>
+    <!-- Find stories like mine -->
+    <div id="story-matcher-card" style="background:rgba(93,184,126,0.08);border:1px solid rgba(93,184,126,0.18);border-radius:12px;padding:12px 14px;cursor:pointer;" onclick="startStoryMatcher()">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(93,184,126,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#5db87e" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="#5db87e" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:12px;font-weight:500;color:#5db87e;">Find stories like yours</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">Answer 3 quick questions · Mia finds your closest match</div>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <!-- Matcher active state -->
+    <div id="story-matcher-active" style="display:none;">
+      <div id="story-matcher-step" style="margin-top:2px;"></div>
     </div>
   </div>
   <!-- Filter chips -->
@@ -2958,6 +2975,215 @@ function faqCard(g, variant) {
 }
 
 // ── JOURNEYS / STORIES ────────────────────────────────
+
+// ── STORY MATCHER ─────────────────────────────────────
+window._matcherAnswers = {};
+window._matchedStories = null;
+
+const MATCHER_STEPS = [
+  {
+    id: 'path',
+    q: 'How did you get your green card?',
+    options: ['Marriage-based', 'Employment-based', 'Refugee or asylum', 'Other / not sure']
+  },
+  {
+    id: 'duration',
+    q: 'How long have you had your green card?',
+    options: ['Under 3 years', '3–5 years', '5–10 years', '10+ years']
+  },
+  {
+    id: 'location',
+    q: 'Where do you live?',
+    type: 'text',
+    placeholder: 'City or state (e.g. Chicago, TX)'
+  }
+];
+
+let _matcherStep = 0;
+
+function startStoryMatcher() {
+  _matcherStep = 0;
+  window._matcherAnswers = {};
+  document.getElementById('story-matcher-card').style.display = 'none';
+  document.getElementById('story-matcher-active').style.display = 'block';
+  renderMatcherStep();
+}
+
+function renderMatcherStep() {
+  const el = document.getElementById('story-matcher-step');
+  if (!el) return;
+  const step = MATCHER_STEPS[_matcherStep];
+  const progress = `${_matcherStep + 1} of ${MATCHER_STEPS.length}`;
+
+  if (step.type === 'text') {
+    el.innerHTML = `
+      <div style="margin-bottom:8px;">
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-bottom:5px;">${progress}</div>
+        <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:10px;">${step.q}</div>
+        <div style="display:flex;gap:8px;">
+          <input id="matcher-text-input" type="text" placeholder="${step.placeholder}"
+            style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;font-size:12px;color:#fff;font-family:inherit;outline:none;"
+            onkeydown="if(event.key==='Enter')submitMatcherText()"
+          />
+          <button onclick="submitMatcherText()" style="background:#4a9e6b;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;">Next</button>
+        </div>
+        <button onclick="skipMatcherStep()" style="background:none;border:none;color:rgba(255,255,255,0.25);font-size:10px;font-family:inherit;cursor:pointer;margin-top:6px;padding:0;">Skip</button>
+      </div>`;
+    setTimeout(() => { const i = document.getElementById('matcher-text-input'); if(i) i.focus(); }, 100);
+  } else {
+    el.innerHTML = `
+      <div style="margin-bottom:8px;">
+        <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-bottom:5px;">${progress}</div>
+        <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:10px;">${step.q}</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          ${step.options.map(o => `
+            <button onclick="answerMatcherStep('${o.replace(/'/g,"\'")}' )" style="text-align:left;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:9px 12px;font-size:12px;color:rgba(255,255,255,0.7);font-family:inherit;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='rgba(93,184,126,0.12)';this.style.borderColor='rgba(93,184,126,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'">${o}</button>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+}
+
+function answerMatcherStep(answer) {
+  window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = answer;
+  advanceMatcherStep();
+}
+
+function submitMatcherText() {
+  const input = document.getElementById('matcher-text-input');
+  const val = input ? input.value.trim() : '';
+  window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = val || null;
+  advanceMatcherStep();
+}
+
+function skipMatcherStep() {
+  window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = null;
+  advanceMatcherStep();
+}
+
+function advanceMatcherStep() {
+  _matcherStep++;
+  if (_matcherStep >= MATCHER_STEPS.length) {
+    runStoryMatcher();
+  } else {
+    renderMatcherStep();
+  }
+}
+
+async function runStoryMatcher() {
+  const el = document.getElementById('story-matcher-step');
+  if (el) el.innerHTML = `<div style="font-size:12px;color:rgba(255,255,255,0.4);padding:10px 0;text-align:center;">Finding your matches…</div>`;
+
+  // Fetch all approved stories
+  const { data: allStories } = await window._sb
+    .from('stories')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  const stories = allStories || [];
+  const answers = window._matcherAnswers;
+
+  // Basic keyword matching
+  const scored = stories.map(s => {
+    let score = 0;
+    const haystack = (s.story_text + ' ' + (s.origin || '')).toLowerCase();
+    if (answers.path) {
+      const p = answers.path.toLowerCase();
+      if (p.includes('marriage') && (haystack.includes('marriage') || haystack.includes('spouse') || haystack.includes('husband') || haystack.includes('wife') || haystack.includes('combo'))) score += 3;
+      if (p.includes('employment') && (haystack.includes('employment') || haystack.includes('work') || haystack.includes('employer'))) score += 3;
+      if (p.includes('military') && (haystack.includes('military') || haystack.includes('army') || haystack.includes('national guard'))) score += 3;
+    }
+    if (answers.location) {
+      const loc = answers.location.toLowerCase();
+      if (haystack.includes(loc) || (s.origin || '').toLowerCase().includes(loc)) score += 4;
+    }
+    if (answers.duration) {
+      if (answers.duration.includes('Under 3') && s.months && s.months <= 36) score += 2;
+      if (answers.duration.includes('3–5') && s.months && s.months > 36 && s.months <= 60) score += 2;
+      if (answers.duration.includes('5–10') && s.months && s.months > 60 && s.months <= 120) score += 2;
+    }
+    return { ...s, score };
+  }).sort((a, b) => b.score - a.score);
+
+  const topMatches = scored.filter(s => s.score > 0).slice(0, 2);
+  window._matchedStories = topMatches.length ? topMatches : null;
+
+  // Ask Mia to explain the match
+  let miaComment = null;
+  if (topMatches.length && window._miaUnlocked) {
+    try {
+      const session = window._sbSession || (await window._sb.auth.getSession()).data.session;
+      const res = await fetch('https://nbfkmxgtlfzbanfleuss.supabase.co/functions/v1/mia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({
+          system: 'You are Mia, a warm guide for Landed. Given a user's citizenship circumstances and a matching story, write one warm sentence (max 20 words) explaining why this story is relevant to them. Be specific. No filler.',
+          messages: [{
+            role: 'user',
+            content: `User circumstances: ${JSON.stringify(answers)}. Matching story: "${topMatches[0].story_text.substring(0, 300)}"`
+          }]
+        })
+      });
+      const data = await res.json();
+      miaComment = data.content?.[0]?.text || null;
+    } catch(e) { miaComment = null; }
+  }
+
+  window._miaMatchComment = miaComment;
+  renderStories();
+  showMatcherResult(topMatches.length, miaComment);
+}
+
+function showMatcherResult(count, miaComment) {
+  const el = document.getElementById('story-matcher-step');
+  if (!el) return;
+  el.innerHTML = `
+    <div style="padding:4px 0 8px;">
+      <div style="font-size:12px;color:#5db87e;font-weight:500;margin-bottom:3px;">
+        ${count > 0 ? `${count} match${count > 1 ? 'es' : ''} found` : 'No close matches yet'}
+      </div>
+      ${miaComment ? `<div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.5;margin-bottom:8px;font-style:italic;">"${miaComment}"</div>` : ''}
+      ${count === 0 ? `<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;">Showing all stories — yours could be the first for your path.</div>` : ''}
+      <button onclick="clearStoryMatcher()" style="font-size:10px;color:rgba(255,255,255,0.3);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;">Clear and show all stories</button>
+    </div>`;
+}
+
+function clearStoryMatcher() {
+  window._matchedStories = null;
+  window._miaMatchComment = null;
+  window._matcherAnswers = {};
+  document.getElementById('story-matcher-card').style.display = 'block';
+  document.getElementById('story-matcher-active').style.display = 'none';
+  renderStories();
+}
+
+function storyCard(s, isMatch) {
+  const avatarContent = s.isFlag
+    ? `<span style="font-size:18px;line-height:1;">${s.initials}</span>`
+    : s.initials
+      ? `<span style="font-size:12px;font-weight:600;color:${s.avatarColor || s.textColor};">${s.initials}</span>`
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="${s.textColor || '#5db87e'}" stroke-width="1.5" fill="none"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7" stroke="${s.textColor || '#5db87e'}" stroke-width="1.5" stroke-linecap="round"/></svg>`;
+
+  const borderStyle = isMatch
+    ? 'border-left:2px solid rgba(93,184,126,0.4);background:rgba(93,184,126,0.04);'
+    : '';
+
+  return `<div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);${borderStyle}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:${s.avatarBg || s.color};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        ${avatarContent}
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name || 'Anonymous'}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${[s.origin, s.months ? s.months + ' months' : null].filter(Boolean).join(' · ') || 'Journey shared'}</div>
+      </div>
+    </div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story || s.story_text}"</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">${(s.tags || []).map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
+  </div>`;
+}
+
 async function renderStories() {
   const el = document.getElementById('stories-list');
   if (!el) return;
@@ -2974,17 +3200,43 @@ async function renderStories() {
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    const STORIES = (data || []).filter(s => !userId || s.user_id !== userId).map(s => ({
-      initials: s.name ? s.name.substring(0,2).toUpperCase() : '?',
-      color: 'rgba(93,184,126,0.18)',
-      textColor: '#5db87e',
+    const STORIES = (data || []).filter(s => !userId || s.user_id !== userId).map(s => {
+      // Generate avatar color from story id
+      const hash = (s.id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      const hue = hash % 360;
+      const avatarBg = `hsla(${hue}, 35%, 28%, 0.7)`;
+      const avatarColor = `hsla(${hue}, 60%, 75%, 1)`;
+      // Get flag emoji from origin if we can detect a country
+      const originLower = (s.origin || '').toLowerCase();
+      const flags = {
+        'mexico': '🇲🇽', 'colombia': '🇨🇴', 'india': '🇮🇳', 'china': '🇨🇳',
+        'nigeria': '🇳🇬', 'philippines': '🇵🇭', 'vietnam': '🇻🇳', 'brazil': '🇧🇷',
+        'korea': '🇰🇷', 'japan': '🇯🇵', 'haiti': '🇭🇹', 'ghana': '🇬🇭',
+        'ethiopia': '🇪🇹', 'iran': '🇮🇷', 'pakistan': '🇵🇰', 'bangladesh': '🇧🇩',
+        'russia': '🇷🇺', 'ukraine': '🇺🇦', 'poland': '🇵🇱', 'germany': '🇩🇪',
+        'france': '🇫🇷', 'uk': '🇬🇧', 'canada': '🇨🇦', 'australia': '🇦🇺',
+        'cuba': '🇨🇺', 'dominican': '🇩🇴', 'el salvador': '🇸🇻', 'guatemala': '🇬🇹',
+        'morocco': '🇲🇦', 'egypt': '🇪🇬', 'kenya': '🇰🇪', 'jamaica': '🇯🇲',
+        'taiwan': '🇹🇼', 'hong kong': '🇭🇰', 'thailand': '🇹🇭', 'indonesia': '🇮🇩',
+      };
+      let flagEmoji = null;
+      for (const [country, flag] of Object.entries(flags)) {
+        if (originLower.includes(country)) { flagEmoji = flag; break; }
+      }
+      return ({
+      initials: flagEmoji || (s.origin ? s.origin.substring(0,2).toUpperCase() : null),
+      isFlag: !!flagEmoji,
+      avatarBg,
+      avatarColor,
+      color: avatarBg,
+      textColor: avatarColor,
       name: s.name || 'Anonymous',
       origin: s.origin || '',
       months: s.months || 0,
       speed: s.speed || 'typical',
       tags: [s.origin, s.months ? s.months + ' months' : null].filter(Boolean),
       story: s.story_text,
-    }));
+    });});
 
     // Always hide filter chips
     const chipsEl = document.getElementById('stories-filter-chips');
@@ -3071,19 +3323,17 @@ async function renderStories() {
       }
     }
 
-    html += items.map(s => `
-      <div style="padding:16px;border-bottom:1px solid rgba(255,255,255,0.05);">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:${s.textColor};flex-shrink:0;">${s.initials}</div>
-          <div>
-            <div style="font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);">${s.name}</div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:1px;">${s.origin} · ${s.months} months</div>
-          </div>
-        </div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:12px;font-style:italic;">"${s.story}"</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;">${s.tags.map(t => `<span style="font-size:9px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);">${t}</span>`).join('')}</div>
-      </div>
-    `).join('');
+    // Show matched stories highlighted at top
+    if (window._matchedStories && window._matchedStories.length > 0) {
+      const matchedIds = new Set(window._matchedStories.map(s => s.id));
+      html += `<div style="padding:10px 16px 6px;font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:#5db87e;font-weight:500;">Your matches</div>`;
+      html += window._matchedStories.map(s => storyCard(s, true)).join('');
+      if (items.length > 0) {
+        html += `<div style="padding:10px 16px 6px;font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.25);font-weight:500;">All stories</div>`;
+      }
+    }
+
+    html += items.map(s => storyCard(s, false)).join('');
 
     el.innerHTML = html;
 
