@@ -3016,12 +3016,39 @@ async function saveMatcherAnswers() {
   }
 }
 
+const ALL_COUNTRIES = [
+  "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan",
+  "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi",
+  "Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic",
+  "Denmark","Djibouti","Dominica","Dominican Republic",
+  "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
+  "Fiji","Finland","France",
+  "Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana",
+  "Haiti","Honduras","Hungary",
+  "Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast",
+  "Jamaica","Japan","Jordan",
+  "Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan",
+  "Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+  "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+  "Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway",
+  "Oman",
+  "Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+  "Qatar",
+  "Romania","Russia","Rwanda",
+  "Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
+  "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu",
+  "Uganda","Ukraine","United Arab Emirates","United Kingdom","Uruguay","Uzbekistan",
+  "Vanuatu","Venezuela","Vietnam",
+  "Yemen",
+  "Zambia","Zimbabwe"
+];
+
 const MATCHER_STEPS = [
   {
     id: 'country',
     q: 'Where are you originally from?',
-    type: 'text',
-    placeholder: 'Country (e.g. Mexico, India, Brazil)'
+    type: 'country',
+    placeholder: 'Start typing your country…'
   },
   {
     id: 'path',
@@ -3088,13 +3115,40 @@ function renderMatcherStep() {
   const step = MATCHER_STEPS[_matcherStep];
   const progress = `${_matcherStep + 1} of ${MATCHER_STEPS.length}`;
 
-  if (step.type === 'text') {
+  if (step.type === 'country') {
+    const saved = window._matcherAnswers[step.id] || '';
     el.innerHTML = `
       <div style="margin-bottom:8px;">
-        <div style="font-size:10px;color:rgba(255,255,255,0.25);margin-bottom:5px;">${progress}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <div style="font-size:10px;color:rgba(255,255,255,0.25);">${progress}</div>
+          ${_matcherStep > 0 ? '<button onclick="goBackMatcher()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:10px;font-family:inherit;cursor:pointer;padding:0;">← Back</button>' : ''}
+        </div>
+        <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:10px;">${step.q}</div>
+        <div style="position:relative;">
+          <input id="matcher-country-input" type="text" placeholder="${step.placeholder}" value="${saved}"
+            style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;font-size:12px;color:#fff;font-family:inherit;outline:none;"
+            oninput="filterCountries(this.value)"
+            onkeydown="if(event.key==='Enter'){const f=document.getElementById('country-dropdown');if(f&&f.children[0])selectCountry(f.children[0].textContent);else submitMatcherText();}"
+          />
+          <div id="country-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1a3020;border:1px solid rgba(255,255,255,0.12);border-radius:8px;margin-top:3px;max-height:160px;overflow-y:auto;z-index:100;"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button onclick="submitMatcherText()" style="flex:1;background:#4a9e6b;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;">Next</button>
+          <button onclick="skipMatcherStep()" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;">Skip</button>
+        </div>
+      </div>`;
+    setTimeout(() => { const i = document.getElementById('matcher-country-input'); if(i) i.focus(); }, 100);
+  } else if (step.type === 'text') {
+    const saved = window._matcherAnswers[step.id] || '';
+    el.innerHTML = `
+      <div style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <div style="font-size:10px;color:rgba(255,255,255,0.25);">${progress}</div>
+          ${_matcherStep > 0 ? '<button onclick="goBackMatcher()" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:10px;font-family:inherit;cursor:pointer;padding:0;">← Back</button>' : ''}
+        </div>
         <div style="font-size:13px;font-weight:500;color:#fff;margin-bottom:10px;">${step.q}</div>
         <div style="display:flex;gap:8px;">
-          <input id="matcher-text-input" type="text" placeholder="${step.placeholder}"
+          <input id="matcher-text-input" type="text" placeholder="${step.placeholder}" value="${saved}"
             style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;font-size:12px;color:#fff;font-family:inherit;outline:none;"
             onkeydown="if(event.key==='Enter')submitMatcherText()"
           />
@@ -3117,6 +3171,40 @@ function renderMatcherStep() {
   }
 }
 
+function goBackMatcher() {
+  if (_matcherStep > 0) {
+    _matcherStep--;
+    renderMatcherStep();
+  }
+}
+
+function filterCountries(val) {
+  const drop = document.getElementById('country-dropdown');
+  if (!drop) return;
+  if (!val || val.length < 1) { drop.style.display = 'none'; return; }
+  const matches = ALL_COUNTRIES.filter(c => c.toLowerCase().startsWith(val.toLowerCase())).slice(0, 8);
+  if (!matches.length) { drop.style.display = 'none'; return; }
+  drop.style.display = 'block';
+  drop.innerHTML = matches.map(c =>
+    `<div onclick="selectCountry('${c}')" style="padding:8px 12px;font-size:12px;color:rgba(255,255,255,0.8);cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.background='rgba(93,184,126,0.15)'" onmouseout="this.style.background='none'">${c}</div>`
+  ).join('');
+}
+
+function selectCountry(country) {
+  const input = document.getElementById('matcher-country-input');
+  if (input) input.value = country;
+  const drop = document.getElementById('country-dropdown');
+  if (drop) drop.style.display = 'none';
+}
+
+function submitMatcherText() {
+  const countryInput = document.getElementById('matcher-country-input');
+  const textInput = document.getElementById('matcher-text-input');
+  const val = (countryInput || textInput)?.value.trim() || '';
+  window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = val || null;
+  advanceMatcherStep();
+}
+
 function answerMatcherByIndex(idx) {
   const step = MATCHER_STEPS[_matcherStep];
   if (step && step.options && step.options[idx] !== undefined) {
@@ -3129,12 +3217,7 @@ function answerMatcherStep(answer) {
   advanceMatcherStep();
 }
 
-function submitMatcherText() {
-  const input = document.getElementById('matcher-text-input');
-  const val = input ? input.value.trim() : '';
-  window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = val || null;
-  advanceMatcherStep();
-}
+// submitMatcherText defined above
 
 function skipMatcherStep() {
   window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = null;
