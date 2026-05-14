@@ -3130,8 +3130,8 @@ function renderMatcherStep() {
             oninput="filterCountries(this.value)"
             onkeydown="if(event.key==='Enter'){const f=document.getElementById('country-dropdown');if(f&&f.children[0])selectCountry(f.children[0].textContent);else submitMatcherText();}"
           />
-          <div id="country-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#1a3020;border:1px solid rgba(255,255,255,0.12);border-radius:8px;margin-top:3px;max-height:160px;overflow-y:auto;z-index:100;"></div>
         </div>
+        <div id="country-dropdown" style="display:none;background:#1a3020;border:1px solid rgba(255,255,255,0.12);border-radius:8px;margin-top:3px;max-height:160px;overflow-y:auto;"></div>
         <div style="display:flex;gap:8px;margin-top:8px;">
           <button onclick="submitMatcherText()" style="flex:1;background:#4a9e6b;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;">Next</button>
           <button onclick="skipMatcherStep()" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;">Skip</button>
