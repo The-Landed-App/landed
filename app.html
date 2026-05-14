@@ -811,8 +811,8 @@ function googleTranslateElementInit(){
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#5db87e" stroke-width="1.5"/><path d="M16.5 16.5L21 21" stroke="#5db87e" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <div style="flex:1;">
-          <div style="font-size:12px;font-weight:500;color:#5db87e;">Find stories like yours</div>
-          <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">Answer 3 quick questions · Mia finds your closest match</div>
+          <div id="matcher-card-title" style="font-size:12px;font-weight:500;color:#5db87e;">Find stories like yours</div>
+          <div id="matcher-card-sub" style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;">Answer 4 quick questions · Mia finds your closest match</div>
         </div>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
@@ -1954,7 +1954,7 @@ function switchPage(id) {
   window.scrollTo(0,0);
   reapplyTranslation();
   if (id === 'faqs') { initFAQsLayout(); }
-  if (id === 'journeys') { renderStories(); }
+  if (id === 'journeys') { loadMatcherAnswers().then(() => renderStories()); }
 }
 
 function reapplyTranslation() {
@@ -2980,7 +2980,49 @@ function faqCard(g, variant) {
 window._matcherAnswers = {};
 window._matchedStories = null;
 
+async function loadMatcherAnswers() {
+  // Try Supabase first
+  if (window._sb && window._sbSession) {
+    try {
+      const { data: profile } = await window._sb
+        .from('profiles')
+        .select('matcher_answers')
+        .eq('id', window._sbSession.user.id)
+        .single();
+      if (profile?.matcher_answers) {
+        window._matcherAnswers = profile.matcher_answers;
+        return;
+      }
+    } catch(e) {}
+  }
+  // Fall back to localStorage
+  try {
+    const saved = localStorage.getItem('landed_matcher');
+    if (saved) window._matcherAnswers = JSON.parse(saved);
+  } catch(e) {}
+}
+
+async function saveMatcherAnswers() {
+  // Save to localStorage immediately
+  try { localStorage.setItem('landed_matcher', JSON.stringify(window._matcherAnswers)); } catch(e) {}
+  // Sync to Supabase in background
+  if (window._sb && window._sbSession) {
+    window._sb
+      .from('profiles')
+      .update({ matcher_answers: window._matcherAnswers })
+      .eq('id', window._sbSession.user.id)
+      .then(() => {})
+      .catch(() => {});
+  }
+}
+
 const MATCHER_STEPS = [
+  {
+    id: 'country',
+    q: 'Where are you originally from?',
+    type: 'text',
+    placeholder: 'Country (e.g. Mexico, India, Brazil)'
+  },
   {
     id: 'path',
     q: 'How did you get your green card?',
@@ -3003,9 +3045,40 @@ let _matcherStep = 0;
 
 function startStoryMatcher() {
   _matcherStep = 0;
-  window._matcherAnswers = {};
   document.getElementById('story-matcher-card').style.display = 'none';
   document.getElementById('story-matcher-active').style.display = 'block';
+  // If we have saved answers, show them with option to re-answer or use saved
+  const hasAnswers = Object.keys(window._matcherAnswers).length > 0;
+  if (hasAnswers) {
+    showSavedAnswers();
+  } else {
+    renderMatcherStep();
+  }
+}
+
+function showSavedAnswers() {
+  const el = document.getElementById('story-matcher-step');
+  if (!el) return;
+  const a = window._matcherAnswers;
+  const summary = [
+    a.country ? `From ${a.country}` : null,
+    a.path || null,
+    a.duration || null,
+    a.location ? `in ${a.location}` : null,
+  ].filter(Boolean).join(' · ');
+  el.innerHTML = `
+    <div style="padding:4px 0 8px;">
+      <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:8px;line-height:1.5;">${summary}</div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="runStoryMatcher()" style="flex:1;background:#4a9e6b;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:500;font-family:inherit;cursor:pointer;">Find matches</button>
+        <button onclick="resetMatcherAnswers()" style="background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;font-size:12px;font-family:inherit;cursor:pointer;">Update answers</button>
+      </div>
+    </div>`;
+}
+
+function resetMatcherAnswers() {
+  window._matcherAnswers = {};
+  _matcherStep = 0;
   renderMatcherStep();
 }
 
@@ -3078,6 +3151,8 @@ function advanceMatcherStep() {
 }
 
 async function runStoryMatcher() {
+  // Save answers
+  await saveMatcherAnswers();
   const el = document.getElementById('story-matcher-step');
   if (el) el.innerHTML = `<div style="font-size:12px;color:rgba(255,255,255,0.4);padding:10px 0;text-align:center;">Finding your matches…</div>`;
 
@@ -3095,6 +3170,10 @@ async function runStoryMatcher() {
   const scored = stories.map(s => {
     let score = 0;
     const haystack = (s.story_text + ' ' + (s.origin || '')).toLowerCase();
+    if (answers.country) {
+      const c = answers.country.toLowerCase();
+      if (haystack.includes(c) || (s.origin || '').toLowerCase().includes(c)) score += 5;
+    }
     if (answers.path) {
       const p = answers.path.toLowerCase();
       if (p.includes('marriage') && (haystack.includes('marriage') || haystack.includes('spouse') || haystack.includes('husband') || haystack.includes('wife') || haystack.includes('combo'))) score += 3;
