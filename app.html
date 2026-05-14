@@ -3044,6 +3044,13 @@ function renderMatcherStep() {
   }
 }
 
+function answerMatcherByIndex(idx) {
+  const step = MATCHER_STEPS[_matcherStep];
+  if (step && step.options && step.options[idx] !== undefined) {
+    answerMatcherStep(step.options[idx]);
+  }
+}
+
 function answerMatcherStep(answer) {
   window._matcherAnswers[MATCHER_STEPS[_matcherStep].id] = answer;
   advanceMatcherStep();
@@ -3118,7 +3125,7 @@ async function runStoryMatcher() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
         body: JSON.stringify({
-          system: 'You are Mia, a warm guide for Landed. Given a user's citizenship circumstances and a matching story, write one warm sentence (max 20 words) explaining why this story is relevant to them. Be specific. No filler.',
+          system: 'You are Mia, a warm guide for Landed. Given a user citizenship circumstances and a matching story, write one warm sentence (max 20 words) explaining why this story is relevant to them. Be specific. No filler.',
           messages: [{
             role: 'user',
             content: `User circumstances: ${JSON.stringify(answers)}. Matching story: "${topMatches[0].story_text.substring(0, 300)}"`
